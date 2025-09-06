@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useQuizEngine } from '@/hooks/useQuizEngine';
 import { PhaseA } from './quiz/PhaseA';
 import { PhaseB } from './quiz/PhaseB';
@@ -9,6 +9,7 @@ import { Summary } from './quiz/Summary';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { ProgressBar } from './ProgressBar';
 import { phaseDEngine } from '@/engine/PhaseD';
+import { getArchetypeQuestionsForFamily, getArchetypesForFamily } from '@/data/questions';
 import { FACE_ANCHOR } from '@/types/quiz';
 
 export function QuizEngine() {
@@ -50,9 +51,10 @@ export function QuizEngine() {
     
     switch (state.phase) {
       case 'A':
-        // Phase A: 7 family cards to select
-        completed = selectedALines.length;
-        total = 7;
+        // Phase A: 3 family cards to select (33% each, 100% when all 3 selected)
+        const selectedCount = selectedALines.length;
+        completed = Math.min(selectedCount, 3); // Cap at 3
+        total = 3; // Show progress out of 3, not 7
         break;
         
       case 'B':
@@ -73,22 +75,64 @@ export function QuizEngine() {
         total = nonALines.length * 3 + severityNeeded;
         break;
         
+      case 'D':
+        // Phase D: Install question - progress based on whether user has made a choice
+        completed = state.installedChoice ? 1 : 0;
+        total = 1;
+        break;
         
       case 'E':
-        // Phase E: Final calculations
-        completed = 1;
+        // Phase E: Anchor selection - progress based on whether user has made a choice
+        completed = state.anchor ? 1 : 0;
         total = 1;
         break;
         
       case 'Archetype':
-        // Archetype: Questions to determine specific archetype within family
-        const archetypeQuestions = state.anchor ? 
-          (() => {
-            const { getArchetypeQuestionsForFamily } = require('@/data/questions');
-            return getArchetypeQuestionsForFamily(state.anchor);
-          })() : [];
+        // Archetype: Questions to determine specific archetype within family (best-of-3 system)
+        const archetypeQuestions = state.anchor ? getArchetypeQuestionsForFamily(state.anchor) : [];
         completed = Object.keys(state.archetypeAnswers).length;
-        total = archetypeQuestions.length;
+        
+        // Calculate dynamic total based on best-of-3 logic
+        if (completed === 0) {
+          total = 2; // Start with 2 questions minimum
+        } else {
+          // Count current archetype wins to determine if we need a 3rd question
+          const archetypes = state.anchor ? getArchetypesForFamily(state.anchor) : [];
+          const archetypeCounts = archetypes.reduce((acc, archetype) => {
+            acc[archetype] = 0;
+            return acc;
+          }, {} as Record<string, number>);
+          
+          // Count archetype selections
+          Object.entries(state.archetypeAnswers).forEach(([questionId, choice]) => {
+            const question = archetypeQuestions.find(q => q.id === questionId);
+            if (question && (choice === 'A' || choice === 'B')) {
+              const archetype = question.map[choice];
+              archetypeCounts[archetype]++;
+            }
+          });
+          
+          const maxWins = Math.max(...Object.values(archetypeCounts));
+          
+          if (maxWins >= 2) {
+            // Early win! Total is the number of questions answered
+            total = completed;
+          } else if (completed === 2) {
+            // After 2 questions, check if we need a tiebreaker
+            const values = Object.values(archetypeCounts);
+            const isTied = values[0] === values[1] && values[0] === 1;
+            total = isTied ? 3 : 2; // Need 3rd question if tied, otherwise done at 2
+          } else {
+            // Still in progress, show 2 as target
+            total = 2;
+          }
+        }
+        break;
+        
+      case 'FinalProcessing':
+        // Final Processing: Complete
+        completed = 1;
+        total = 1;
         break;
         
       case 'Summary':
@@ -103,7 +147,7 @@ export function QuizEngine() {
     }
     
     return { completed, total };
-  }, [state.phase, selectedA, nonA]);
+  }, [state.phase, state.installedChoice, state.anchor, selectedA, nonA]);
 
   const stepDone = useCallback(() => {
     // Progress is calculated dynamically, no need to manually track
@@ -320,23 +364,14 @@ export function QuizEngine() {
         console.log('🎯 Need tie-breaker, going to Phase E');
         updatePhase('E'); // Need tie-breaker
       }
-    }, 2000); // 2 second celebration
+    }, 2500); // 2.5 second celebration
   };
 
 
-  const handleAnchorSelect = (primaryFace: string) => {
-    console.log('🎯 Primary face selected:', primaryFace);
-    
-    // Extract family and face from primary face (e.g., "Control:Rebel" -> "Control", "Rebel")
-    const [primaryFamily, primaryFaceName] = primaryFace.split(':');
-    
-    // Record SIF data now that primary is finalized
-    console.log('🎯 Recording SIF data with finalized primary:', { primaryFamily, primaryFace });
-    recordAllSIFData(state, primaryFamily, primaryFace);
-    
-    setAnchor(primaryFamily); // Store family for display
-    setFinalArchetype(primaryFaceName); // Set the selected face as final archetype
-    updatePhase('Summary'); // Go directly to Summary phase
+
+  const handleAnchorSelect = (anchor: string) => {
+    console.log('🎯 Anchor selected:', anchor);
+    setAnchor(anchor);
   };
 
   const handleProceedToArchetype = ({ selectedLine, anchorSource }: {
@@ -407,7 +442,7 @@ export function QuizEngine() {
     console.log('🎯 Recording SIF data with determined archetype:', { selectedLine, primaryFace });
     recordAllSIFData(state, selectedLine, primaryFace);
     
-    updatePhase('Summary');
+    updatePhase('FinalProcessing');
   };
 
 
@@ -416,25 +451,52 @@ export function QuizEngine() {
     resetQuiz();
   };
 
+  // Handle FinalProcessing phase transition
+  const [finalProcessingStep, setFinalProcessingStep] = useState(0);
+  
+  useEffect(() => {
+    if (state.phase === 'FinalProcessing') {
+      setFinalProcessingStep(0);
+      
+      // Show "PATTERN FOUND" after 0.7 seconds
+      const patternTimer = setTimeout(() => {
+        setFinalProcessingStep(1);
+      }, 700);
+      
+      // Go to Summary after 1.5 seconds
+      const summaryTimer = setTimeout(() => {
+        updatePhase('Summary');
+      }, 1500);
+      
+      return () => {
+        clearTimeout(patternTimer);
+        clearTimeout(summaryTimer);
+      };
+    }
+  }, [state.phase, updatePhase]);
+
   const handleSIFCalculate = useCallback((primaryFamily: string, primaryFace: string, prizeFace: string) => {
     return calculateSIF(primaryFamily, primaryFace, prizeFace);
   }, [calculateSIF]);
 
   return (
     <div className="bg-black text-gray-200 font-sans relative min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8 bg-gray-900 rounded-xl">
+      <div className={`mx-auto px-4 py-4 sm:py-8 bg-gray-900 rounded-xl ${
+        state.phase === 'B' || state.phase === 'C' ? 'max-w-2xl' : 'max-w-4xl'
+      }`}>
         
         {(() => {
           const { completed, total } = getProgress();
           const getStepInfo = () => {
             switch (state.phase) {
-              case 'A': return { step: 1, title: 'Choose your focus', description: 'Select 3 families that resonate with you' };
+              case 'A': return { step: 1, title: 'Choose your focus', description: `${completed}/3 families selected` };
               case 'B': return { step: 2, title: 'Quick choices', description: `${completed}/${total} dilemmas completed` };
-              case 'C': return { step: 3, title: 'Situations', description: `${completed}/${total} scenarios completed` };
-              case 'D': return { step: 4, title: 'Final decisions', description: `${completed}/${total} assessments completed` };
-              case 'E': return { step: 5, title: 'Your profile', description: 'Processing your results...' };
+              case 'C': return { step: 3, title: 'Module decisions', description: `${completed}/${total} scenarios completed` };
+              case 'D': return { step: 4, title: 'Install question', description: `${completed}/${total} choice made` };
+              case 'E': return { step: 5, title: 'Anchor selection', description: `${completed}/${total} choice made` };
               case 'Archetype': return { step: 5, title: 'Your profile', description: 'Determining your specific archetype...' };
-              case 'Summary': return { step: 6, title: 'Complete', description: 'Your 7-minute profile is ready!' };
+              case 'FinalProcessing': return { step: 6, title: 'Final processing', description: 'LOCKING PATTERN...' };
+              case 'Summary': return { step: 7, title: 'Complete', description: 'Your 7-minute profile is ready!' };
               default: return { step: 1, title: 'Getting started', description: 'This takes about 7 minutes' };
             }
           };
@@ -513,6 +575,7 @@ export function QuizEngine() {
               onAddQuestionToHistory={addQuestionToHistory}
               onProceedToArchetype={handleProceedToArchetype}
               onArchetypeSelect={setFinalArchetype}
+              onAnchorSelect={handleAnchorSelect}
             />
           )}
 
@@ -522,8 +585,20 @@ export function QuizEngine() {
               <div className="text-center">
                 <div className="text-6xl mb-6">🎉</div>
                 <h2 className="text-3xl font-bold text-white mb-4">Done!</h2>
-                <p className="text-xl text-gray-300 mb-2">Processing your 7-minute profile...</p>
+                <p className="text-xl text-red-500 mb-2">LOCKING PATTERN...</p>
                 <div className="animate-pulse text-gray-400 text-sm">This will just take a moment</div>
+              </div>
+            </div>
+          )}
+
+          {state.phase === 'FinalProcessing' && (
+            <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+              <div className="text-center">
+                <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-6"></div>
+                <div className="text-red-500 text-2xl font-bold mb-4">
+                  {finalProcessingStep === 0 ? 'LOCKING PATTERN...' : 'PATTERN FOUND'}
+                </div>
+                <div className="text-gray-300 text-lg">Processing final results</div>
               </div>
             </div>
           )}

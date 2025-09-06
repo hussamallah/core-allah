@@ -8,12 +8,12 @@
 
 export interface PersistedState {
   sessionId: string;
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
   selectedALines: string[];
   nonALines: string[];
   usedQuestions: string[];
   questionHistory: Array<{
-    phase: 'A' | 'B' | 'C' | 'D' | 'E';
+    phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
     lineId: string;
     questionId: string;
     choice: string;
@@ -201,7 +201,7 @@ export class PersistenceManager {
    */
   static addQuestionToHistory(
     state: PersistedState,
-    phase: 'A' | 'B' | 'C' | 'D' | 'E',
+    phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary',
     lineId: string,
     questionId: string,
     choice: string

@@ -4,7 +4,7 @@
 
 export interface QuizRecord {
   timestamp: number;
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
   action: 'line_selected' | 'question_answered' | 'severity_assessed' | 'verdict_calculated' | 'sif_calculated';
   lineId?: string;
   questionId?: string;

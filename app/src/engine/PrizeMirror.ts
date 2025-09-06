@@ -72,7 +72,7 @@ export class PrizeMirrorEngine {
     hasMirrorGain: boolean
   ): PrizeMirrorResult['resultCard'] {
     return {
-      header: `${anchor} → ${finalArchetype} | Prize = ${prizeRole}`,
+      header: `→ ${anchor}:${finalArchetype} | Prize = ${prizeRole}`,
       
       section1: `${prizeRole} as stable role; ${finalArchetype} as style; 1 action anchor.`,
       

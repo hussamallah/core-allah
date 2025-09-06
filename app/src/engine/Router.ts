@@ -3,7 +3,7 @@
  * PATCHSET v2025-09-06 — "Do What The Site Says"
  */
 
-export type Phase = 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Summary';
+export type Phase = 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
 
 export interface RouterState {
   currentPhase: Phase;

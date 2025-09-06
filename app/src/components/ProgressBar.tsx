@@ -24,7 +24,7 @@ export function ProgressBar({ progress, total }: ProgressBarProps) {
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               i < progress
                 ? isComplete 
-                  ? 'bg-green-400 shadow-[0_0_8px_rgba(34,197,94,0.6)]' 
+                  ? 'bg-yellow-300 shadow-[0_0_12px_rgba(253,224,71,0.8)]' 
                   : 'bg-yellow-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]'
                 : 'bg-gray-700 border border-gray-600'
             }`}
@@ -37,14 +37,14 @@ export function ProgressBar({ progress, total }: ProgressBarProps) {
         <div 
           className={`h-full transition-all duration-500 ease-out ${
             isComplete 
-              ? 'bg-gradient-to-r from-green-400 to-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' 
+              ? 'bg-gradient-to-r from-yellow-300 to-yellow-200 shadow-[0_0_15px_rgba(253,224,71,0.8)]' 
               : 'bg-gradient-to-r from-yellow-300 to-orange-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]'
           }`}
           style={{ width: `${percentage}%` }}
         />
       </div>
       
-      <div className="text-xs text-gray-400 mt-2 text-center">
+      <div className={`text-sm mt-2 text-center ${isComplete ? 'text-yellow-300 font-semibold' : 'text-gray-400'}`}>
         {isComplete ? 'Complete!' : `${percentage}% complete`}
       </div>
     </div>

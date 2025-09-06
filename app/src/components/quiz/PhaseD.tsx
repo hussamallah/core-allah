@@ -89,6 +89,7 @@ export default function PhaseD({
       choice: faceId,
       shortlist: shortlist || []
     });
+    
   };
 
   const handleProceed = () => {
@@ -98,11 +99,11 @@ export default function PhaseD({
 
   if (!hasComputed) {
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+      <div className="bg-gray-900 rounded-xl p-4 min-h-[300px] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-yellow-400 text-2xl font-bold mb-4">Phase D — Computing Verdicts</div>
-          <div className="text-gray-200 text-lg mb-6">Using deterministic verdict table...</div>
-          <div className="w-full bg-gray-700 rounded-full h-2 mb-6">
+          <div className="text-yellow-400 text-xl font-bold mb-3">Phase D — Computing Verdicts</div>
+          <div className="text-gray-200 text-base mb-4">Using deterministic verdict table...</div>
+          <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
             <div className="bg-yellow-400 h-2 rounded-full animate-pulse" style={{width: '100%'}}></div>
           </div>
         </div>
@@ -112,10 +113,10 @@ export default function PhaseD({
 
   if (!installedStatements || installedStatements.length === 0) {
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+      <div className="bg-gray-900 rounded-xl p-4 min-h-[300px] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-400 text-2xl font-bold mb-4">Phase D — Error</div>
-          <div className="text-gray-200 text-lg mb-6">No install options available</div>
+          <div className="text-red-400 text-xl font-bold mb-3">Phase D — Error</div>
+          <div className="text-gray-200 text-base mb-4">No install options available</div>
           <button
             onClick={handleProceed}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
@@ -128,21 +129,21 @@ export default function PhaseD({
   }
 
   return (
-    <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-      <div className="text-center mb-8">
-        <div className="text-gray-200 text-lg mb-6">
+    <div className="bg-gray-900 rounded-xl p-4 min-h-[300px]">
+      <div className="text-center mb-6">
+        <div className="text-gray-200 text-base mb-4">
           Which role do you actually get installed into most often by people and context?
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
+      <div className="grid md:grid-cols-2 gap-3 mb-6">
         {installedStatements.map(statement => (
           <button
             key={statement.faceId}
-            className={`rounded-xl p-6 border-2 transition-all text-left ${
+            className={`rounded-xl p-4 border-2 transition-all text-left ${
               installed === statement.faceId 
-                ? 'border-yellow-400 bg-yellow-400/10 ring-2 ring-yellow-400' 
-                : 'border-gray-600 hover:border-gray-500 hover:bg-gray-800'
+                ? 'border-yellow-300 bg-yellow-300/20 ring-2 ring-yellow-300 shadow-[0_0_15px_rgba(253,224,71,0.5)]' 
+                : 'border-gray-600 hover:border-yellow-400 hover:bg-gray-800'
             }`}
             onClick={() => handleInstallChoice(statement.faceId)}
           >
@@ -159,11 +160,11 @@ export default function PhaseD({
           onClick={handleProceed}
           className={`px-6 py-3 rounded-lg font-medium transition-colors ${
             installed
-              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              ? 'bg-gradient-to-r from-yellow-300 to-yellow-200 text-black hover:from-yellow-200 hover:to-yellow-100 shadow-[0_0_15px_rgba(253,224,71,0.5)]'
               : 'bg-gray-600 text-gray-400 cursor-not-allowed'
           }`}
         >
-          Continue to Phase E
+          Next
         </button>
       </div>
     </div>

@@ -8,17 +8,18 @@ type Family = 'Control' | 'Pace' | 'Boundary' | 'Truth' | 'Recognition' | 'Bondi
 
 interface PhaseEProps {
   state: QuizState;
-  onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E', lineId: string, questionId: string, choice: string) => void;
+  onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
   onProceedToArchetype?: (payload: {
     selectedLine: Family;
     anchorSource: "E:Purity" | "E:TieBreak";
   }) => void;
   onArchetypeSelect?: (archetype: string) => void;
+  onAnchorSelect?: (anchor: string) => void;
 }
 
 type PhaseEStatus = 'IDLE' | 'PROCESSING' | 'COMMITTED';
 
-export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, onArchetypeSelect }: PhaseEProps) {
+export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, onArchetypeSelect, onAnchorSelect }: PhaseEProps) {
   const [phaseEState, setPhaseEState] = useState(phaseEEngine.getState());
   const [hasEntered, setHasEntered] = useState(false);
   const [status, setStatus] = useState<PhaseEStatus>('IDLE');
@@ -75,6 +76,12 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
       // Auto-select if single candidate - show archetype selection
       if (newState.anchor && status === 'IDLE') {
         console.log('🎯 PHASE E - Auto-selecting anchor:', newState.anchor);
+        
+        // Update global anchor state immediately for progress bar
+        if (onAnchorSelect) {
+          onAnchorSelect(newState.anchor);
+        }
+        
         setStatus('COMMITTED');
         setShowArchetypeSelection(true);
       }
@@ -94,6 +101,11 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
     phaseEEngine.selectAnchor(selectedLine);
     const newState = phaseEEngine.getState();
     setPhaseEState(newState);
+    
+    // Update global anchor state immediately for progress bar
+    if (onAnchorSelect) {
+      onAnchorSelect(selectedLine);
+    }
     
     // Record in question history
     onAddQuestionToHistory('E', selectedLine, 'tie-break-question', 'selected');
@@ -123,7 +135,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
     'Stress': 'Igniter'
   };
 
-  // Archetype selection logic
+  // Archetype selection logic with best-of-3 system
   const handleArchetypeChoice = (choice: 'A' | 'B') => {
     if (!phaseEState.anchor) return;
     
@@ -150,31 +162,52 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
       questionIndex: currentQuestionIndex
     });
     
-    if (currentQuestionIndex < archetypeQuestions.length - 1) {
-      // Move to next question
-      setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      // All questions answered, determine final archetype
-      const archetypes = getArchetypesForFamily(phaseEState.anchor);
-      const archetypeCounts = archetypes.reduce((acc, archetype) => {
-        acc[archetype] = 0;
-        return acc;
-      }, {} as Record<string, number>);
-      
-      // Count archetype selections
-      Object.entries(newAnswers).forEach(([questionId, choice]) => {
-        const question = archetypeQuestions.find(q => q.id === questionId);
-        if (question) {
-          const archetype = question.map[choice];
-          archetypeCounts[archetype]++;
-        }
-      });
-      
-      // Find the archetype with most selections
+    // Count current archetype selections to check for early win
+    const archetypes = getArchetypesForFamily(phaseEState.anchor);
+    const archetypeCounts = archetypes.reduce((acc, archetype) => {
+      acc[archetype] = 0;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    // Count archetype selections
+    Object.entries(newAnswers).forEach(([questionId, choice]) => {
+      const question = archetypeQuestions.find(q => q.id === questionId);
+      if (question) {
+        const archetype = question.map[choice];
+        archetypeCounts[archetype]++;
+      }
+    });
+    
+    // Check for early win (2 wins for any archetype)
+    const maxWins = Math.max(...Object.values(archetypeCounts));
+    const totalQuestionsAnswered = Object.keys(newAnswers).length;
+    
+    if (maxWins >= 2) {
+      // Early win! Determine final archetype
       const finalArchetype = Object.entries(archetypeCounts)
         .sort(([,a], [,b]) => b - a)[0][0];
       
-      console.log('🎯 PHASE E - Final archetype determined:', finalArchetype);
+      console.log('🎯 PHASE E - Early win! Final archetype determined:', finalArchetype);
+      
+      // Call the archetype select callback
+      if (onArchetypeSelect) {
+        onArchetypeSelect(finalArchetype);
+      }
+      
+      // Proceed to Summary
+      proceed({ 
+        selectedLine: phaseEState.anchor as Family, 
+        anchorSource: "E:Purity" 
+      });
+    } else if (totalQuestionsAnswered < archetypeQuestions.length) {
+      // No early win yet, move to next question
+      setCurrentQuestionIndex(prev => prev + 1);
+    } else {
+      // All questions answered, determine final archetype (tiebreaker scenario)
+      const finalArchetype = Object.entries(archetypeCounts)
+        .sort(([,a], [,b]) => b - a)[0][0];
+      
+      console.log('🎯 PHASE E - Final archetype determined after all questions:', finalArchetype);
       
       // Call the archetype select callback
       if (onArchetypeSelect) {
@@ -255,8 +288,8 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
     return (
       <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-yellow-400 text-2xl font-bold mb-4">Primary selected: {phaseEState.anchor}</div>
-          <div className="text-gray-200 text-lg mb-6">Proceeding to Archetype Selection...</div>
+          <div className="text-red-500 text-2xl font-bold mb-4">PRIMARY SELECTED: {phaseEState.anchor}</div>
+          <div className="text-red-500 text-lg mb-6">PROCESSING...</div>
           <div className="w-full bg-gray-700 rounded-full h-2">
             <div className="bg-yellow-400 h-2 rounded-full animate-pulse" style={{width: '100%'}}></div>
           </div>
@@ -269,7 +302,6 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
   if (phaseEEngine.needsTieBreak()) {
     return (
       <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-        <h2 className="text-2xl font-bold text-white mb-6">Phase E — Primary Selection</h2>
         <p className="text-ivory text-xl mb-8 font-medium">
           When it actually lands on you, which line do you trust to carry your week?
         </p>
@@ -289,7 +321,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-bold text-ivory text-xl mb-2">{line}</div>
-                  <div className="text-yellow-400 text-xl font-light uppercase tracking-wider">
+                  <div className="text-yellow-400 text-sm font-bold uppercase tracking-wider">
                     {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
                     {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
                     {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
@@ -312,8 +344,8 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
   return (
     <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
       <div className="text-center">
-        <div className="text-yellow-400 text-2xl font-bold mb-4">Processing...</div>
-        <div className="text-gray-200 text-lg">Determining anchor selection</div>
+        <div className="text-red-500 text-2xl font-bold mb-4">PROCESSING...</div>
+        <div className="text-gray-200 text-lg">DETERMINING ANCHOR SELECTION</div>
       </div>
     </div>
   );

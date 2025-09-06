@@ -253,7 +253,7 @@ export function useQuizEngine() {
     });
   }, []);
 
-  const addQuestionToHistory = useCallback((phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype', lineId: string, questionId: string, choice: string) => {
+  const addQuestionToHistory = useCallback((phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => {
     setState(prev => ({
       ...prev,
       questionHistory: [

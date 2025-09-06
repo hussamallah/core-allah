@@ -466,7 +466,7 @@ export function Summary({ state, onSIFCalculate, onFinalizeSIFWithInstall, onRes
         {/* Header */}
         <div className="bg-gray-900 border border-yellow-400 rounded-2xl p-4 mb-6 text-center">
           <h1 className="text-2xl font-bold text-yellow-400">
-            {primary.family} → {primaryArchetype} | Prize = {canonicalPrize}
+            → {primary.family}:{primaryArchetype} | Prize = {canonicalPrize}
           </h1>
           <div className="text-sm text-gray-400 mt-2">
             Face Color: <span className="font-semibold" style={{ color: ARCHETYPE_COLORS[primaryArchetype] || '#ffffff' }}>
@@ -507,34 +507,6 @@ export function Summary({ state, onSIFCalculate, onFinalizeSIFWithInstall, onRes
           </div>
         </div>
 
-        {/* Prize/Mirror/Secondary Canon Display */}
-        {prizeMirrorResult && (
-          <div className="bg-gradient-to-r from-blue-900 to-purple-900 border border-blue-400 rounded-2xl p-6 mb-4">
-            <h2 className="text-xl font-bold text-blue-200 mb-4">Canon Result Card</h2>
-            <div className="space-y-3 text-sm">
-              <div className="bg-black/20 rounded-lg p-3">
-                <div className="font-bold text-yellow-300 mb-2">Header:</div>
-                <div className="text-white">{prizeMirrorResult.resultCard.header}</div>
-              </div>
-              <div className="bg-black/20 rounded-lg p-3">
-                <div className="font-bold text-yellow-300 mb-2">Section 1:</div>
-                <div className="text-white">{prizeMirrorResult.resultCard.section1}</div>
-              </div>
-              <div className="bg-black/20 rounded-lg p-3">
-                <div className="font-bold text-yellow-300 mb-2">Section 2:</div>
-                <div className="text-white">{prizeMirrorResult.resultCard.section2}</div>
-              </div>
-              <div className="bg-black/20 rounded-lg p-3">
-                <div className="font-bold text-yellow-300 mb-2">Section 3:</div>
-                <div className="text-white">{prizeMirrorResult.resultCard.section3}</div>
-              </div>
-              <div className="bg-black/20 rounded-lg p-3">
-                <div className="font-bold text-yellow-300 mb-2">Footer:</div>
-                <div className="text-white">{prizeMirrorResult.resultCard.footer}</div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Section 3 — Secondary Current */}
         <div className="bg-gray-900 border border-gray-600 rounded-2xl p-6 mb-4">
@@ -612,39 +584,6 @@ export function Summary({ state, onSIFCalculate, onFinalizeSIFWithInstall, onRes
           </div>
         </div>
 
-        {/* Action Plan */}
-        <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-bold">Action Plan (Path to Prize)</h2>
-            <span className="text-xs text-gray-400">Probes target edges, not identity</span>
-          </div>
-                  <div>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-gray-400 text-sm">Probe 1:</span>
-              <span className="text-sm">"Claim your full key."</span>
-                  </div>
-            <ul className="text-sm text-gray-400 ml-4 space-y-1">
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">A</span> One clear stake in the ground.</li>
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">B</span> Share the stake, invite a counter.</li>
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">C</span> No stake yet — observe the pull.</li>
-            </ul>
-            <div className="h-px bg-gray-700 my-2"></div>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-gray-400 text-sm">Probe 2:</span>
-              <span className="text-sm">"Claim bias on cause."</span>
-                  </div>
-            <ul className="text-sm text-gray-400 ml-4 space-y-1">
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">A</span> Anchor the bias openly.</li>
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">B</span> Name the doubt.</li>
-              <li><span className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs mr-2">C</span> Hold both; test together.</li>
-            </ul>
-            <div className="flex justify-end mt-2">
-              <button className="px-3 py-2 border border-yellow-400 text-yellow-400 bg-transparent rounded-lg text-sm font-semibold hover:bg-yellow-400 hover:text-black transition-colors">
-                Print / Save PDF
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Traditional Results - Full Width */}
         <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">

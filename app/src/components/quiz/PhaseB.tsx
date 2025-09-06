@@ -9,7 +9,7 @@ interface PhaseBProps {
   onChoice: (lineId: string, choice: string) => void;
   onProceedToC: () => void;
   onAddUsedQuestion: (questionId: string) => void;
-  onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E', lineId: string, questionId: string, choice: string) => void;
+  onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
   onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void;
 }
 
@@ -31,18 +31,17 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
       
       const timer = setTimeout(() => {
         onProceedToC();
-      }, 1000);
+      }, 1700);
       return () => clearTimeout(timer);
     }
   }, [remaining.length, onProceedToC]);
 
   if (remaining.length === 0) {
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+      <div className="bg-gray-900 rounded-xl p-4 min-h-[300px] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <div className="text-yellow-400 text-xl font-medium">Processing your choices...</div>
-          <div className="text-gray-400 text-sm mt-2">Moving to Step 3</div>
+          <div className="animate-spin w-6 h-6 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-3"></div>
+          <div className="text-red-500 text-lg font-medium">THE ENGINE IS ADAPTING...</div>
         </div>
       </div>
     );
@@ -79,8 +78,8 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
 
   if (availableQuestions.length === 0) {
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-        <div className="text-red-400 text-xl font-medium">
+      <div className="bg-gray-900 rounded-xl p-4 min-h-[300px]">
+        <div className="text-red-400 text-lg font-medium">
           No question available for {line.id} {type} Round {round}. Fix your bank or restart.
         </div>
       </div>
@@ -116,22 +115,22 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
   return (
     <div className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
       {/* Question Card */}
-      <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
-        <div className="mb-4">
+      <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
+        <div className="mb-4 text-center">
           <h2 className="text-white text-xl font-semibold">{line.id}</h2>
         </div>
         
-        <p className="text-gray-100 text-lg leading-relaxed mb-6">{question.prompt}</p>
+        <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>
       </div>
 
       {/* Options */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <button
           onClick={() => handleChoice('C')}
-          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-yellow-300 transition-colors">
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
             <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.A}</span>
@@ -140,10 +139,10 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
         
         <button
           onClick={() => handleChoice(type === "CO" ? "O" : "F")}
-          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-yellow-300 transition-colors">
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
             <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.B}</span>

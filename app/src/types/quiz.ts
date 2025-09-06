@@ -50,7 +50,7 @@ export interface QuizLine {
 }
 
 export interface QuestionHistoryEntry {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
   questionId: string;
   lineId: string;
   choice: string;
@@ -180,7 +180,7 @@ export function getPrizeMirror(archetype: string): string {
 }
 
 export interface QuizState {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
   lines: QuizLine[];
   anchor: string | null;
   usedQuestions: string[];
@@ -302,16 +302,9 @@ export interface Decision {
   pick: string;
 }
 
-export interface QuestionHistoryEntry {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype';
-  lineId: string;
-  questionId: string;
-  choice: string;
-  timestamp: number;
-}
 
 export interface QuizState {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary';
   lines: QuizLine[];
   anchor: string | null;
   usedQuestions: string[];
