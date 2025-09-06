@@ -3,8 +3,7 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "outputDirectory": "app/.next",
-  "rootDirectory": "app",
+  "outputDirectory": ".next",
   "functions": {
     "app/api/**/*.ts": {
       "runtime": "nodejs18.x"
