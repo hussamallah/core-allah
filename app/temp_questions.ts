@@ -1723,10 +1723,10 @@ export const SEVERITY_PROBE_QUESTIONS: SeverityProbeQuestion[] = [
     "phase": "D",
     "line": "Truth",
     "lineId": "Truth",
-    "prompt": "Do you ship claims without checks when rushed?",
+    "prompt": "Do you ignore data that contradicts your view?",
     "options": {
-      "A": "No, I check anyway.",
-      "B": "Yes, I skip the checks."
+      "A": "No, I examine all data.",
+      "B": "Yes, I focus on supporting data."
     },
     "mappings": {
       "A": "C",

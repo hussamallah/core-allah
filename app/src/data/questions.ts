@@ -1,5 +1,5 @@
 import { FamilyCard, DuelQuestion, ModuleQuestion, FinalProbeQuestion, SeverityProbeQuestion, ArchetypeQuestion } from '@/types/quiz';
-import questionsData from '../../../questions_template.json';
+import questionsData from '../../../questions_template_upgraded.json';
 
 export const FAMILY_CARDS: FamilyCard[] = [
   {
