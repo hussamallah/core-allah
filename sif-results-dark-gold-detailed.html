@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SIF Results — Dark Gold (Detailed)</title>
+  <style>
+    :root{
+      --bg:#000000;
+      --panel:#0a0a0a;
+      --ink:#ffffff;
+      --muted:#c7c7c7;
+      --line:#2a2a2a;
+      --line-soft:#1a1a1a;
+      --gold:#e6c86e;  /* light gold for borders & highlights */
+      --gold-deep:#d4af37;
+      --chip-bg:transparent;
+      --accent:#ffffff;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{background:var(--bg);color:var(--ink);margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif;}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px}
+    h1,h2,h3{margin:0 0 12px 0;font-weight:700;letter-spacing:.2px}
+    h1{font-size:22px}
+    h2{font-size:18px}
+    h3{font-size:16px;color:var(--muted)}
+    .subtle{color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .cols-2{grid-template-columns:repeat(2,1fr)}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+    }
+    .header{display:flex;gap:16px;align-items:stretch;margin-bottom:16px}
+    .summary{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+    .kv{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+    .kv .k{color:var(--muted);font-size:13px}
+    .kv .v{font-weight:600}
+    .chip, .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:2px 10px;border:1px solid var(--gold);
+      color:var(--gold);background:var(--chip-bg);
+      border-radius:999px;font-size:12px;white-space:nowrap;
+    }
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .bar{
+      position:relative;background:#111;border:1px solid var(--line-soft);
+      height:10px;border-radius:999px;overflow:hidden;flex:1;
+    }
+    .bar > i{
+      position:absolute;inset:0 0 0 0;display:block;width:0;height:100%;
+      background:var(--accent);
+      opacity:.9;
+    }
+    .bar.gold > i{ background:var(--gold); }
+    .grid-table{width:100%;border-collapse:collapse}
+    .grid-table th,.grid-table td{
+      padding:10px 12px;border-bottom:1px solid var(--line);
+      text-align:left;font-size:14px;
+    }
+    .grid-table th{color:var(--muted);font-weight:600}
+    .grid-table tr:nth-child(even){background:#0b0b0b}
+    .right{text-align:right}
+    .mono{font-family:var(--mono)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:4px 0 10px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .soft{color:var(--muted)}
+    .tiny{font-size:12px;color:var(--muted)}
+    .divider{height:1px;background:var(--line);margin:8px 0 4px}
+    .list{margin:0;padding-left:18px}
+    .list li{margin:6px 0}
+    .footer-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+    .btn{
+      appearance:none;border:1px solid var(--line);background:#0b0b0b;color:var(--ink);
+      padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600
+    }
+    .btn.print{border-color:var(--gold);color:var(--gold)}
+    .pillset{display:flex;gap:6px;flex-wrap:wrap}
+    .score-row{display:flex;gap:10px;align-items:center;margin:8px 0}
+    .score-row .label{width:160px;white-space:nowrap}
+    .score-row .val{width:44px;text-align:right}
+    .muted{color:#9c9c9c}
+    /* layout tweaks for narrow screens */
+    @media (max-width: 860px){
+      .summary{grid-template-columns:1fr}
+      .cols-3{grid-template-columns:1fr}
+      .cols-2{grid-template-columns:1fr}
+      .score-row .label{width:120px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div class="card" style="flex:1">
+        <h1>SIF Results</h1>
+        <div class="kv"><span class="k">Session:</span><span class="v mono">#SR-2025‑001</span></div>
+        <div class="kv"><span class="k">User:</span><span class="v">Sample User</span></div>
+        <div class="tiny">Dark / Gold layout — verdict is at the bottom with explanation.</div>
+      </div>
+      <div class="card" style="flex:2">
+        <div class="summary">
+          <div>
+            <h3>Primary</h3>
+            <div class="kv"><span class="k">Family</span><span class="v">Bonding</span></div>
+            <div class="kv"><span class="k">Face</span><span class="v">Partner</span></div>
+            <div class="pillset">
+              <span class="chip">C</span><span class="chip">C</span><span class="chip">O</span>
+              <span class="chip">C</span><span class="chip">F</span>
+            </div>
+          </div>
+          <div>
+            <h3>Secondary (SIF)</h3>
+            <div class="kv"><span class="k">Family</span><span class="v">Control</span></div>
+            <div class="kv"><span class="k">Face</span><span class="v">Sovereign</span></div>
+            <div class="kv"><span class="k">Signal Index</span><span class="v mono">0.667</span></div>
+            <div class="kv"><span class="k">Noise Index</span><span class="v mono">0</span></div>
+            <div class="pillset">
+              <span class="chip">C</span><span class="chip">C</span><span class="chip">C</span>
+            </div>
+          </div>
+          <div>
+            <h3>Prize</h3>
+            <div class="kv"><span class="k">Mapped Prize</span><span class="v">Catalyst</span></div>
+            <div class="kv"><span class="k">Mirror</span><span class="v">Catalyst</span></div>
+            <div class="pillset">
+              <span class="chip">Prize‑Aligned</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid cols-2">
+      <div class="card">
+        <div class="section-title">
+          <h2>Family Ladder</h2>
+          <span class="tiny">C/O/F by family</span>
+        </div>
+        <table class="grid-table mono">
+          <thead><tr><th>Family</th><th class="right">C</th><th class="right">O</th><th class="right">F</th><th class="right">Purity</th></tr></thead>
+          <tbody>
+            <tr><td>Control</td><td class="right">2</td><td class="right">0</td><td class="right">0</td><td class="right">3.0</td></tr>
+            <tr><td>Pace</td><td class="right">2</td><td class="right">1</td><td class="right">0</td><td class="right">2.6</td></tr>
+            <tr><td>Boundary</td><td class="right">1</td><td class="right">0</td><td class="right">1</td><td class="right">2.0</td></tr>
+            <tr><td>Truth</td><td class="right">2</td><td class="right">1</td><td class="right">0</td><td class="right">2.6</td></tr>
+            <tr><td>Recognition</td><td class="right">0</td><td class="right">1</td><td class="right">1</td><td class="right">0.6</td></tr>
+            <tr><td>Bonding</td><td class="right">3</td><td class="right">1</td><td class="right">1</td><td class="right">2.6</td></tr>
+            <tr><td>Stress</td><td class="right">1</td><td class="right">2</td><td class="right">1</td><td class="right">1.6</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>Face Scoreboard</h2>
+          <span class="tiny">Top 6 shown</span>
+        </div>
+        <div class="score-row">
+          <div class="label">Control • Sovereign</div>
+          <div class="bar gold"><i style="width:90%"></i></div>
+          <div class="val mono">0.90</div>
+        </div>
+        <div class="score-row">
+          <div class="label">Truth • Seeker</div>
+          <div class="bar"><i style="width:70%"></i></div>
+          <div class="val mono">0.70</div>
+        </div>
+        <div class="score-row">
+          <div class="label">Truth • Architect</div>
+          <div class="bar"><i style="width:66%"></i></div>
+          <div class="val mono">0.66</div>
+        </div>
+        <div class="score-row">
+          <div class="label">Bonding • Partner</div>
+          <div class="bar"><i style="width:64%"></i></div>
+          <div class="val mono">0.64</div>
+        </div>
+        <div class="score-row">
+          <div class="label">Boundary • Equalizer</div>
+          <div class="bar"><i style="width:50%"></i></div>
+          <div class="val mono">0.50</div>
+        </div>
+        <div class="score-row">
+          <div class="label">Pace • Visionary</div>
+          <div class="bar"><i style="width:44%"></i></div>
+          <div class="val mono">0.44</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid cols-2" style="margin-top:16px">
+      <div class="card">
+        <div class="section-title">
+          <h2>Action Plan (Path to Prize)</h2>
+          <span class="tiny">Probes target edges, not identity</span>
+        </div>
+        <div>
+          <div class="kv"><span class="k">Probe 1:</span><span class="v">“Claim your full key.”</span></div>
+          <ul class="list soft">
+            <li><span class="chip">A</span> One clear stake in the ground.</li>
+            <li><span class="chip">B</span> Share the stake, invite a counter.</li>
+            <li><span class="chip">C</span> No stake yet — observe the pull.</li>
+          </ul>
+          <div class="divider"></div>
+          <div class="kv"><span class="k">Probe 2:</span><span class="v">“Claim bias on cause.”</span></div>
+          <ul class="list soft">
+            <li><span class="chip">A</span> Anchor the bias openly.</li>
+            <li><span class="chip">B</span> Name the doubt.</li>
+            <li><span class="chip">C</span> Hold both; test together.</li>
+          </ul>
+          <div class="footer-actions">
+            <button class="btn print" onclick="window.print()">Print / Save PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>Traditional Results</h2>
+          <span class="tiny">For comparison only</span>
+        </div>
+        <div class="grid cols-2">
+          <div>
+            <div class="kv"><span class="k">Line</span><span class="v">Bonding</span></div>
+          </div>
+          <div>
+            <div class="kv"><span class="k">Prize‑chain</span><span class="v mono">CC C F CF</span></div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="section-title">
+            <h3>Per‑line details</h3>
+          </div>
+          <table class="grid-table mono">
+            <thead>
+              <tr><th>Line</th><th>Plays</th><th>Probe picks</th><th>Phase B picks</th><th>Module decision</th><th>Votes</th><th>Purity</th><th>F severity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Control</td><td>No</td><td>—</td><td><span class="chip">C</span><span class="chip">C</span></td><td>—</td><td class="right">2</td><td class="right">2.6</td><td class="right">0</td></tr>
+              <tr><td>Pace</td><td>No</td><td>—</td><td><span class="chip">C</span><span class="chip">C</span></td><td>—</td><td class="right">2</td><td class="right">2.6</td><td class="right">0</td></tr>
+              <tr><td>Boundary</td><td>—</td><td><span class="chip">C</span><span class="chip">F</span></td><td>—</td><td>—</td><td class="right">2</td><td class="right">2.0</td><td class="right">1</td></tr>
+              <tr><td>Truth</td><td>—</td><td><span class="chip">C</span><span class="chip">O</span><span class="chip">C</span></td><td>—</td><td>—</td><td class="right">3</td><td class="right">2.6</td><td class="right">0</td></tr>
+              <tr><td>Recognition</td><td>—</td><td><span class="chip">O</span><span class="chip">C</span><span class="chip">C</span></td><td><span class="chip">O</span><span class="chip">F</span></td><td>—</td><td class="right">5</td><td class="right">0.6</td><td class="right">1</td></tr>
+              <tr><td>Bonding</td><td>No</td><td>—</td><td><span class="chip">C</span><span class="chip">O</span><span class="chip">C</span><span class="chip">F</span></td><td>—</td><td class="right">5</td><td class="right">2.6</td><td class="right">1</td></tr>
+              <tr><td>Stress</td><td>—</td><td><span class="chip">O</span><span class="chip">O</span><span class="chip">C</span></td><td>—</td><td>—</td><td class="right">3</td><td class="right">1.6</td><td class="right">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:16px">
+      <div class="section-title">
+        <h2>Transcript Chips</h2>
+        <span class="tiny">Lightweight evidence flags</span>
+      </div>
+      <div class="chips">
+        <span class="chip">“I’ll take the call.”</span>
+        <span class="chip">Left the door open.</span>
+        <span class="chip">Named the doubt.</span>
+        <span class="chip">Stood ground in push.</span>
+        <span class="chip">Invited counter.</span>
+      </div>
+    </section>
+
+    <!-- FINAL VERDICT AT THE BOTTOM -->
+    <section class="card" style="margin-top:16px;border-color:var(--gold)">
+      <div class="section-title">
+        <h2>Final Verdict &amp; Why</h2>
+        <span class="tiny">Placed after all evidence</span>
+      </div>
+      <div class="grid cols-3">
+        <div>
+          <div class="kv"><span class="k">Primary</span><span class="v">Bonding • Partner</span></div>
+          <div class="kv"><span class="k">Secondary (SIF)</span><span class="v">Control • Sovereign</span></div>
+          <div class="kv"><span class="k">Prize</span><span class="v">Catalyst</span></div>
+        </div>
+        <div>
+          <div class="kv"><span class="k">Badge</span><span class="v chip">Not yet aligned</span></div>
+          <div class="kv"><span class="k">Alignment</span><span class="v">Secondary face is not yet the Prize.</span></div>
+          <div class="kv"><span class="k">Friction</span><span class="v">Boundary, Recognition, Bonding</span></div>
+        </div>
+        <div class="mono">
+          <div class="kv"><span class="k">Why</span></div>
+          <div class="tiny" style="margin-top:6px">
+            • Secondary rose on strong Control family C votes (2) with zero O/F noise.<br/>
+            • Prize maps to Catalytic drive; current secondary acts upstream, not prize‑aligned.<br/>
+            • Evidence chips show decisive calls but hesitation in Recognition &amp; Boundary flows.<br/>
+            • Next step: run two probes (above). If they land C/C, recheck badge immediately.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="soft tiny" style="text-align:center;margin-top:12px">
+      Built for SIF engine — dark/gold detailed template. Replace sample values with live data.
+    </footer>
+  </div>
+</body>
+</html>

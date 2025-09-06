@@ -1,0 +1,21 @@
+{
+  "name": "typescript-app-engine",
+  "version": "1.0.0",
+  "description": "TypeScript core engine with Next.js 15+ frontend",
+  "private": true,
+  "workspaces": [
+    "core-engine",
+    "app"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "build": "pnpm --filter core-engine build && pnpm --filter app build",
+    "type-check": "pnpm --filter core-engine type-check && pnpm --filter app type-check",
+    "lint": "pnpm --filter core-engine lint && pnpm --filter app lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "pnpm@8.0.0"
+}

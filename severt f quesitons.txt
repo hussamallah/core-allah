@@ -1,0 +1,135 @@
+Phase D — Severity Probes (Canonical)
+
+D-SEV-CTRL
+
+phase: D
+
+line: Control
+
+trigger: if Control = F
+
+prompt: “When you had to call it, what happened?”
+
+options:
+
+A: “I paused but spoke later.” → F0.5
+
+B: “I stayed quiet until it passed.” → F1
+
+C: “I gave no call at all.” → F0
+
+D-SEV-PACE
+
+phase: D
+
+line: Pace
+
+trigger: if Pace = F
+
+prompt: “When time pressed, what happened?”
+
+options:
+
+A: “I slowed a little, then moved.” → F0.5
+
+B: “I stalled most of the task.” → F1
+
+C: “I froze; nothing got done.” → F0
+
+D-SEV-BOUND
+
+phase: D
+
+line: Boundary
+
+trigger: if Boundary = F
+
+prompt: “When asked past your limit, what happened?”
+
+options:
+
+A: “I said yes once, then fixed later.” → F0.5
+
+B: “I kept saying yes and bent.” → F1
+
+C: “I dropped my line completely.” → F0
+
+D-SEV-TRUTH
+
+phase: D
+
+line: Truth
+
+trigger: if Truth = F
+
+prompt: “When facts were off, what happened?”
+
+options:
+
+A: “I let it slide once, then fixed later.” → F0.5
+
+B: “I held back most of the time.” → F1
+
+C: “I stayed silent and hid the error.” → F0
+
+D-SEV-RECOG
+
+phase: D
+
+line: Recognition
+
+trigger: if Recognition = F
+
+prompt: “When credit was on the line, what happened?”
+
+options:
+
+A: “I missed my chance once.” → F0.5
+
+B: “I stayed quiet more than once.” → F1
+
+C: “I never claimed it at all.” → F0
+
+D-SEV-BOND
+
+phase: D
+
+line: Bonding
+
+trigger: if Bonding = F
+
+prompt: “When others leaned on you, what happened?”
+
+options:
+
+A: “I gave too much once, then stopped.” → F0.5
+
+B: “I kept giving up my time.” → F1
+
+C: “I dropped my needs completely.” → F0
+
+D-SEV-STRESS
+
+phase: D
+
+line: Stress
+
+trigger: if Stress = F
+
+prompt: “When pressure hit, what happened?”
+
+options:
+
+A: “I slowed down but got moving soon.” → F0.5
+
+B: “I stalled most of the time.” → F1
+
+C: “I froze and did nothing.” → F0
+
+That’s 7 severity probes, 3 options each. Each one ties directly to an F verdict, with graded fail depth. This way you:
+
+Tag severity in the 7-letter code (F0/F0.5/F1).
+
+Show the exact “where it broke” in the Chamber heatmap.
+
+Sell the override card right there (“Mind Break” if Stress = F, “Visibility” if Recognition = F, etc.).

@@ -1,0 +1,53 @@
+# Node.js dependencies (regenerate with pnpm install)
+node_modules/
+.pnpm-store/
+
+# Build outputs and caches (regenerate with pnpm build)
+.next/
+.turbo/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Vercel deployment files
+.vercel/
+
+# IDE and editor files
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+*.tmp
+*.backup
+*.bak
+
+# Environment files (should be configured per environment)
+.env*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Package manager lock files (keep only pnpm-lock.yaml)
+package-lock.json
+yarn.lock
+
+# Large image files (keep only essential ones)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+!core-1.png

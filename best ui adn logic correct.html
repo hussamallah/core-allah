@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ground Zero — Quiz Engine (Minimal UI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #12151c;
+      --muted: #a6adbb;
+      --text: #e8ecf1;
+      --accent: #89b4fa;
+      --good: #86efac;
+      --warn: #fde047;
+      --bad: #f87171;
+      --border: #1f2430;
+      --btn: #1a1f2b;
+      --btnh: #223047;
+      --sel: #23324d;
+      --selBorder: #35507d;
+      --selGlow: rgba(137,180,250,.25);
+    }
+    * { box-sizing: border-box; }
+    html, body { background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial; margin: 0; }
+    .wrap { max-width: 980px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.8rem; margin: 0 0 .5rem; }
+    h2 { font-size: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: .5rem; margin-top: 1.6rem; }
+    p.small { color: var(--muted); margin-top: .3rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+    .btn { background: var(--btn); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: .6rem .8rem; cursor: pointer; }
+    .btn:hover { background: var(--btnh); }
+    .btn.primary { background: #2a3450; border-color: #314060; }
+    .btnbar { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .8rem; }
+    .muted { color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    th, td { padding:.6rem .7rem; border-bottom: 1px solid var(--border); text-align:left; }
+    th { background:#151a22; color:var(--muted); font-weight:600; }
+
+    /* Progress bar */
+    .progress { height:10px; background:#1a1f2b; width:100%; border-radius:999px; overflow:hidden; border:1px solid var(--border); }
+    .progress > div { height:100%; width:0%; background: var(--good); transition: width .25s ease; }
+
+    /* Phase A selectable cards */
+    .select-card {
+      border-radius: 14px;
+      padding: .9rem;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #131823, #10131a);
+      cursor: pointer;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .04s ease;
+      display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+      user-select: none;
+    }
+    .select-card:hover { border-color: var(--selBorder); box-shadow: 0 0 0 6px var(--selGlow); }
+    .select-card.selected {
+      background: linear-gradient(180deg, var(--sel), #1a2436);
+      border-color: var(--selBorder);
+      box-shadow: 0 0 0 8px var(--selGlow);
+      transform: translateY(-1px);
+    }
+    .checkmark {
+      width: 26px; height: 26px; border-radius: 999px;
+      border: 2px solid var(--border); display:flex; align-items:center; justify-content:center;
+      color: transparent; background: #0e1320;
+      transition: all .15s ease;
+      flex: 0 0 auto;
+    }
+    .select-card:hover .checkmark { border-color: var(--selBorder); }
+    .select-card.selected .checkmark {
+      color: #e8ecf1; border-color: var(--good); background: #0f1b2c;
+    }
+    .checkmark svg { width: 16px; height: 16px; }
+
+    /* Choice buttons (CO/CF, etc.) */
+    .choicebar { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.6rem; }
+    .choicebtn {
+      border:1px solid var(--border); background: var(--btn); color: var(--text);
+      border-radius: 12px; padding: .65rem .9rem; cursor:pointer;
+      transition: background .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+      min-width: 120px; text-align:center; user-select: none;
+    }
+    .choicebtn:hover { background: var(--btnh); border-color: var(--selBorder); box-shadow: 0 0 0 4px var(--selGlow); }
+    .choicebtn.locked { opacity:.6; pointer-events:none; }
+    .choicebtn.selected { background:#203256; border-color:#3a5d9b; box-shadow: 0 0 0 6px var(--selGlow); transform: translateY(-1px); }
+
+    .footer { margin: 2rem 0; color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Ground Zero — Quiz Engine</h1>
+    <p class="small">Minimal UI per your rules: no streaks, no badges, no scores. Hover to highlight. Clicking anywhere selects and visually locks per prompt. F-severity preserved.</p>
+
+    <div class="progress" aria-label="progress">
+      <div id="progressFill"></div>
+    </div>
+
+    <div id="app"></div>
+    <div class="footer">© Spec implementation for testing. No tracking; results held in-memory only.</div>
+  </main>
+
+<script>
+(function() {
+  const LINES = ["Control","Pace","Boundary","Truth","Recognition","Bonding","Stress"];
+
+  const HUD = { progress: document.getElementById("progressFill") };
+  const gamify = { stepsDone: 0, stepsTotal: 6 /*B*/ + 12 /*C modules*/ };
+  function stepDone(extra=0) {
+    gamify.stepsDone += 1;
+    gamify.stepsTotal += extra;
+    const pct = Math.max(0, Math.min(100, Math.round((gamify.stepsDone / gamify.stepsTotal) * 100)));
+    HUD.progress.style.width = pct + "%";
+  }
+
+  const state = {
+    phase: "A",
+    lines: LINES.map(id => ({
+      id,
+      selectedA: false,
+      B: { picks: [], C_hits: 0, O_hits: 0, C_evidence: 0.0, F_flag: false },
+      mod: { decisions: [] }, // CO1, CO2, CF
+      verdict: null,
+      fSeverity: null
+    })),
+    anchor: null,
+  };
+  const byId = id => state.lines.find(l => l.id === id);
+  const selectedA = () => state.lines.filter(l => l.selectedA);
+  const nonA = () => state.lines.filter(l => !l.selectedA);
+
+  function render() {
+    const app = document.getElementById("app");
+    app.innerHTML = "";
+    if (state.phase === "A") return renderA(app);
+    if (state.phase === "B") return renderB(app);
+    if (state.phase === "C") return renderC(app);
+    if (state.phase === "D") return renderD(app);
+    if (state.phase === "E") return renderE(app);
+    if (state.phase === "Summary") return renderSummary(app);
+  }
+
+  // Phase A
+  function renderA(root) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>Phase A — Pick 3 Lines</h2>
+      <p class="muted">Click a card to select. Hover highlights; selected cards show a check. Exactly three required.</p>
+      <div class="grid" id="agrid"></div>
+      <div class="btnbar"><button class="btn primary" id="startB" disabled>Start Phase B</button></div>
+    `;
+    root.appendChild(card);
+    const grid = card.querySelector("#agrid");
+
+    state.lines.forEach(line => {
+      const el = document.createElement("div");
+      el.className = "select-card" + (line.selectedA ? " selected" : "");
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-pressed", line.selectedA ? "true" : "false");
+      el.innerHTML = `
+        <div><strong>${line.id}</strong></div>
+        <div class="checkmark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20.285 6.709a1 1 0 0 1 0 1.414l-9.9 9.9a1 1 0 0 1-1.414 0l-4.243-4.243a1 1 0 0 1 1.414-1.414l3.536 3.536 9.193-9.193a1 1 0 0 1 1.414 0z"/></svg>
+        </div>`;
+      el.addEventListener("click", () => {
+        const cur = selectedA().length;
+        if (!line.selectedA && cur >= 3) return; // cap at 3
+        line.selectedA = !line.selectedA;
+        el.classList.toggle("selected", line.selectedA);
+        el.setAttribute("aria-pressed", line.selectedA ? "true" : "false");
+        render(); // re-eval button disabled state
+      });
+      grid.appendChild(el);
+    });
+
+    const btn = card.querySelector("#startB");
+    btn.disabled = selectedA().length !== 3;
+    btn.addEventListener("click", () => {
+      selectedA().forEach(l => l.B = { picks: [], C_hits: 0, O_hits: 0, C_evidence: 0.6, F_flag: false });
+      state.phase = "B";
+      render();
+    });
+  }
+
+  // Phase B
+  function renderB(root) {
+    const remaining = selectedA().filter(l => l.B.picks.length < 2);
+    const card = document.createElement("div");
+    card.className = "card";
+    const progress = `${selectedA().reduce((a,l)=>a+l.B.picks.length,0)}/6 picks`;
+    card.innerHTML = `
+      <h2>Phase B — Duels (A-lines)</h2>
+      <p class="muted">Round 1: C vs O. If O chosen, Round 2 becomes C vs F. Otherwise Round 2 is C vs O.</p>
+      <div class="muted">Progress: ${progress}</div>
+      <div id="bpanel"></div>
+    `;
+    root.appendChild(card);
+    const panel = card.querySelector("#bpanel");
+
+    if (!remaining.length) {
+      const sum = document.createElement("div");
+      sum.className = "card";
+      let html = `<h3>Phase B results</h3><table><thead><tr><th>Line</th><th>Picks</th><th>C_hits</th><th>O_hits</th><th>FacePurity</th></tr></thead><tbody>`;
+      selectedA().forEach(l => {
+        html += `<tr><td>${l.id}</td><td>${l.B.picks.join(" → ")}</td><td>${l.B.C_hits}</td><td>${l.B.O_hits}</td><td>${l.B.C_evidence.toFixed(1)}</td></tr>`;
+      });
+      html += `</tbody></table><div class="btnbar"><button class="btn primary" id="goC">Proceed to Phase C</button></div>`;
+      sum.innerHTML = html;
+      card.appendChild(sum);
+      sum.querySelector("#goC").addEventListener("click", () => { state.phase = "C"; render(); });
+      return;
+    }
+
+    const line = remaining[0];
+    const round = line.B.picks.length + 1;
+    const firstWasO = line.B.picks[0] === "O";
+    const promptType = round === 1 ? "CO" : (firstWasO ? "CF" : "CO");
+
+    const p = document.createElement("div");
+    p.className = "card";
+    p.innerHTML = `
+      <div><strong>${line.id}</strong> — Round ${round} <span class="muted">(${promptType})</span></div>
+      <div class="choicebar">
+        <button class="choicebtn" id="cbtn">Choose C</button>
+        <button class="choicebtn" id="xbtn">${promptType==="CO"?"Choose O":"Choose F"}</button>
+      </div>
+    `;
+    panel.appendChild(p);
+
+    const cbtn = p.querySelector("#cbtn");
+    const xbtn = p.querySelector("#xbtn");
+    function lockButtons(which) {
+      cbtn.classList.add("locked");
+      xbtn.classList.add("locked");
+      if (which === "C") cbtn.classList.add("selected"); else xbtn.classList.add("selected");
+    }
+    cbtn.addEventListener("click", () => {
+      line.B.picks.push("C");
+      line.B.C_hits += 1;
+      line.B.C_evidence += 1.0;
+      lockButtons("C"); stepDone();
+      setTimeout(render, 120);
+    });
+    xbtn.addEventListener("click", () => {
+      if (promptType === "CO") {
+        line.B.picks.push("O");
+        line.B.O_hits += 1;
+        line.B.F_flag = true;
+      } else {
+        line.B.picks.push("F");
+        line.B.O_hits += 1; // counts like O for tiebreaks
+        line.B.F_flag = true;
+      }
+      lockButtons(promptType === "CO" ? "O" : "F"); stepDone();
+      setTimeout(render, 120);
+    });
+  }
+
+  // Verdict table
+  function verdictFrom(decisions) {
+    const d = Object.fromEntries(decisions.map(x => [x.type, x.pick]));
+    const key = `${d["CO1"]}${d["CO2"]}${d["CF"]}`;
+    const table = {CCC:"C", CCF:"O", COC:"O", COF:"F", OCC:"O", OCF:"F", OOC:"O", OOF:"F"};
+    return table[key] || "O";
+  }
+
+  // Severity prompt
+  function renderSeverity(root, line, nextFn) {
+    const panel = document.createElement("div");
+    panel.className = "card";
+    panel.innerHTML = `
+      <div><strong>${line.id}</strong> — Severity for F</div>
+      <p class="muted">Pick severity: F1 (high), F0.5 (mid), F0 (low).</p>
+      <div class="choicebar">
+        <button class="choicebtn" id="f1">F1 (high)</button>
+        <button class="choicebtn" id="f05">F0.5 (mid)</button>
+        <button class="choicebtn" id="f0">F0 (low)</button>
+      </div>
+    `;
+    root.appendChild(panel);
+    const f1 = panel.querySelector("#f1");
+    const f05 = panel.querySelector("#f05");
+    const f0 = panel.querySelector("#f0");
+    function lock(which) {
+      f1.classList.add("locked"); f05.classList.add("locked"); f0.classList.add("locked");
+      if (which==="F1") f1.classList.add("selected");
+      if (which==="F0.5") f05.classList.add("selected");
+      if (which==="F0") f0.classList.add("selected");
+    }
+    f1.addEventListener("click", () => { line.fSeverity="high"; lock("F1"); stepDone(); setTimeout(nextFn, 120); });
+    f05.addEventListener("click", () => { line.fSeverity="mid"; lock("F0.5"); stepDone(); setTimeout(nextFn, 120); });
+    f0.addEventListener("click", () => { line.fSeverity="low"; lock("F0"); stepDone(); setTimeout(nextFn, 120); });
+  }
+
+  // Phase C — non-A modules
+  function renderC(root) {
+    const needSeverity = nonA().find(l => {
+      const by = Object.fromEntries(l.mod.decisions.map(d=>[d.type,d.pick]));
+      return by["CF"] === "F" && l.fSeverity == null;
+    });
+    if (needSeverity) { renderSeverity(root, needSeverity, () => render()); return; }
+
+    const pending = nonA().filter(l => l.mod.decisions.length < 3);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>Phase C — Modules (non-A lines)</h2>
+      <p class="muted">Each non-A line: CO1 → CO2 → CF. If O appears, switch to CF next. If CF=F, ask severity immediately.</p>
+      <div id="cpanel"></div>
+    `;
+    root.appendChild(card);
+    const cp = card.querySelector("#cpanel");
+
+    if (!pending.length) {
+      nonA().forEach(l => { l.verdict = verdictFrom(l.mod.decisions); });
+      const sum = document.createElement("div");
+      sum.className = "card";
+      let html = `<h3>Phase C results (non-A)</h3><table><thead><tr><th>Line</th><th>Decisions</th><th>ModulePurity (C count)</th><th>Verdict</th><th>F severity</th></tr></thead><tbody>`;
+      nonA().forEach(l => {
+        const ccount = l.mod.decisions.filter(d => d.pick === "C").length;
+        html += `<tr><td>${l.id}</td><td>${l.mod.decisions.map(d=>d.pick).join(" → ")}</td><td>${ccount.toFixed(1)}</td><td>${l.verdict}</td><td>${l.fSeverity || "—"}</td></tr>`;
+      });
+      html += `</tbody></table><div class="btnbar"><button class="btn primary" id="goD">Proceed to Phase D</button></div>`;
+      sum.innerHTML = html;
+      root.appendChild(sum);
+      sum.querySelector("#goD").addEventListener("click", () => { state.phase = "D"; render(); });
+      return;
+    }
+
+    const line = pending[0];
+    const k = line.mod.decisions.length;
+    const sawO = line.mod.decisions.some(d => d.type.startsWith("CO") && d.pick === "O");
+    let promptType = (k === 0 || k === 1) ? "CO" : "CF";
+    if (sawO && k < 2) promptType = "CF";
+    const label = k === 0 ? "CO1" : (k === 1 ? "CO2" : "CF");
+
+    const panel = document.createElement("div");
+    panel.className = "card";
+    panel.innerHTML = `
+      <div><strong>${line.id}</strong> — ${label} <span class="muted">(${promptType})</span></div>
+      <div class="choicebar">
+        <button class="choicebtn" id="cbtn">Choose C</button>
+        <button class="choicebtn" id="xbtn">${promptType==="CO"?"Choose O":"Choose F"}</button>
+      </div>
+    `;
+    cp.appendChild(panel);
+    const cbtn = panel.querySelector("#cbtn");
+    const xbtn = panel.querySelector("#xbtn");
+    function lockButtons(which) {
+      cbtn.classList.add("locked"); xbtn.classList.add("locked");
+      if (which === "C") cbtn.classList.add("selected"); else xbtn.classList.add("selected");
+    }
+    cbtn.addEventListener("click", () => { line.mod.decisions.push({ type: label, pick: "C" }); lockButtons("C"); stepDone(); setTimeout(render, 120); });
+    xbtn.addEventListener("click", () => {
+      const pick = promptType === "CO" ? "O" : "F";
+      line.mod.decisions.push({ type: label, pick }); lockButtons(pick); stepDone(); setTimeout(render, 120);
+    });
+  }
+
+  // Phase D — derive A-line decisions and verdicts; ask severity if CF=F
+  function preseedAlineDecisions() {
+    selectedA().forEach(l => {
+      if (l.mod.decisions.length) return;
+      const p1 = l.B.picks[0];
+      const p2 = l.B.picks[1];
+      if (!p1 || !p2) return;
+      l.mod.decisions.push({ type: "CO1", pick: p1 === "F" ? "O" : p1 });
+      if (p1 === "C") {
+        l.mod.decisions.push({ type: "CO2", pick: p2 === "F" ? "O" : p2 });
+        l.mod.decisions.push({ type: "CF",  pick: "C" });
+      } else {
+        l.mod.decisions.push({ type: "CF",  pick: p2 === "O" ? "F" : p2 });
+        l.mod.decisions.push({ type: "CO2", pick: "O" });
+      }
+    });
+  }
+  function renderD(root) {
+    preseedAlineDecisions();
+    const needSeverity = selectedA().find(l => {
+      const by = Object.fromEntries(l.mod.decisions.map(d=>[d.type,d.pick]));
+      return by["CF"] === "F" && l.fSeverity == null;
+    });
+    if (needSeverity) { renderSeverity(root, needSeverity, () => render()); return; }
+
+    selectedA().forEach(l => { l.verdict = verdictFrom(l.mod.decisions); });
+    const card = document.createElement("div");
+    card.className = "card";
+    let html = `<h2>Phase D — Calculation (A-lines)</h2>`;
+    html += `<table><thead><tr><th>Line</th><th>CO1</th><th>CO2</th><th>CF</th><th>FacePurity</th><th>Verdict</th><th>F severity</th></tr></thead><tbody>`;
+    selectedA().forEach(l => {
+      const by = Object.fromEntries(l.mod.decisions.map(d=>[d.type,d.pick]));
+      html += `<tr><td>${l.id}</td><td>${by.CO1}</td><td>${by.CO2}</td><td>${by.CF}</td><td>${l.B.C_evidence.toFixed(1)}</td><td>${l.verdict}</td><td>${l.fSeverity || "—"}</td></tr>`;
+    });
+    html += `</tbody></table><div class="btnbar"><button class="btn primary" id="goE">Proceed to Phase E (Anchor)</button></div>`;
+    card.innerHTML = html;
+    root.appendChild(card);
+    card.querySelector("#goE").addEventListener("click", () => { state.phase = "E"; render(); });
+  }
+
+  // Phase E — minimal anchor per your rule (2.6 outranks 3.0; else best <3.0; ties → prefer A else user pick)
+  function renderE(root) {
+    const facePurity = {}; selectedA().forEach(l => facePurity[l.id] = l.B.C_evidence);
+    const modulePurity = {}; nonA().forEach(l => modulePurity[l.id] = l.mod.decisions.filter(d=>d.pick==="C").length * 1.0);
+    let candidates = [];
+    const a26 = selectedA().filter(l => Math.abs(facePurity[l.id] - 2.6) < 1e-9);
+    if (a26.length) { candidates = a26.map(l => l.id); }
+    else {
+      const anyThree = nonA().filter(l => Math.abs(modulePurity[l.id] - 3.0) < 1e-9);
+      if (anyThree.length) candidates = anyThree.map(l => l.id);
+      else {
+        let best = -999; let names = [];
+        state.lines.forEach(l => {
+          const p = l.selectedA ? facePurity[l.id] : modulePurity[l.id];
+          if (Math.abs(p - 2.6) < 1e-9) return;
+          if (p < 3.0 - 1e-9) {
+            if (p > best + 1e-9) { best = p; names = [l.id]; }
+            else if (Math.abs(p - best) < 1e-9) { names.push(l.id); }
+          }
+        });
+        candidates = names;
+      }
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<h2>Phase E — Anchor Selection</h2>`;
+    root.appendChild(card);
+
+    if (candidates.length === 1) {
+      state.anchor = candidates[0];
+      card.innerHTML += `<p>Anchor chosen: <strong>${state.anchor}</strong></p><div class="btnbar"><button class="btn primary" id="goSummary">See Summary</button></div>`;
+      card.querySelector("#goSummary").addEventListener("click", () => { state.phase = "Summary"; render(); });
+      return;
+    }
+
+    const aInTie = candidates.filter(id => byId(id).selectedA);
+    let tieSet = candidates;
+    if (aInTie.length) tieSet = aInTie;
+    card.innerHTML += `<p>Select your Anchor from the tie:</p>`;
+    const bar = document.createElement("div"); bar.className = "btnbar";
+    tieSet.forEach(id => {
+      const b = document.createElement("button");
+      b.className = "btn"; b.textContent = id;
+      b.addEventListener("click", () => { state.anchor = id; state.phase = "Summary"; render(); });
+      bar.appendChild(b);
+    });
+    card.appendChild(bar);
+  }
+
+  // Summary
+  function renderSummary(root) {
+    const code = LINES.map(id => byId(id).verdict || "?").join("");
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>Results</h2>
+      <p><strong>Anchor:</strong> ${state.anchor || "—"}</p>
+      <p><strong>7-letter code:</strong> <span style="font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;">${code}</span></p>
+      <h3>Per-line details</h3>
+      <table>
+        <thead><tr><th>Line</th><th>Phase A?</th><th>Phase B picks</th><th>Module decisions</th><th>Verdict</th><th>Purity</th><th>F severity</th></tr></thead>
+        <tbody>
+          ${state.lines.map(l => {
+            const faceP = l.selectedA ? l.B.C_evidence.toFixed(1) : "-";
+            const modP = !l.selectedA ? (l.mod.decisions.filter(d=>d.pick==="C").length).toFixed(1) : "-";
+            const purity = l.selectedA ? faceP : modP;
+            return `<tr>
+              <td>${l.id}</td>
+              <td>${l.selectedA ? "Yes" : "No"}</td>
+              <td>${l.selectedA ? (l.B.picks.join(" → ") || "—") : "—"}</td>
+              <td>${l.mod.decisions.map(d=>d.pick).join(" → ") || "—"}</td>
+              <td>${l.verdict || "—"}</td>
+              <td>${purity}</td>
+              <td>${l.fSeverity || "—"}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      <div class="btnbar"><button class="btn" id="restart">Restart</button></div>
+    `;
+    root.appendChild(card);
+    card.querySelector("#restart").addEventListener("click", () => {
+      gamify.stepsDone = 0; gamify.stepsTotal = 6 + 12; HUD.progress.style.width = "0%";
+      state.phase = "A";
+      state.lines.forEach(l => {
+        l.selectedA = false;
+        l.B = { picks: [], C_hits: 0, O_hits: 0, C_evidence: 0.0, F_flag: false };
+        l.mod = { decisions: [] };
+        l.verdict = null; l.fSeverity = null;
+      });
+      state.anchor = null;
+      render();
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

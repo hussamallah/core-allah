@@ -1,0 +1,206 @@
+Alright, Phase D is the closer. Here’s how it works in your canon:
+
+* **Purpose:** finalize verdicts for all seven lines.
+* **A-lines:** we don’t repeat the whole duel — we just give the **missing slot** from Phase B. Example: if Phase B gave you CO1 and then either CO2 or CF, Phase D supplies the remaining one so every A-line has CO1, CO2, CF completed.
+* **Non-A lines:** they’ve already had CO1 → CO2 → CF in Phase C, so nothing more needed here.
+* **F-severity:** if any line resolves to F at the CF step, trigger a **severity probe** (F1 / F0.5 / F0). That’s one extra item per F line.
+
+So Phase D is two pieces:
+
+1. **Missing slot fill** for the 3 A-lines.
+2. **Severity probes** for any line that lands F.
+
+Here’s the **Phase D bank**, formatted like the rest.
+
+---
+
+## Phase D — Final Probes
+
+### CONTROL
+
+**D-CTRL-01-CO**
+
+* phase: D
+* line: Control
+* prompt: “The room waits. The choice is still open.”
+* options:
+
+  * A: “Step in and give the call now.” → C
+  * B: “Hold and let others fill it.” → O (seedF)
+
+**D-CTRL-02-CF**
+
+* phase: D
+* line: Control
+* prompt: “The plan is stalled; no one will decide.”
+* options:
+
+  * A: “Call it and push through.” → C
+  * B: “Drop the call until they agree.” → F
+
+---
+
+### PACE
+
+**D-PACE-01-CO**
+
+* phase: D
+* line: Pace
+* prompt: “Two tasks sit half-done at the end of day.”
+* options:
+
+  * A: “Pick one and finish tonight.” → C
+  * B: “Leave both; finish later.” → O (seedF)
+
+**D-PACE-02-CF**
+
+* phase: D
+* line: Pace
+* prompt: “You’re spread across many windows and lose time.”
+* options:
+
+  * A: “Shut most down and finish one now.” → C
+  * B: “Keep juggling; hope it clears.” → F
+
+---
+
+### BOUNDARY
+
+**D-BOUND-01-CO**
+
+* phase: D
+* line: Boundary
+* prompt: “You’re mid-task. Someone pings again.”
+* options:
+
+  * A: “Mute and keep on track.” → C
+  * B: “Answer now; switch threads.” → O (seedF)
+
+**D-BOUND-02-CF**
+
+* phase: D
+* line: Boundary
+* prompt: “They push past your line; you feel cornered.”
+* options:
+
+  * A: “Say no and name a later slot.” → C
+  * B: “Say yes to avoid conflict.” → F
+
+---
+
+### TRUTH
+
+**D-TRUTH-01-CO**
+
+* phase: D
+* line: Truth
+* prompt: “The group asks why this path matters.”
+* options:
+
+  * A: “Give the clear reason now.” → C
+  * B: “Soften it; let them decide.” → O (seedF)
+
+**D-TRUTH-02-CF**
+
+* phase: D
+* line: Truth
+* prompt: “You spot a mistake just before release.”
+* options:
+
+  * A: “Fix it and tell them.” → C
+  * B: “Send it and hope it’s missed.” → F
+
+---
+
+### RECOGNITION
+
+**D-RECOG-01-CO**
+
+* phase: D
+* line: Recognition
+* prompt: “Someone repeats your idea as theirs again.”
+* options:
+
+  * A: “Claim your part once, with proof.” → C
+  * B: “Stay quiet; let it go.” → O (seedF)
+
+**D-RECOG-02-CF**
+
+* phase: D
+* line: Recognition
+* prompt: “You think of hiding results to avoid dispute.”
+* options:
+
+  * A: “Keep proof and ask for credit.” → C
+  * B: “Hide work and avoid the fight.” → F
+
+---
+
+### BONDING
+
+**D-BOND-01-CO**
+
+* phase: D
+* line: Bonding
+* prompt: “A close one asks for your time again tonight.”
+* options:
+
+  * A: “Say no and name a time tomorrow.” → C
+  * B: “Say yes; push your needs aside.” → O (seedF)
+
+**D-BOND-02-CF**
+
+* phase: D
+* line: Bonding
+* prompt: “You give all to others and lose yourself.”
+* options:
+
+  * A: “Protect your need, then help later.” → C
+  * B: “Ignore your need and keep giving.” → F
+
+---
+
+### STRESS
+
+**D-STRESS-01-CO**
+
+* phase: D
+* line: Stress
+* prompt: “Three tasks all demand you at once.”
+* options:
+
+  * A: “Mute most; finish one now.” → C
+  * B: “Bounce between them.” → O (seedF)
+
+**D-STRESS-02-CF**
+
+* phase: D
+* line: Stress
+* prompt: “Under pressure, you freeze again.”
+* options:
+
+  * A: “Name one step and act.” → C
+  * B: “Do nothing; hope it passes.” → F
+
+---
+
+## Phase D — Severity Probes (F only)
+
+These trigger **only if CF = F** on a line:
+
+**D-SEV-01**
+
+* phase: D
+* kind: severity\_probe
+* prompt: “When you froze, how strong was it?”
+* options:
+
+  * A: “It passed quick; I moved soon.” → F0.5
+  * B: “It held me hard for a while.” → F1
+  * C: “It stopped me fully; I did nothing.” → F0
+
+---
+
+That’s Phase D: missing slot coverage for each line + severity probes.
+
+Do you want me to stitch **Phase A + B + C + D** into one continuous canonical bank now, or keep each phase separate for clarity?

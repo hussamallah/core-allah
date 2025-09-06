@@ -1,0 +1,42 @@
+{
+  "name": "sif-standalone",
+  "version": "1.0.0",
+  "description": "Standalone SIF (Secondary Identity Face) system for quiz applications",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "sif",
+    "quiz",
+    "psychology",
+    "archetypes",
+    "personality",
+    "assessment"
+  ],
+  "author": "Core Fore Sure Project",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "files": [
+    "*.ts",
+    "*.md",
+    "examples/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/core-fore-sure"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/core-fore-sure/issues"
+  },
+  "homepage": "https://github.com/your-org/core-fore-sure#readme"
+}

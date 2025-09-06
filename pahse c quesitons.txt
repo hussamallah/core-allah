@@ -1,0 +1,255 @@
+Alright, Phase C is the **four non-selected lines**. Each one runs a fixed sequence:
+
+* **CO1** → firmness vs softness
+* **CO2** → another firmness vs softness
+* **CF** → firmness vs fail (only after an O has been seeded)
+
+That means we need **3 items per line** × 7 lines = 21 slots total. But because in Phase C we only ever use 4 lines (the ones not picked in Phase A), we still need a full set for all 7 so the engine can rotate.
+
+Here’s the full **Phase C bank (21 items)** in the same structure you approved.
+
+---
+
+## Phase C — Module Questions (3 per line)
+
+### CONTROL
+
+**C-CTRL-01-CO**
+
+* phase: C
+* line: Control
+* prompt: “It’s late in the day. A choice is waiting.”
+* options:
+
+  * A: “Call the choice and move it now.” → C
+  * B: “Hold off; wait for others to weigh in.” → O (seedF)
+
+**C-CTRL-02-CO**
+
+* phase: C
+* line: Control
+* prompt: “Everyone pauses when a plan is needed.”
+* options:
+
+  * A: “Step in and set the plan.” → C
+  * B: “Stay quiet; let someone else speak first.” → O (seedF)
+
+**C-CTRL-03-CF**
+
+* phase: C
+* line: Control
+* prompt: “The team looks stuck on the decision.”
+* options:
+
+  * A: “Give the call and push ahead.” → C
+  * B: “Drop it until they agree.” → F
+
+---
+
+### PACE
+
+**C-PACE-01-CO**
+
+* phase: C
+* line: Pace
+* prompt: “Two tasks are due by end of day.”
+* options:
+
+  * A: “Pick one and finish it now.” → C
+  * B: “Split time; both can wait.” → O (seedF)
+
+**C-PACE-02-CO**
+
+* phase: C
+* line: Pace
+* prompt: “You’ve got 45 minutes to clear a task.”
+* options:
+
+  * A: “Start and finish in this slot.” → C
+  * B: “Pause and leave room for later.” → O (seedF)
+
+**C-PACE-03-CF**
+
+* phase: C
+* line: Pace
+* prompt: “You switch between tabs and lose track.”
+* options:
+
+  * A: “Close extras and finish one thing.” → C
+  * B: “Keep bouncing; hope it sorts out.” → F
+
+---
+
+### BOUNDARY
+
+**C-BOUND-01-CO**
+
+* phase: C
+* line: Boundary
+* prompt: “A ping comes in while you’re mid-task.”
+* options:
+
+  * A: “Mute and finish first.” → C
+  * B: “Peek now and reply fast.” → O (seedF)
+
+**C-BOUND-02-CO**
+
+* phase: C
+* line: Boundary
+* prompt: “Scope creep: they ask for ‘one more thing.’”
+* options:
+
+  * A: “Hold scope; name what fits later.” → C
+  * B: “Say yes; small adds are fine.” → O (seedF)
+
+**C-BOUND-03-CF**
+
+* phase: C
+* line: Boundary
+* prompt: “Saying no feels harsh, so you agree often.”
+* options:
+
+  * A: “Say no; set a time instead.” → C
+  * B: “Say yes now to avoid tension.” → F
+
+---
+
+### TRUTH
+
+**C-TRUTH-01-CO**
+
+* phase: C
+* line: Truth
+* prompt: “Your team asks why you chose this path.”
+* options:
+
+  * A: “State the clear reason you had.” → C
+  * B: “Soften it; say maybe.” → O (seedF)
+
+**C-TRUTH-02-CO**
+
+* phase: C
+* line: Truth
+* prompt: “A stat in your draft might be wrong.”
+* options:
+
+  * A: “Check it now and fix.” → C
+  * B: “Leave it; check later.” → O (seedF)
+
+**C-TRUTH-03-CF**
+
+* phase: C
+* line: Truth
+* prompt: “You notice the chart is wrong before send.”
+* options:
+
+  * A: “Fix and tell the group.” → C
+  * B: “Send as is; hope no one sees.” → F
+
+---
+
+### RECOGNITION
+
+**C-RECOG-01-CO**
+
+* phase: C
+* line: Recognition
+* prompt: “In a meeting, someone repeats your idea as theirs.”
+* options:
+
+  * A: “Claim your part once, with proof.” → C
+  * B: “Stay quiet; let it slide.” → O (seedF)
+
+**C-RECOG-02-CO**
+
+* phase: C
+* line: Recognition
+* prompt: “You finish work early.”
+* options:
+
+  * A: “Show it now as proof.” → C
+  * B: “Hold it until deadline.” → O (seedF)
+
+**C-RECOG-03-CF**
+
+* phase: C
+* line: Recognition
+* prompt: “To avoid conflict, you think of hiding results.”
+* options:
+
+  * A: “Keep proof and ask for credit.” → C
+  * B: “Hide it; no one can argue then.” → F
+
+---
+
+### BONDING
+
+**C-BOND-01-CO**
+
+* phase: C
+* line: Bonding
+* prompt: “A friend asks to talk late. You need sleep.”
+* options:
+
+  * A: “Say no; set a time tomorrow.” → C
+  * B: “Say yes; lose sleep.” → O (seedF)
+
+**C-BOND-02-CO**
+
+* phase: C
+* line: Bonding
+* prompt: “A teammate looks for your steady support.”
+* options:
+
+  * A: “Back them fully right now.” → C
+  * B: “Stay half-in, in case it fails.” → O (seedF)
+
+**C-BOND-03-CF**
+
+* phase: C
+* line: Bonding
+* prompt: “You skip your needs to keep others happy.”
+* options:
+
+  * A: “Protect your need, then help after.” → C
+  * B: “Help now and ignore yourself.” → F
+
+---
+
+### STRESS
+
+**C-STRESS-01-CO**
+
+* phase: C
+* line: Stress
+* prompt: “Three issues hit at once. Alerts keep buzzing.”
+* options:
+
+  * A: “Mute most; pick one and act.” → C
+  * B: “Bounce across all of them.” → O (seedF)
+
+**C-STRESS-02-CO**
+
+* phase: C
+* line: Stress
+* prompt: “Time runs out; many tasks remain.”
+* options:
+
+  * A: “Choose one and push it done.” → C
+  * B: “Hop between them all.” → O (seedF)
+
+**C-STRESS-03-CF**
+
+* phase: C
+* line: Stress
+* prompt: “Pressure builds fast and you freeze.”
+* options:
+
+  * A: “Name one step and do it.” → C
+  * B: “Do nothing and wait it out.” → F
+
+---
+
+That’s your **Phase C baseline: 21 items**. Each line has CO1, CO2, CF, balanced per your rules.
+
+Want me to keep rolling straight into **Phase D (final probes + F severity)** in the same style?
