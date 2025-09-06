@@ -298,14 +298,14 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-bold text-ivory text-xl mb-2">{line}</div>
-                  <div className="text-yellow-400 text-lg font-bold">
-                    {line === 'Control' && 'I set the call. Authority.'}
-                    {line === 'Pace' && 'I set the tempo. Direction.'}
-                    {line === 'Boundary' && 'I hold the line. Gatekeeper.'}
-                    {line === 'Truth' && 'I name reality. Clarity.'}
-                    {line === 'Recognition' && 'I make it seen. Spotlight.'}
-                    {line === 'Bonding' && 'I keep people steady. Support.'}
-                    {line === 'Stress' && 'I turn pressure into motion. Response.'}
+                  <div className="text-yellow-400 text-xl font-light uppercase tracking-wider">
+                    {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
+                    {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
+                    {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
+                    {line === 'Truth' && 'I NAME REALITY. CLARITY.'}
+                    {line === 'Recognition' && 'I MAKE IT SEEN. SPOTLIGHT.'}
+                    {line === 'Bonding' && 'I KEEP PEOPLE STEADY. SUPPORT.'}
+                    {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
                   </div>
                 </div>
                 <div className="text-yellow-400 text-sm font-semibold">Lock Anchor</div>
