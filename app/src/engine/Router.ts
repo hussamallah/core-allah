@@ -69,6 +69,8 @@ export class Router {
       'D': ['E'],
       'E': ['Archetype'],
       'Archetype': ['Summary'],
+      'Celebration': [],
+      'FinalProcessing': [],
       'Summary': [] // Terminal phase
     };
 
