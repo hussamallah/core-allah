@@ -180,7 +180,7 @@ export function getPrizeMirror(archetype: string): string {
 }
 
 export interface QuizState {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'Summary';
   lines: QuizLine[];
   anchor: string | null;
   usedQuestions: string[];
@@ -311,7 +311,7 @@ export interface QuestionHistoryEntry {
 }
 
 export interface QuizState {
-  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Summary';
+  phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'Summary';
   lines: QuizLine[];
   anchor: string | null;
   usedQuestions: string[];

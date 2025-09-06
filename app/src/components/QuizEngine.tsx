@@ -305,16 +305,22 @@ export function QuizEngine() {
   const handleProceedToE = () => {
     console.log('📈 Proceeding to Phase E');
     
-    // Calculate anchor immediately after Phase D completes
-    const anchor = calculateAnchor();
-    if (anchor) {
-      console.log('🎯 Auto-calculated anchor:', anchor);
-      setAnchor(anchor);
-      updatePhase('Archetype'); // Go to Archetype phase to determine specific archetype
-    } else {
-      console.log('🎯 Need tie-breaker, going to Phase E');
-      updatePhase('E'); // Need tie-breaker
-    }
+    // Show celebration screen first
+    updatePhase('Celebration');
+    
+    // After celebration, proceed to calculations
+    setTimeout(() => {
+      // Calculate anchor immediately after Phase D completes
+      const anchor = calculateAnchor();
+      if (anchor) {
+        console.log('🎯 Auto-calculated anchor:', anchor);
+        setAnchor(anchor);
+        updatePhase('Archetype'); // Go to Archetype phase to determine specific archetype
+      } else {
+        console.log('🎯 Need tie-breaker, going to Phase E');
+        updatePhase('E'); // Need tie-breaker
+      }
+    }, 2000); // 2 second celebration
   };
 
 
@@ -415,31 +421,46 @@ export function QuizEngine() {
   }, [calculateSIF]);
 
   return (
-    <div className="bg-black text-gray-200 font-sans relative">
-
-
-      <div className="max-w-4xl mx-auto px-4 py-8 bg-gray-900 rounded-xl">
+    <div className="bg-black text-gray-200 font-sans relative min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8 bg-gray-900 rounded-xl">
         
         {(() => {
           const { completed, total } = getProgress();
+          const getStepInfo = () => {
+            switch (state.phase) {
+              case 'A': return { step: 1, title: 'Choose your focus', description: 'Select 3 families that resonate with you' };
+              case 'B': return { step: 2, title: 'Quick choices', description: `${completed}/${total} dilemmas completed` };
+              case 'C': return { step: 3, title: 'Situations', description: `${completed}/${total} scenarios completed` };
+              case 'D': return { step: 4, title: 'Final decisions', description: `${completed}/${total} assessments completed` };
+              case 'E': return { step: 5, title: 'Your profile', description: 'Processing your results...' };
+              case 'Archetype': return { step: 5, title: 'Your profile', description: 'Determining your specific archetype...' };
+              case 'Summary': return { step: 6, title: 'Complete', description: 'Your 7-minute profile is ready!' };
+              default: return { step: 1, title: 'Getting started', description: 'This takes about 7 minutes' };
+            }
+          };
+          
+          const stepInfo = getStepInfo();
           return total > 0 && (
-            <div className="mb-4">
-              <ProgressBar progress={completed} total={total} />
-              <div className="text-center text-gray-400 text-sm mt-1">
-                {completed}/{total} {state.phase === 'A' ? 'families selected' : 
-                 state.phase === 'B' ? 'duels completed' :
-                 state.phase === 'C' ? 'module questions' :
-                 state.phase === 'D' ? 'severity assessments' :
-                 state.phase === 'E' ? 'calculations' :
-                 'steps completed'}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Step {stepInfo.step}: {stepInfo.title}</h2>
+                  <p className="text-sm text-gray-400">{stepInfo.description}</p>
+                </div>
+                {state.phase === 'A' && (
+                  <div className="text-xs text-gray-500 bg-gray-800 px-3 py-1 rounded-full">
+                    ~7 minutes
+                  </div>
+                )}
               </div>
+              <ProgressBar progress={completed} total={total} />
             </div>
           );
         })()}
 
 
         {/* Phase Content */}
-        <div id="app" className="relative">
+        <div id="app" className="relative transition-all duration-300 ease-in-out">
           {state.phase === 'A' && (
             <PhaseA
               state={state}
@@ -495,6 +516,17 @@ export function QuizEngine() {
             />
           )}
 
+
+          {state.phase === 'Celebration' && (
+            <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-6xl mb-6">🎉</div>
+                <h2 className="text-3xl font-bold text-white mb-4">Done!</h2>
+                <p className="text-xl text-gray-300 mb-2">Processing your 7-minute profile...</p>
+                <div className="animate-pulse text-gray-400 text-sm">This will just take a moment</div>
+              </div>
+            </div>
+          )}
 
           {state.phase === 'Summary' && (
             <Summary

@@ -160,45 +160,68 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     const totalSteps = totalModules + severityNeeded;
 
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-        <div className="mb-6">
-          <strong className="text-white text-2xl">{needSeverity.id}</strong>
+      <div className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+        {/* Question Card */}
+        <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
+        <div className="mb-4">
+          <h2 className="text-white text-xl font-semibold">{needSeverity.id}</h2>
         </div>
-        
-        <div className="bg-gray-700 rounded-lg p-6 border border-gray-600 mb-8">
-          <p className="text-white mb-6 text-2xl leading-relaxed font-bold">{severityQuestion.prompt}</p>
-          <div className="space-y-4">
-            <div 
-              onClick={() => handleSeverityChoice('high', 1.0)}
-              className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-            >
-              <strong className="text-yellow-400 text-xl">A:</strong> <span className="text-xl font-bold">{severityQuestion.options.A}</span>
-            </div>
-            <div 
-              onClick={() => handleSeverityChoice('mid', 0.5)}
-              className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-            >
-              <strong className="text-yellow-400 text-xl">B:</strong> <span className="text-xl font-bold">{severityQuestion.options.B}</span>
-            </div>
-            {severityQuestion.options.C && (
-              <div 
-                onClick={() => handleSeverityChoice('low', 0.0)}
-                className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-              >
-                <strong className="text-yellow-400 text-xl">C:</strong> <span className="text-xl font-bold">{severityQuestion.options.C}</span>
+          
+          <p className="text-gray-100 text-lg leading-relaxed mb-6">{severityQuestion.prompt}</p>
+        </div>
+
+        {/* Options */}
+        <div className="space-y-3">
+          <button
+            onClick={() => handleSeverityChoice('high', 1.0)}
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
+                A
               </div>
-            )}
-          </div>
+              <span className="text-gray-100 text-base font-medium leading-relaxed">{severityQuestion.options.A}</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => handleSeverityChoice('mid', 0.5)}
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
+                B
+              </div>
+              <span className="text-gray-100 text-base font-medium leading-relaxed">{severityQuestion.options.B}</span>
+            </div>
+          </button>
+          
+          {severityQuestion.options.C && (
+            <button
+              onClick={() => handleSeverityChoice('low', 0.0)}
+              className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
+                  C
+                </div>
+                <span className="text-gray-100 text-base font-medium leading-relaxed">{severityQuestion.options.C}</span>
+              </div>
+            </button>
+          )}
         </div>
-        
       </div>
     );
   }
 
   if (!pendingLine) {
     return (
-      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-        <div className="text-yellow-400 text-xl font-medium">Proceeding to Phase D…</div>
+      <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="text-yellow-400 text-xl font-medium">Processing scenarios...</div>
+          <div className="text-gray-400 text-sm mt-2">Moving to Step 4</div>
+        </div>
       </div>
     );
   }
@@ -283,31 +306,41 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
   const totalSteps = totalModules + severityNeeded;
 
   return (
-    <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}-${forceRefresh}`} className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
-
-      <div className="bg-gray-700 rounded-lg p-6 border border-gray-600">
-        <div className="mb-6">
-          <strong className="text-white text-2xl">{pendingLine.id}</strong> — <span className="text-yellow-400 text-xl">{decisionType}</span>
+    <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}-${forceRefresh}`} className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+      {/* Question Card */}
+      <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
+        <div className="mb-4">
+          <h2 className="text-white text-xl font-semibold">{pendingLine.id}</h2>
         </div>
+        
+        <p className="text-gray-100 text-lg leading-relaxed mb-6">{question.prompt}</p>
+      </div>
 
-        <div className="mb-8">
-          <p className="text-ivory mb-6 text-2xl leading-relaxed font-bold">{question.prompt}</p>
-          <div className="space-y-4">
-            <div 
-              onClick={() => handleChoice('C')}
-              className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-            >
-              <strong className="text-yellow-400 text-xl">A:</strong> <span className="text-xl font-bold">{question.options.A}</span>
+      {/* Options */}
+      <div className="space-y-3">
+        <button
+          onClick={() => handleChoice('C')}
+          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-yellow-300 transition-colors">
+              A
             </div>
-            <div 
-              onClick={() => handleChoice(type === 'CO' ? 'O' : 'F')}
-              className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-            >
-              <strong className="text-yellow-400 text-xl">B:</strong> <span className="text-xl font-bold">{question.options.B}</span>
-            </div>
+            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.A}</span>
           </div>
-        </div>
-
+        </button>
+        
+        <button
+          onClick={() => handleChoice(type === 'CO' ? 'O' : 'F')}
+          className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-left hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-yellow-300 transition-colors">
+              B
+            </div>
+            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.B}</span>
+          </div>
+        </button>
       </div>
     </div>
   );

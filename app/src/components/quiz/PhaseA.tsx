@@ -16,15 +16,19 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
 
   return (
     <div className="bg-gray-900 rounded-xl p-6">
-      <p className="text-gray-200 text-lg mb-4 font-medium">Select the three lines that resonate with your sovereign essence. Each choice shapes your alignment.</p>
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold text-white mb-2">Discover Your Core Profile</h1>
+        <p className="text-gray-300 text-lg mb-4">This takes about 7 minutes to complete</p>
+        <p className="text-gray-200 text-base">Select the three families that resonate with your sovereign essence. Each choice shapes your alignment.</p>
+      </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
         {state.lines.map((line, index) => {
           const familyCard = FAMILY_CARDS.find(card => card.family === line.id);
           return (
             <div 
               key={line.id} 
-              className={`rounded-xl p-3 border-2 cursor-pointer transition-all duration-200 flex flex-col gap-2 select-none ${
+              className={`rounded-xl p-4 border-2 cursor-pointer transition-all duration-200 flex flex-col gap-3 select-none min-h-[120px] ${
                 line.selectedA 
                   ? 'bg-gradient-to-b from-yellow-900/20 to-orange-900/20 border-yellow-400 shadow-lg shadow-yellow-400/25 transform -translate-y-0.5' 
                   : 'bg-gradient-to-b from-gray-800 to-gray-700 border-gray-600 hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/10'
@@ -73,13 +77,13 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
         <button
           onClick={onStartPhaseB}
           disabled={selectedCount !== 3}
-          className={`px-6 py-3 rounded-lg font-bold text-base transition-all duration-300 ${
+          className={`w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 min-h-[56px] ${
             selectedCount === 3
               ? 'bg-gradient-to-r from-yellow-300 to-orange-400 text-black border-none hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(251,191,36,0.6)] shadow-[0_0_15px_rgba(251,191,36,0.4)]'
               : 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-600'
           }`}
         >
-          Begin The Alignment
+          {selectedCount === 3 ? 'Continue to Step 2' : `Select ${3 - selectedCount} more families`}
         </button>
       </div>
     </div>
