@@ -208,16 +208,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
     return (
       <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
         <div className="text-center mb-8">
-          <div className="text-yellow-400 text-2xl font-bold mb-4">Phase E — Archetype Selection</div>
           <div className="text-gray-200 text-lg mb-6">Family: {phaseEState.anchor}</div>
-          <div className="text-gray-400 text-sm mb-4">Choose between:</div>
-          <div className="flex gap-4 justify-center">
-            {archetypes.map(archetype => (
-              <span key={archetype} className="px-3 py-1 bg-gray-700 rounded-lg border border-gray-600 text-white">
-                {archetype}
-              </span>
-            ))}
-          </div>
         </div>
         
         <div className="bg-gray-700 rounded-lg p-6 border border-gray-600 mb-8">
@@ -232,7 +223,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
             >
               <strong className="text-yellow-400 text-xl">A:</strong> 
               <span className="text-xl font-bold ml-2">{currentQuestion.options.A}</span>
-              <div className="text-sm text-gray-400 mt-1">
+              <div className="text-lg text-yellow-400 mt-1">
                 → {currentQuestion.map.A}
               </div>
             </div>
@@ -243,7 +234,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
             >
               <strong className="text-yellow-400 text-xl">B:</strong> 
               <span className="text-xl font-bold ml-2">{currentQuestion.options.B}</span>
-              <div className="text-sm text-gray-400 mt-1">
+              <div className="text-lg text-yellow-400 mt-1">
                 → {currentQuestion.map.B}
               </div>
             </div>

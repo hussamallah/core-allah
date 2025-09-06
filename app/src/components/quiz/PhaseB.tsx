@@ -124,13 +124,13 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
               onClick={() => handleChoice('C')}
               className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
             >
-              <strong className="text-yellow-400 text-xl">Choose C:</strong> <span className="text-xl font-bold">{question.options.A}</span>
+              <strong className="text-yellow-400 text-xl">A:</strong> <span className="text-xl font-bold">{question.options.A}</span>
             </div>
             <div 
               onClick={() => handleChoice(type === "CO" ? "O" : "F")}
               className="text-ivory p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
             >
-              <strong className="text-yellow-400 text-xl">Choose {type === "CO" ? "O" : "F"}:</strong> <span className="text-xl font-bold">{question.options.B}</span>
+              <strong className="text-yellow-400 text-xl">B:</strong> <span className="text-xl font-bold">{question.options.B}</span>
             </div>
           </div>
         </div>

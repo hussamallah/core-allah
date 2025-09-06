@@ -130,7 +130,6 @@ export default function PhaseD({
   return (
     <div className="bg-gray-900 rounded-xl p-8 min-h-[500px]">
       <div className="text-center mb-8">
-        <div className="text-yellow-400 text-2xl font-bold mb-4">Phase D — Install Question</div>
         <div className="text-gray-200 text-lg mb-6">
           Which role do you actually get installed into most often by people and context?
         </div>
@@ -149,19 +148,6 @@ export default function PhaseD({
           >
             <div className="text-white text-lg font-medium mb-2">
               {statement.statement.replace(/\*\*(.*?)\*\*/g, '$1')}
-            </div>
-            <div className="text-gray-400 text-sm mb-3">
-              *{statement.label} — {statement.family}*
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {statement.cues.map((cue, index) => (
-                <span 
-                  key={index}
-                  className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded"
-                >
-                  • {cue}
-                </span>
-              ))}
             </div>
           </button>
         ))}

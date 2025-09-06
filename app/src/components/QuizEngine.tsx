@@ -507,8 +507,8 @@ export function QuizEngine() {
           
         </div>
 
-        {/* Recording Data Display */}
-        <div className="mt-8 p-4 bg-gray-800 rounded-lg">
+        {/* Recording Data Display - TEMPORARILY HIDDEN */}
+        {/* <div className="mt-8 p-4 bg-gray-800 rounded-lg">
           <h3 className="text-white font-bold mb-2">Quiz Recording Data</h3>
           <div className="text-sm text-gray-300">
             <div>Total Records: {quizRecorder.getRecords().length}</div>
@@ -537,7 +537,7 @@ export function QuizEngine() {
 
         <div className="mt-4 text-slate-400 text-sm">
           © Spec implementation for testing. No tracking; results held in-memory only.
-        </div>
+        </div> */}
       </div>
     </div>
   );
