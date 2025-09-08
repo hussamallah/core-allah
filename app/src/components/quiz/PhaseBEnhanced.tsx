@@ -337,17 +337,7 @@ export function PhaseBEnhanced({
             <span className="text-gray-100 text-base font-medium leading-relaxed flex-1 text-left">
               {question.options.A}
             </span>
-            {keyboardEnabled && (
-              <div className="text-gray-400 text-xs">
-                Press 'A'
-              </div>
-            )}
           </div>
-          {question.enhanced?.c_flavor && (
-            <div className="text-gray-400 text-xs mt-1 text-center">
-              Flavor: {question.enhanced.c_flavor}
-            </div>
-          )}
         </button>
         
         <button
@@ -361,17 +351,7 @@ export function PhaseBEnhanced({
             <span className="text-gray-100 text-base font-medium leading-relaxed flex-1 text-left">
               {question.options.B}
             </span>
-            {keyboardEnabled && (
-              <div className="text-gray-400 text-xs">
-                Press 'B'
-              </div>
-            )}
           </div>
-          {(question.enhanced?.o_subtype || question.enhanced?.f_flavor) && (
-            <div className="text-gray-400 text-xs mt-1 text-center">
-              {type === "CO" ? `Subtype: ${question.enhanced.o_subtype}` : `Flavor: ${question.enhanced.f_flavor}`}
-            </div>
-          )}
         </button>
       </div>
 

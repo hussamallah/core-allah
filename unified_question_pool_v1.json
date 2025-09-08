@@ -20,7 +20,24 @@
       "CF1",
       "Severity1"
     ],
-    "notes": "Unified pool v1: Phase A + 28 questions (4 per line: CO1, CO2, CF1, Severity1). Phase B uses family effects, Phase C uses face effects."
+    "notes": "Unified pool v1: Phase A + 28 questions (4 per line: CO1, CO2, CF1, Severity1). Phase B uses family effects, Phase C uses face effects.",
+    "severity_probe_structure": {
+      "description": "Severity probes test family line strength under pressure",
+      "structure": {
+        "prompt": "High-pressure situation that stresses the weak line",
+        "option_a": {
+          "pick": "C",
+          "meaning": "User can still act through the line → severity light F (bend, not collapse)",
+          "effects": "famC + faceC + sevF"
+        },
+        "option_b": {
+          "pick": "F", 
+          "meaning": "Line fails under pressure → severity deep F (collapsed)",
+          "effects": "famF + faceF + sevF"
+        }
+      },
+      "scoring": "Both options give sevF points for F-severity scoring in SIF system"
+    }
   },
   "phase_a": [
     {

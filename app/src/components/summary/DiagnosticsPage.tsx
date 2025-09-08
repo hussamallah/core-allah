@@ -1,12 +1,17 @@
 import React from 'react';
 import { ExtractSnapshot } from '@/types/Extract';
+import { resolveSIFData, getFaceVsILAnalysisText } from '@/utils/sifDataResolver';
+import { QuizState, SIFResult } from '@/types/quiz';
 
 interface DiagnosticsPageProps {
   extract: ExtractSnapshot | null;
+  state?: QuizState;
+  sifResult?: SIFResult;
+  sifEngine?: any;
 }
 
-export const DiagnosticsPage: React.FC<DiagnosticsPageProps> = ({ extract }) => {
-  if (!extract) {
+export const DiagnosticsPage: React.FC<DiagnosticsPageProps> = ({ extract, state, sifResult, sifEngine }) => {
+  if (!extract || !state || !sifResult) {
     return (
       <div className="no-data bg-gray-900 border border-gray-700 rounded-2xl p-6">
         <p className="text-gray-400">No diagnostic data available. Complete the quiz to see engine diagnostics.</p>
@@ -14,30 +19,33 @@ export const DiagnosticsPage: React.FC<DiagnosticsPageProps> = ({ extract }) => 
     );
   }
 
+  // Resolve all SIF data from single source of truth
+  const sifData = resolveSIFData(state, sifResult, sifEngine);
+
   return (
     <div className="diagnostics-page">
       <h2 className="text-2xl font-bold text-yellow-400 mb-6">Engine Diagnostics</h2>
       
-      {/* Version Info */}
-      <VersionInfo extract={extract} />
+      {/* Session Metadata */}
+      <SessionMetadata extract={extract} />
       
-      {/* Anchor Analysis */}
-      <AnchorAnalysis extract={extract} />
+      {/* Identity Results */}
+      <IdentityResults sifData={sifData} />
       
-      {/* Line Paths */}
-      <LinePathsAnalysis extract={extract} />
+      {/* Face Presentation */}
+      <FacePresentation sifData={sifData} />
       
-      {/* IL Breakdown */}
-      <ILBreakdownAnalysis extract={extract} />
+      {/* Face vs IL Analysis */}
+      <FaceVsILAnalysis sifData={sifData} />
       
-      {/* Secondary Resolution */}
-      <SecondaryResolutionAnalysis extract={extract} />
+      {/* Per-Line Details */}
+      <PerLineDetails sifData={sifData} />
       
-      {/* Prize Mirror Analysis */}
-      <PrizeMirrorAnalysis extract={extract} />
+      {/* Severity Probes */}
+      <SeverityProbes sifData={sifData} />
       
-      {/* Performance Metrics */}
-      <PerformanceMetrics extract={extract} />
+      {/* Legacy Results */}
+      <LegacyResults sifData={sifData} />
       
       {/* Export Options */}
       <ExportOptions extract={extract} />
@@ -45,21 +53,19 @@ export const DiagnosticsPage: React.FC<DiagnosticsPageProps> = ({ extract }) => 
   );
 };
 
-const VersionInfo: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="version-info bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">System Information</h3>
-    <div className="version-grid grid grid-cols-2 gap-4 text-sm">
+const SessionMetadata: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
+  <div className="session-metadata bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
+    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Session Information</h3>
+    <div className="session-grid grid grid-cols-2 gap-4 text-sm">
       <div className="text-gray-300">
-        <span className="text-gray-400">Canon Version:</span> {extract.canonVersion}
+        <span className="text-gray-400">Session ID:</span> SR-2025-001
       </div>
       <div className="text-gray-300">
-        <span className="text-gray-400">Verdict Table:</span> {extract.verdictTableVersion}
+        <span className="text-gray-400">Engine Version:</span> SIF Canon v3
       </div>
-      {extract.buildHash && (
         <div className="text-gray-300">
-          <span className="text-gray-400">Build Hash:</span> {extract.buildHash}
+        <span className="text-gray-400">Timestamp:</span> {new Date().toISOString()}
         </div>
-      )}
       <div className="text-gray-300">
         <span className="text-gray-400">Total Duration:</span> {extract.timestamps.totalDuration}ms
       </div>
@@ -67,242 +73,293 @@ const VersionInfo: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
   </div>
 );
 
-const AnchorAnalysis: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="anchor-analysis bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Anchor Selection Analysis</h3>
-    <div className="anchor-details space-y-3">
-      <div className="primary-info text-sm">
-        <span className="text-gray-400">Selected:</span> 
-        <span className="text-white font-semibold ml-2">{extract.anchor.line} ({extract.anchor.archetype})</span>
-      </div>
-      <div className="selection-source text-sm">
-        <span className="text-gray-400">Source:</span> 
-        <span className="text-white font-semibold ml-2">{extract.anchor.source}</span>
-      </div>
+const IdentityResults: React.FC<{ sifData: any }> = ({ sifData }) => {
+  return (
+    <div className="identity-results bg-gray-900 border border-yellow-400 rounded-2xl p-6 mb-4">
+      <h3 className="text-xl font-bold text-yellow-400 mb-4">Identity Results</h3>
       
-      {extract.anchor.tie && (
-        <div className="tie-break-details bg-gray-800 rounded-lg p-3">
-          <h4 className="text-base font-semibold text-yellow-400 mb-2">Tie-Break Resolution</h4>
-          <div className="text-sm space-y-1">
-            <div><span className="text-gray-400">Candidates:</span> {extract.anchor.tie.candidates.join(', ')}</div>
-            <div><span className="text-gray-400">Selected:</span> {extract.anchor.tie.selected}</div>
-            <div><span className="text-gray-400">Reason:</span> {extract.anchor.tie.reason}</div>
+      <div className="identity-grid grid grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="identity-item">
+            <h4 className="text-lg font-semibold text-yellow-400 mb-2">Primary (Anchor)</h4>
+            <div className="text-sm text-gray-300">
+              <div className="font-semibold text-white">{sifData.primary.face}</div>
+              <div className="text-gray-400 mt-1">Evidence-based chosen face</div>
+            </div>
+          </div>
+          
+          <div className="identity-item">
+            <h4 className="text-lg font-semibold text-yellow-400 mb-2">Prize (Mirror target)</h4>
+            <div className="text-sm text-gray-300">
+              <div className="font-semibold text-white">{sifData.prize.face}</div>
+              <div className="text-gray-400 mt-1">Exact mirror of Primary face</div>
+            </div>
           </div>
         </div>
-      )}
+        
+        <div className="space-y-4">
+          <div className="identity-item">
+            <h4 className="text-lg font-semibold text-yellow-400 mb-2">Secondary (Installed)</h4>
+            <div className="text-sm text-gray-300">
+              <div className="font-semibold text-white">{sifData.secondary.face}</div>
+              <div className="text-gray-400 mt-1">User's installed choice from Phase D</div>
+      </div>
+      </div>
       
-      <div className="why-primary bg-gray-800 rounded-lg p-3">
-        <h4 className="text-base font-semibold text-yellow-400 mb-2">Why This Primary</h4>
-        <ul className="text-sm space-y-1">
-          {extract.whyPrimary.evidence.map((evidence, i) => (
-            <li key={i} className="text-gray-300">• {evidence}</li>
-          ))}
-        </ul>
-        <div className="text-sm mt-2">
-          <span className="text-gray-400">Strength:</span> 
-          <span className="text-white font-semibold ml-2">{extract.whyPrimary.strength.toFixed(2)}</span>
+          <div className="identity-item">
+            <h4 className="text-lg font-semibold text-yellow-400 mb-2">Needed for Alignment</h4>
+            <div className="text-sm text-gray-300">
+              <div className="font-semibold text-white">{sifData.neededForAlignment.face}</div>
+              <div className="text-gray-400 mt-1">Prize if Secondary ≠ Prize</div>
+            </div>
+          </div>
+          </div>
+        </div>
+      
+      <div className="mt-6 pt-4 border-t border-gray-700">
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            <span className="text-gray-400">Alignment Status:</span>
+            <span className={`ml-2 font-semibold ${sifData.aligned ? 'text-green-400' : 'text-yellow-400'}`}>
+              {sifData.aligned ? 'Aligned' : 'Not yet aligned'}
+            </span>
+          </div>
+          <div className="text-sm text-gray-400">
+            {sifData.aligned ? 'Secondary = Prize' : 'Secondary ≠ Prize'}
         </div>
       </div>
     </div>
   </div>
 );
+};
 
-const LinePathsAnalysis: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="line-paths-analysis bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Line Paths & Purity Analysis</h3>
-    <div className="paths-grid grid grid-cols-1 md:grid-cols-2 gap-4">
-      {Object.entries(extract.linePaths).map(([family, path]) => (
-        <div key={family} className="path-card bg-gray-800 rounded-lg p-3">
-          <h4 className="text-base font-semibold text-yellow-400 mb-2">
-            {family} ({path.kind === 'A' ? 'A-line' : 'Module'})
-          </h4>
-          
-          <div className="path-details text-sm space-y-1 mb-3">
-            <div><span className="text-gray-400">Decisions:</span> [{path.decisions.join(', ')}]</div>
-            <div><span className="text-gray-400">Key:</span> {path.key}</div>
-            <div><span className="text-gray-400">Verdict:</span> {path.verdict}</div>
-            <div><span className="text-gray-400">Module Purity:</span> {path.modulePurity.toFixed(2)}</div>
+const FacePresentation: React.FC<{ sifData: any }> = ({ sifData }) => {
+  return (
+    <div className="face-presentation bg-gray-900 border border-purple-500 rounded-2xl p-4 mb-4">
+      <h3 className="text-lg font-bold text-purple-400 mb-3">Face Presentation</h3>
+      
+      <div className="presentation-grid grid grid-cols-2 gap-4">
+        <div className="presentation-item">
+          <h4 className="text-base font-semibold text-yellow-400 mb-2">Face Pattern</h4>
+          <div className="text-sm text-gray-300">
+            <div className="font-semibold text-white">{sifData.facePattern}</div>
+          </div>
           </div>
           
-          <div className="counters text-sm space-y-1 mb-3">
-            <div><span className="text-gray-400">C:</span> {path.counters.cCount}, 
-                  <span className="text-gray-400"> O:</span> {path.counters.oCount}, 
-                  <span className="text-gray-400"> F:</span> {path.counters.fCount}</div>
-            <div><span className="text-gray-400">Early O:</span> {path.counters.earlyO ? 'Yes' : 'No'}</div>
-            <div><span className="text-gray-400">Ended F:</span> {path.counters.endedF ? 'Yes' : 'No'}</div>
-            {path.counters.seedF !== undefined && (
-              <div><span className="text-gray-400">Seed F:</span> {path.counters.seedF ? 'Yes' : 'No'}</div>
-            )}
-          </div>
-          
-          {path.fProbe && (
-            <div className="f-probe bg-gray-700 rounded p-2">
-              <h5 className="text-sm font-semibold text-blue-400 mb-1">F-Probe Results</h5>
-              <div className="text-xs space-y-1">
-                <div><span className="text-gray-400">Run:</span> {path.fProbe.run ? 'Yes' : 'No'}</div>
-                {path.fProbe.result && (
-                  <>
-                    <div><span className="text-gray-400">Result:</span> {path.fProbe.result}</div>
-                    <div><span className="text-gray-400">Outcome:</span> {path.fProbe.outcomeText}</div>
-                  </>
-                )}
+        <div className="presentation-item">
+          <h4 className="text-base font-semibold text-yellow-400 mb-2">Face Color Token</h4>
+          <div className="text-sm text-gray-300">
+            <div className="font-semibold text-white" style={{ color: sifData.colorToken || '#ffffff' }}>
+              {sifData.colorToken}
               </div>
             </div>
-          )}
         </div>
-      ))}
     </div>
   </div>
 );
+};
 
-const ILBreakdownAnalysis: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="il-breakdown-analysis bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Installed Likelihood (IL) Breakdown</h3>
-    <div className="il-grid grid grid-cols-1 md:grid-cols-2 gap-4">
-      {extract.ilFaces.map(faceIL => (
-        <div key={faceIL.face} className="il-card bg-gray-800 rounded-lg p-3">
-          <h4 className="text-base font-semibold text-yellow-400 mb-2">{faceIL.face}</h4>
-          <div className="il-score text-sm mb-2">
-            <span className="text-gray-400">IL:</span> 
-            <span className="text-white font-semibold ml-2">{faceIL.il.toFixed(2)}</span>
-          </div>
-          <div className="il-source text-sm mb-3">
-            <span className="text-gray-400">Source:</span> 
-            <span className="text-white font-semibold ml-2">{faceIL.source}</span>
+const FaceVsILAnalysis: React.FC<{ sifData: any }> = ({ sifData }) => {
+  return (
+    <div className="face-vs-il-analysis bg-gray-900 border border-purple-500 rounded-2xl p-4 mb-4">
+      <h3 className="text-lg font-bold text-purple-400 mb-3">Face vs IL Analysis</h3>
+      <div className="text-sm text-gray-300 mb-4">
+        <p className="text-gray-400">Comparing your inner strength (Face) with outer expectations (IL):</p>
           </div>
           
-          <div className="breakdown-details bg-gray-700 rounded p-2">
-            <h5 className="text-sm font-semibold text-blue-400 mb-2">Breakdown</h5>
-            <div className="text-xs space-y-1">
-              {faceIL.breakdown.cCount !== undefined && (
-                <div><span className="text-gray-400">C Count:</span> {faceIL.breakdown.cCount}</div>
-              )}
-              {faceIL.breakdown.driftRatio !== undefined && (
-                <div><span className="text-gray-400">Drift Ratio:</span> {faceIL.breakdown.driftRatio.toFixed(2)}</div>
-              )}
-              {faceIL.breakdown.endedF !== undefined && (
-                <div><span className="text-gray-400">Ended F:</span> {faceIL.breakdown.endedF ? 'Yes' : 'No'}</div>
-              )}
-              {faceIL.breakdown.isCCC !== undefined && (
-                <div><span className="text-gray-400">Is CCC:</span> {faceIL.breakdown.isCCC ? 'Yes' : 'No'}</div>
-              )}
-              {faceIL.breakdown.purityGap !== undefined && (
-                <div><span className="text-gray-400">Purity Gap:</span> {faceIL.breakdown.purityGap.toFixed(2)}</div>
-              )}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-gray-700">
+              <th className="text-left p-2 text-gray-300">Face</th>
+              <th className="text-left p-2 text-gray-300">Face Score</th>
+              <th className="text-left p-2 text-gray-300">IL Score</th>
+              <th className="text-left p-2 text-gray-300">Analysis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sifData.faceVsIL.map((item: any, index: number) => {
+              const analysisColor = {
+                'Match': 'text-green-400',
+                'High IL, low Face': 'text-blue-400',
+                'Low IL, high Face': 'text-orange-400',
+                'Low Both': 'text-gray-400'
+              }[item.label] || 'text-gray-400';
               
-              <div className="bonuses mt-2 pt-2 border-t border-gray-600">
-                <div><span className="text-gray-400">Sibling Bonus:</span> +{faceIL.breakdown.bonuses.sibling}</div>
-                <div><span className="text-gray-400">Prize Bonus:</span> +{faceIL.breakdown.bonuses.prize}</div>
+              return (
+                <tr key={item.face} className="border-b border-gray-800 hover:bg-gray-800">
+                  <td className="p-2 text-gray-200 font-medium">{item.face}</td>
+                  <td className="p-2 text-gray-300 font-mono">{item.faceScore.toFixed(2)}</td>
+                  <td className="p-2 text-gray-300 font-mono">{item.ilScore.toFixed(2)}</td>
+                  <td className="p-2">
+                    <div className={`${analysisColor} font-medium text-xs mb-1`}>
+                      {item.label}
               </div>
+                    <div className="text-gray-400 text-xs leading-relaxed">
+                      {getFaceVsILAnalysisText(item.label)}
             </div>
-          </div>
-        </div>
-      ))}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
     </div>
   </div>
 );
+};
 
-const SecondaryResolutionAnalysis: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="secondary-resolution-analysis bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Secondary Resolution Analysis</h3>
-    
-    <div className="shortlist-formation mb-4">
-      <h4 className="text-base font-semibold text-yellow-400 mb-3">Shortlist Formation</h4>
-      <div className="candidates-list space-y-2 mb-3">
-        {extract.shortlistFormation.candidates.map(candidate => (
-          <div key={candidate.face} className={`candidate p-2 rounded ${candidate.included ? 'bg-green-900/20 border border-green-500' : 'bg-gray-800 border border-gray-600'}`}>
-            <div className="text-sm font-semibold">{candidate.face} (IL: {candidate.il.toFixed(2)})</div>
-            <div className="text-xs text-gray-400">Family: {candidate.family}</div>
-            <div className="text-xs text-gray-400">Reason: {candidate.reason}</div>
+const PerLineDetails: React.FC<{ sifData: any }> = ({ sifData }) => {
+  return (
+    <div className="per-line-details bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
+      <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Per-Line Details</h3>
+      
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm font-mono min-w-full">
+          <thead>
+            <tr className="border-b border-gray-700">
+              <th className="text-left py-3 px-2">#</th>
+              <th className="text-left py-3 px-2">Line</th>
+              <th className="text-left py-3 px-2">A-line</th>
+              <th className="text-left py-3 px-2">Phase B picks</th>
+              <th className="text-left py-3 px-2">Module decisions</th>
+              <th className="text-right py-3 px-2">Purity</th>
+              <th className="text-right py-3 px-2">Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sifData.perLine.map((line: any, index: number) => (
+              <tr key={line.family} className="border-b border-gray-800 hover:bg-gray-800/50">
+                <td className="py-3 px-2 font-medium text-gray-400">{index + 1}</td>
+                <td className="py-3 px-2 font-medium">{line.family}</td>
+                <td className="py-3 px-2">
+                  {line.isALine ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 border border-green-400 text-green-400 bg-transparent rounded-full text-xs">
+                      A-line
+                    </span>
+                  ) : (
+                    <span className="text-gray-500">—</span>
+                  )}
+                </td>
+                <td className="py-3 px-2">
+                  {line.isALine && line.phaseB ? (
+                    <div className="flex gap-1 flex-wrap">
+                      {line.phaseB.map((pick: string, i: number) => (
+                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs">
+                          {pick}
+                        </span>
+                      ))}
           </div>
+                  ) : (
+                    <span className="text-gray-500">—</span>
+                  )}
+                </td>
+                <td className="py-3 px-2">
+                  {!line.isALine && line.module ? (
+                    <div className="flex gap-1 flex-wrap">
+                      {line.module.map((pick: string, i: number) => (
+                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 border border-yellow-400 text-yellow-400 bg-transparent rounded-full text-xs">
+                          {pick}
+                        </span>
         ))}
       </div>
+                  ) : (
+                    <span className="text-gray-500">—</span>
+                  )}
+                </td>
+                <td className="text-right py-3 px-2 font-mono">
+                  {line.purity.toFixed(1)}
+                </td>
+                <td className="text-right py-3 px-2 font-mono">
+                  {line.verdict}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const SeverityProbes: React.FC<{ sifData: any }> = ({ sifData }) => {
+  const severityProbes = sifData.severityProbes;
+  
+  if (severityProbes.length === 0) {
+    return null;
+  }
+  
+  return (
+    <div className="severity-probes bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
+      <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Severity Probes</h3>
       
-      <div className="formation-details bg-gray-800 rounded p-3 text-sm">
-        <div><span className="text-gray-400">Final Shortlist:</span> {extract.shortlistFormation.finalShortlist.join(', ')}</div>
-        <div><span className="text-gray-400">Family Diversity:</span> {extract.shortlistFormation.familyDiversityCheck ? 'Yes' : 'No'}</div>
-        <div><span className="text-gray-400">Pruned:</span> {extract.shortlistFormation.prunedCandidates.join(', ') || 'None'}</div>
-      </div>
-    </div>
-    
-    <div className="collision-analysis">
-      <h4 className="text-base font-semibold text-yellow-400 mb-3">Collision Analysis</h4>
-      <div className="bg-gray-800 rounded p-3 text-sm space-y-2">
-        <div><span className="text-gray-400">Installed Choice:</span> {extract.secondary.installedChoice}</div>
-        <div><span className="text-gray-400">Collision:</span> {extract.secondary.collision ? 'Yes' : 'No'}</div>
-        {extract.secondary.collisionDetails && (
-          <div className="collision-details bg-gray-700 rounded p-2 mt-2">
-            <div><span className="text-gray-400">Anchor Face:</span> {extract.secondary.collisionDetails.anchorFace}</div>
-            <div><span className="text-gray-400">Installed Face:</span> {extract.secondary.collisionDetails.installedFace}</div>
-            <div><span className="text-gray-400">Downgraded To:</span> {extract.secondary.collisionDetails.downgradedTo}</div>
+      <div className="mb-4 p-3 bg-gray-800 rounded-lg border border-gray-600">
+        <div className="text-sm text-gray-300">
+          <p className="font-semibold text-yellow-400 mb-2">What Severity Probes Test:</p>
+          <p className="mb-2">High-pressure situations that stress the weak line.</p>
+          <div className="space-y-1 text-xs">
+            <p><span className="text-green-400">Option A (C pick):</span> Shows you can still act through the line → <span className="text-yellow-400">severity light F</span> (bend, not collapse)</p>
+            <p><span className="text-red-400">Option B (F pick):</span> Shows the line fails under pressure → <span className="text-red-400">severity deep F</span> (collapsed)</p>
           </div>
-        )}
-        <div><span className="text-gray-400">Final Secondary:</span> {extract.secondary.resolved}</div>
+      </div>
+    </div>
+    
+      <div className="space-y-4">
+        {severityProbes.map(probe => (
+          <div key={probe.family} className="p-4 bg-gray-800 rounded-lg border border-gray-700">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-semibold">{probe.family} — F verdict</h4>
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                probe.resolved === 'Light F' 
+                  ? 'bg-yellow-900 text-yellow-300 border border-yellow-700' 
+                  : 'bg-red-800 text-red-200 border border-red-600'
+              }`}>
+                Resolved: {probe.resolved}
+              </span>
+            </div>
+            <div className="text-sm text-gray-300">
+              <div className="mb-1">
+                <span className="text-yellow-400 font-semibold">Severity Assessment:</span> {probe.resolved === 'Light F' ? 'Light F (bend, not collapse)' : 'Deep F (collapsed)'}
+              </div>
+              <div className="mb-2">
+                <span className="text-gray-400">Outcome:</span> {probe.resolved === 'Light F' ? 'Transient collapse. Context mis-sync.' : 'Structural collapse. Core crack in the line.'}
+          </div>
+              <div>
+                <span className="text-gray-400">Action:</span> {probe.action}
       </div>
     </div>
   </div>
+        ))}
+      </div>
+  </div>
 );
+};
 
-const PrizeMirrorAnalysis: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="prize-mirror-analysis bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Prize Mirror Analysis</h3>
-    
-    <div className="prize-details bg-gray-800 rounded p-3 text-sm space-y-2 mb-3">
-      <div><span className="text-gray-400">Prize Face:</span> {extract.prize.prizeFace}</div>
-      <div><span className="text-gray-400">Mirror Archetype:</span> {extract.prize.mirrorArchetype}</div>
-      <div><span className="text-gray-400">Has Mirror Gain:</span> {extract.prize.hasMirrorGain ? 'Yes' : 'No'}</div>
-      <div><span className="text-gray-400">Mirror Mismatch:</span> {extract.prize.mirrorMismatch ? 'Yes' : 'No'}</div>
-      <div><span className="text-gray-400">Alignment Score:</span> {extract.prize.alignmentScore.toFixed(2)}</div>
-    </div>
-    
-    {extract.prize.suggestedHabits.length > 0 && (
-      <div className="suggested-habits bg-gray-800 rounded p-3">
-        <h4 className="text-base font-semibold text-yellow-400 mb-2">Suggested Habits</h4>
-        <ul className="text-sm space-y-1">
-          {extract.prize.suggestedHabits.map((habit, i) => (
-            <li key={i} className="text-gray-300">• {habit}</li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
-);
-
-const PerformanceMetrics: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => (
-  <div className="performance-metrics bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
-    <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Performance Metrics</h3>
-    
-    <div className="phase-timings">
-      <h4 className="text-base font-semibold text-yellow-400 mb-3">Phase Timings</h4>
-      <div className="timing-grid grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <div className="bg-gray-800 rounded p-2">
-          <div className="text-gray-400">Phase A</div>
-          <div className="text-white font-semibold">{extract.timestamps.phaseA}ms</div>
+const LegacyResults: React.FC<{ sifData: any }> = ({ sifData }) => {
+  return (
+    <div className="legacy-results bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-4">
+      <h3 className="text-lg font-bold text-white mb-3 border-b border-gray-600 pb-2">Legacy Results</h3>
+      
+      <div className="legacy-grid grid grid-cols-2 gap-4">
+        <div className="legacy-item">
+          <h4 className="text-base font-semibold text-yellow-400 mb-2">7 Lines Code</h4>
+          <div className="text-sm text-gray-300">
+            <div className="font-mono text-white">{sifData.prizeChain}</div>
+            <div className="text-gray-400 mt-1">Seven-line snapshot: C = clean, O = offset, F = fail under pressure</div>
         </div>
-        <div className="bg-gray-800 rounded p-2">
-          <div className="text-gray-400">Phase B</div>
-          <div className="text-white font-semibold">{extract.timestamps.phaseB}ms</div>
         </div>
-        <div className="bg-gray-800 rounded p-2">
-          <div className="text-gray-400">Phase C</div>
-          <div className="text-white font-semibold">{extract.timestamps.phaseC}ms</div>
-        </div>
-        <div className="bg-gray-800 rounded p-2">
-          <div className="text-gray-400">Phase D</div>
-          <div className="text-white font-semibold">{extract.timestamps.phaseD}ms</div>
-        </div>
-        <div className="bg-gray-800 rounded p-2">
-          <div className="text-gray-400">Phase E</div>
-          <div className="text-white font-semibold">{extract.timestamps.phaseE}ms</div>
-        </div>
-        <div className="bg-gray-800 rounded p-2 border border-yellow-400">
-          <div className="text-gray-400">Total</div>
-          <div className="text-yellow-400 font-semibold">{extract.timestamps.totalDuration}ms</div>
+        
+        <div className="legacy-item">
+          <h4 className="text-base font-semibold text-yellow-400 mb-2">Engine Version</h4>
+          <div className="text-sm text-gray-300">
+            <div className="font-semibold text-white">SIF Canon v3</div>
+            <div className="text-gray-400 mt-1">Canon version used for this session</div>
         </div>
       </div>
     </div>
   </div>
 );
+};
 
 const ExportOptions: React.FC<{ extract: ExtractSnapshot }> = ({ extract }) => {
   const exportAsJSON = () => {
