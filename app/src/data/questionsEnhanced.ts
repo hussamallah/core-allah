@@ -4,6 +4,12 @@ import unifiedQuestionsData from '../../../unified_question_pool_v1.json';
 // Enhanced unified questions with simulator improvements
 export const UNIFIED_QUESTIONS_ENHANCED = unifiedQuestionsData.unified_questions;
 
+// Function to clean option labels by removing mapping information in parentheses
+function cleanOptionLabel(label: string): string {
+  // Remove text in parentheses at the end of the label
+  return label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+
 // Enhanced Phase B questions with simulator features
 export const DUEL_QUESTIONS_ENHANCED: DuelQuestion[] = UNIFIED_QUESTIONS_ENHANCED.map((q: any) => {
   const typeMapping: Record<string, string> = {
@@ -27,8 +33,8 @@ export const DUEL_QUESTIONS_ENHANCED: DuelQuestion[] = UNIFIED_QUESTIONS_ENHANCE
     lineId: q.family,
     prompt: q.prompt,
     options: {
-      A: q.options[0].label,
-      B: q.options[1].label
+      A: cleanOptionLabel(q.options[0].label),
+      B: cleanOptionLabel(q.options[1].label)
     },
     mappings: {
       A: q.options[0].pick,
@@ -150,8 +156,8 @@ export const MODULE_QUESTIONS_ENHANCED: ModuleQuestion[] = UNIFIED_QUESTIONS_ENH
     lineId: q.family,
     prompt: q.prompt,
     options: {
-      A: q.options[0].label,
-      B: q.options[1].label
+      A: cleanOptionLabel(q.options[0].label),
+      B: cleanOptionLabel(q.options[1].label)
     },
     mappings: {
       A: q.options[0].pick,

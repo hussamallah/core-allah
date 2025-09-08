@@ -285,34 +285,6 @@ export function PhaseBEnhanced({
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
-      {/* Enhanced Live Metrics */}
-      {showMetrics && (
-        <div className="bg-gray-800 rounded-lg p-3 mb-4 border border-gray-600">
-          <div className="flex justify-between items-center text-sm">
-            <div className="text-gray-300">
-              Progress: {progress}/{totalSteps} • Line: {line.id} • Round: {round} • Type: {type}
-            </div>
-            <div className="flex gap-2">
-              {question.enhanced?.timeContext && (
-                <span className="bg-yellow-600 text-yellow-100 px-2 py-1 rounded text-xs">
-                  Time Pressure
-                </span>
-              )}
-              {question.enhanced?.socialDynamics && (
-                <span className="bg-blue-600 text-blue-100 px-2 py-1 rounded text-xs">
-                  Social Dynamics
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
-            <div 
-              className="bg-gradient-to-r from-yellow-500 to-red-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(progress / totalSteps) * 100}%` }}
-            />
-          </div>
-        </div>
-      )}
 
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">

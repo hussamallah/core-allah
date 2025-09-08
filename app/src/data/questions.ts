@@ -14,6 +14,12 @@ export const FAMILY_CARDS: FamilyCard[] = unifiedQuestionsData.phase_a.map((card
 // Unified questions for both Phase B and Phase C
 export const UNIFIED_QUESTIONS = unifiedQuestionsData.unified_questions;
 
+// Function to clean option labels by removing mapping information in parentheses
+function cleanOptionLabel(label: string): string {
+  // Remove text in parentheses at the end of the label
+  return label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+
 // Phase B uses family effects from unified questions
 export const DUEL_QUESTIONS: DuelQuestion[] = UNIFIED_QUESTIONS.map((q: any) => {
   // Map unified question types to Phase B structure
@@ -38,8 +44,8 @@ export const DUEL_QUESTIONS: DuelQuestion[] = UNIFIED_QUESTIONS.map((q: any) => 
     lineId: q.family,
     prompt: q.prompt,
     options: {
-      A: q.options[0].label,
-      B: q.options[1].label
+      A: cleanOptionLabel(q.options[0].label),
+      B: cleanOptionLabel(q.options[1].label)
     },
     mappings: {
       A: q.options[0].pick,
@@ -116,8 +122,8 @@ export const MODULE_QUESTIONS: ModuleQuestion[] = UNIFIED_QUESTIONS.map((q: any)
     lineId: q.family,
     prompt: q.prompt,
     options: {
-      A: q.options[0].label,
-      B: q.options[1].label
+      A: cleanOptionLabel(q.options[0].label),
+      B: cleanOptionLabel(q.options[1].label)
     },
     mappings: {
       A: q.options[0].pick,
