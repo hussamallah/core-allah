@@ -285,7 +285,8 @@ export function QuizEngine() {
 
   const handleSeveritySelect = (lineId: string, severity: 'high' | 'mid' | 'low', score: 1.0 | 0.5 | 0.0) => {
     // Record the severity selection in SIF counters
-    recordSIFSeverity(lineId, severity === 'high' ? 'F1' : severity === 'mid' ? 'F0.5' : 'F0');
+    // Map low severity to F0.5 since recordSIFSeverity only accepts F0.5 | F1
+    recordSIFSeverity(lineId, severity === 'high' ? 'F1' : 'F0.5');
     stepDone();
   };
 
