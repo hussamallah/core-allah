@@ -6,6 +6,7 @@
  */
 
 import { SIFCounters, SIFResult, FACE_TO_FAMILY, FAMILY_TO_FACES, FAMILY_TO_PRIZE, PRIZE_MIRROR_MAP, getPrizeMirror } from '@/types/quiz';
+import { PhaseDEngine } from './PhaseD';
 
 export class SIFEngine {
   private counters: SIFCounters;
@@ -13,16 +14,18 @@ export class SIFEngine {
   private didRecordPhaseD: boolean = false;
   private snapshot: any = null;
   private opportunities: Record<string, number> = {}; // Track opportunities per face
+  private calculatedILScores: Record<string, number> = {}; // Store calculated IL scores
+  public phaseDEngine: PhaseDEngine; // Make Phase D engine accessible
 
   // Family-to-archetype mapping for face determination
   private readonly FAMILY_FACES: Record<string, [string, string]> = {
     Control: ["Control:Sovereign", "Control:Rebel"],
-    Pace: ["Pace:Navigator", "Pace:Driver"],
-    Boundary: ["Boundary:Guardian", "Boundary:Equalizer"],
-    Truth: ["Truth:Architect", "Truth:Seeker"],
+    Pace: ["Pace:Visionary", "Pace:Navigator"],
+    Boundary: ["Boundary:Equalizer", "Boundary:Guardian"],
+    Truth: ["Truth:Seeker", "Truth:Architect"],
     Recognition: ["Recognition:Spotlight", "Recognition:Diplomat"],
     Bonding: ["Bonding:Partner", "Bonding:Provider"],
-    Stress: ["Stress:Catalyst", "Stress:Artisan"],
+    Stress: ["Stress:Catalyst", "Stress:Artisan"]
   };
 
   // Face-to-installed-statement mapping for Phase D UX
@@ -50,9 +53,9 @@ export class SIFEngine {
       family: "Pace", 
       cues: ["Plans milestones", "Manages momentum"]
     },
-    "Pace:Driver": {
+    "Pace:Visionary": {
       statement: "People look to me to **imagine what's next and inspire direction**.",
-      label: "Driver",
+      label: "Visionary",
       family: "Pace",
       cues: ["Big picture", "Sets tempo with ideas"]
     },
@@ -127,6 +130,7 @@ export class SIFEngine {
       faceC: {},
       faceO: {}
     };
+    this.phaseDEngine = new PhaseDEngine();
   }
 
   // Helper to safely increment counters
@@ -295,47 +299,93 @@ export class SIFEngine {
   /**
    * Record severity probe result
    */
-  recordSeverityProbe(family: string, severity: 'F0' | 'F0.5' | 'F1'): void {
-    this.counters.sevF[family]++;
-    console.log(`📊 SIF Severity Probe: ${family} severity ${severity} → sevF[${family}] = ${this.counters.sevF[family]}`);
-    console.log('📊 SIF Counters after Severity Probe:', this.counters);
+  recordSeverityProbe(family: string, severity: 'F0.5' | 'F1'): void {
+    // Store the actual severity value, not just increment
+    const severityValue = severity === 'F1' ? 1 : 0.5;
+    this.counters.sevF[family] = severityValue;
   }
 
   /**
    * NEW: compute anchor-candidate families BEFORE install (Phase D pre-step).
    */
   public computeAnchorCandidateFamilies(a26Faces: string[], moduleTopFamilies: string[]): Set<string> {
+    console.log("🔍 computeAnchorCandidateFamilies input:", { a26Faces, moduleTopFamilies });
+    
     // If any A-line 2.6 faces exist, use their families; else use module tops.
-    return new Set(a26Faces.length ? a26Faces.map(f => FACE_TO_FAMILY[f]) : moduleTopFamilies);
+    if (a26Faces.length > 0) {
+      // a26Faces contains face names like "Pace:C", "Truth:C", "Bonding:C"
+      // We need to extract the family part (before the colon)
+      const families = a26Faces.map(f => f.split(':')[0]);
+      console.log("🔍 Extracted families from a26Faces:", families);
+      return new Set(families);
+    } else {
+      console.log("🔍 No a26Faces, using moduleTopFamilies:", moduleTopFamilies);
+      return new Set(moduleTopFamilies);
+    }
   }
 
   /**
    * NEW: InstalledLikelihood scorer for a single face.
    */
   private installedLikelihoodForFace(face: string, source: "A"|"M", bPath?: ("C"|"O"|"F")[], mPath?: ("C"|"O"|"F")[], aCandFamilies?: Set<string>, aCandPrizeFaces?: Set<string>): number {
+    console.log(`🧮 Computing IL for ${face} (source: ${source})`);
+    
     let base = 0;
     if (source === "A" && bPath) {
+      console.log(`  📊 A-line calculation for ${face}:`);
+      console.log(`    → B-path: [${bPath.join(', ')}]`);
+      
       const earlyO   = bPath[0] === "O" ? 1 : 0;
       const fTouch   = bPath.indexOf("F") !== -1 ? 1 : 0;
       const oHits    = bPath.filter(p=>p==="O").length;
       const oRatio   = oHits / 2;
-      const purity   = this.computeFacePurityFromB(bPath); // reuse your purity calc
+      const purity   = this.computeFacePurityFromB(bPath);
       const purityGap= Math.max(0, Math.min(1, (2.6 - purity)/2));
+      
+      console.log(`    → earlyO: ${earlyO} (first pick is O: ${bPath[0] === "O"})`);
+      console.log(`    → fTouch: ${fTouch} (has F in path: ${bPath.indexOf("F") !== -1})`);
+      console.log(`    → oHits: ${oHits} (O picks: [${bPath.filter(p=>p==="O").join(', ')}])`);
+      console.log(`    → oRatio: ${oRatio} (${oHits}/2)`);
+      console.log(`    → purity: ${purity} (computed from B-path)`);
+      console.log(`    → purityGap: ${purityGap} (clamp((2.6-${purity})/2, 0, 1))`);
+      
       base = 1.6*earlyO + 1.2*fTouch + 0.8*oRatio + 0.8*purityGap;
+      console.log(`    → base IL: ${base} (1.6×${earlyO} + 1.2×${fTouch} + 0.8×${oRatio} + 0.8×${purityGap})`);
+      
     } else if (source === "M" && mPath) {
+      console.log(`  📊 Module calculation for ${face}:`);
+      console.log(`    → M-path: [${mPath.join(', ')}]`);
+      
       const cCount     = mPath.filter(p=>p==="C").length;
       const driftRatio = (3 - cCount)/3;
       const endedF     = mPath[2] === "F" ? 1 : 0;
       const isCCC      = cCount === 3 ? 1 : 0;
+      
+      console.log(`    → cCount: ${cCount} (C picks: [${mPath.filter(p=>p==="C").join(', ')}])`);
+      console.log(`    → driftRatio: ${driftRatio} ((3-${cCount})/3)`);
+      console.log(`    → endedF: ${endedF} (last pick is F: ${mPath[2] === "F"})`);
+      console.log(`    → isCCC: ${isCCC} (perfect CCC: ${cCount === 3})`);
+      
       base = 1.6*isCCC + 1.4*endedF + 0.8*driftRatio;
+      console.log(`    → base IL: ${base} (1.6×${isCCC} + 1.4×${endedF} + 0.8×${driftRatio})`);
     }
     base = Math.min(4.0, base);
+    console.log(`  → base IL (capped): ${base}`);
 
-    const family = FACE_TO_FAMILY[face];
+    // Extract family from full face name (e.g., "Truth:Architect" -> "Truth")
+    const family = face.split(':')[0];
     const sibBonus   = aCandFamilies?.has(family) ? 1.0 : 0.0;
     const prizeBonus = aCandPrizeFaces?.has(face) ? 0.5 : 0.0;
 
-    return Math.min(5.0, base + sibBonus + prizeBonus);
+    console.log(`  🎁 Bonus calculation:`);
+    console.log(`    → family: ${family} (extracted from ${face})`);
+    console.log(`    → sibBonus: ${sibBonus} (family in anchor candidates: ${aCandFamilies?.has(family)})`);
+    console.log(`    → prizeBonus: ${prizeBonus} (face in prize mirrors: ${aCandPrizeFaces?.has(face)})`);
+
+    const finalIL = Math.min(5.0, base + sibBonus + prizeBonus);
+    console.log(`  → final IL: ${finalIL} (${base} + ${sibBonus} + ${prizeBonus}, capped at 5.0)`);
+    
+    return finalIL;
   }
 
   /**
@@ -343,13 +393,33 @@ export class SIFEngine {
    */
   public buildInstallShortlist(allFaces: {face:string, source:"A"|"M", bPath?:("C"|"O"|"F")[], mPath?:("C"|"O"|"F")[]}[],
                                 aCandFamilies: Set<string>, aCandPrizeFaces: Set<string>): string[] {
+    console.log(`🎯 Building install shortlist from ${allFaces.length} faces`);
+    console.log(`📊 Anchor candidate families: [${Array.from(aCandFamilies).join(', ')}]`);
+    console.log(`🏆 Prize mirror faces: [${Array.from(aCandPrizeFaces).join(', ')}]`);
+    
     const scored = allFaces.map(f => ({
       face: f.face,
-      family: FACE_TO_FAMILY[f.face],
+      family: f.face.split(':')[0], // Extract family from full face name
       IL: this.installedLikelihoodForFace(f.face, f.source, f.bPath, f.mPath, aCandFamilies, aCandPrizeFaces),
       fTouch: (f.source==="A" && f.bPath?.indexOf("F") !== -1) ? 1 : 0,
       endedF: (f.source==="M" && f.mPath?.[2]==="F") ? 1 : 0
     }));
+
+    console.log(`📈 All faces scored:`, scored.map(s => ({
+      face: s.face,
+      family: s.family,
+      IL: s.IL,
+      fTouch: s.fTouch,
+      endedF: s.endedF
+    })));
+
+    // Store the calculated IL scores for later retrieval
+    scored.forEach(s => {
+      this.calculatedILScores[s.face] = s.IL;
+      console.log(`💾 Stored IL score: ${s.face} = ${s.IL}`);
+    });
+    
+    console.log('💾 All IL scores stored:', this.calculatedILScores);
 
     scored.sort((a,b)=>{
       if (b.IL !== a.IL) return b.IL - a.IL;
@@ -358,25 +428,50 @@ export class SIFEngine {
       return a.face.localeCompare(b.face);
     });
 
+    console.log(`🔄 Sorted by IL (desc), then fTouch, then endedF, then alphabetical:`, scored.map(s => ({
+      face: s.face,
+      IL: s.IL,
+      fTouch: s.fTouch,
+      endedF: s.endedF
+    })));
+
     const shortlist: string[] = [];
     const families: Record<string, number> = {};
     for (const s of scored) {
       if (shortlist.indexOf(s.face) === -1) {
         shortlist.push(s.face);
         families[s.family] = (families[s.family]||0) + 1;
-        if (shortlist.length === 4) break;
+        console.log(`  ✅ Added ${s.face} (${s.family}) to shortlist. IL: ${s.IL}`);
+        if (shortlist.length === 4) {
+          console.log(`  🛑 Reached max 4 faces, stopping selection`);
+          break;
+        }
+      } else {
+        console.log(`  ⏭️ Skipped ${s.face} (already in shortlist)`);
       }
     }
 
+    console.log(`📋 Initial shortlist: [${shortlist.join(', ')}]`);
+    console.log(`👥 Family distribution:`, families);
+
     // diversity: if all 4 same family, replace #4 with best from another family
     if (shortlist.length === 4) {
-      const fam0 = FACE_TO_FAMILY[shortlist[0]];
-      const allSame = shortlist.every(f => FACE_TO_FAMILY[f] === fam0);
+      const fam0 = shortlist[0].split(':')[0]; // Extract family from first face
+      const allSame = shortlist.every(f => f.split(':')[0] === fam0);
+      console.log(`🔍 Diversity check: all faces from ${fam0}? ${allSame}`);
+      
       if (allSame) {
-        const replacement = scored.find(s => FACE_TO_FAMILY[s.face] !== fam0 && shortlist.indexOf(s.face) === -1);
-        if (replacement) shortlist[3] = replacement.face;
+        const replacement = scored.find(s => s.face.split(':')[0] !== fam0 && shortlist.indexOf(s.face) === -1);
+        if (replacement) {
+          console.log(`🔄 Replacing ${shortlist[3]} with ${replacement.face} for diversity`);
+          shortlist[3] = replacement.face;
+        } else {
+          console.log(`⚠️ No replacement found for diversity, keeping original shortlist`);
+        }
       }
     }
+
+    console.log(`🎯 Final install shortlist: [${shortlist.join(', ')}]`);
     return shortlist;
   }
 
@@ -384,10 +479,31 @@ export class SIFEngine {
    * NEW: resolve final Secondary after Anchor is known.
    */
   public resolveSecondary(installedChoice: string, anchorFace: string, shortlistOrdered: string[], allFacesOrderedByIL: string[]): string {
-    if (installedChoice !== anchorFace) return installedChoice;
-    const alt = shortlistOrdered.find(f => f !== anchorFace) 
-            ?? allFacesOrderedByIL.find(f => f !== anchorFace);
-    return alt ?? installedChoice; // degenerate case: keep installedChoice
+    console.log(`🔄 COLLISION CHECK: installedChoice=${installedChoice}, anchorFace=${anchorFace}`);
+    
+    if (installedChoice !== anchorFace) {
+      console.log(`✅ No collision: returning installedChoice=${installedChoice}`);
+      return installedChoice;
+    }
+    
+    console.log(`⚠️ COLLISION DETECTED: installedChoice equals anchorFace!`);
+    console.log(`🔍 Looking for alternative in shortlist: [${shortlistOrdered.join(', ')}]`);
+    
+    const alt = shortlistOrdered.find(f => f !== anchorFace);
+    if (alt) {
+      console.log(`✅ Found alternative in shortlist: ${alt}`);
+      return alt;
+    }
+    
+    console.log(`🔍 Looking for alternative in allFacesByIL: [${allFacesOrderedByIL.join(', ')}]`);
+    const altFromAll = allFacesOrderedByIL.find(f => f !== anchorFace);
+    if (altFromAll) {
+      console.log(`✅ Found alternative in allFacesByIL: ${altFromAll}`);
+      return altFromAll;
+    }
+    
+    console.log(`❌ No alternative found! This should never happen. Returning installedChoice as fallback.`);
+    return installedChoice; // degenerate case: keep installedChoice
   }
 
   /**
@@ -429,43 +545,68 @@ export class SIFEngine {
     a26Faces: string[],
     moduleTopFamilies: string[]
   ): string[] {
-    console.log("PHASE D - BUILDING INSTALL SHORTLIST", { a26Faces, moduleTopFamilies });
+    console.log("🎯 PHASE D - BUILDING INSTALL SHORTLIST");
+    console.log("📊 Input parameters:", { 
+      a26Faces: a26Faces, 
+      moduleTopFamilies: moduleTopFamilies,
+      totalLines: state.lines.length
+    });
     
     // Get anchor candidate families
     const aCandFamilies = this.computeAnchorCandidateFamilies(a26Faces, moduleTopFamilies);
+    console.log("🏆 Anchor candidate families computed:", Array.from(aCandFamilies));
+    
     const aCandPrizeFaces = new Set(
-      Array.from(aCandFamilies).map(fam => getPrizeMirror(fam+":dummy")).filter(Boolean)
+      Array.from(aCandFamilies).map(fam => {
+        // For each family, get both possible faces and their prize mirrors
+        const familyFaces = this.FAMILY_FACES[fam] || [];
+        const prizeMirrors = familyFaces.map(face => getPrizeMirror(face)).filter(Boolean);
+        return prizeMirrors;
+      }).flat()
     );
+    console.log("🎁 Prize mirror faces computed:", Array.from(aCandPrizeFaces));
     
     // Build all faces with their paths
     const allFaces: {face: string, source: "A"|"M", bPath?: ("C"|"O"|"F")[], mPath?: ("C"|"O"|"F")[]}[] = [];
     
     // Add A-line faces from Phase B
+    console.log("🔍 Processing A-lines from Phase B:");
     state.lines.forEach((line: any) => {
       if (line.selectedA && line.B?.picks && line.B.picks.length > 0) {
         // Phase B picks are stored as strings like "C", "O", "F"
         const bPath = line.B.picks as ("C"|"O"|"F")[];
         const face = this.determineFaceFromBPath(line.id, bPath);
+        console.log(`  → ${line.id}: B-path [${bPath.join(', ')}] → ${face}`);
         allFaces.push({ face, source: "A", bPath });
+      } else if (line.selectedA) {
+        console.log(`  ⚠️ ${line.id}: Selected as A-line but no Phase B picks found`);
       }
     });
     
     // Add Module faces from Phase C
+    console.log("🔍 Processing Module lines from Phase C:");
     state.lines.forEach((line: any) => {
       if (!line.selectedA && line.mod?.decisions && line.mod.decisions.length > 0) {
         // Phase C decisions are stored as {type, pick} objects
         const mPath = line.mod.decisions.map((decision: any) => decision.pick) as ("C"|"O"|"F")[];
         const face = this.determineFaceFromModuleDecisions(line.id, line.mod.decisions);
+        console.log(`  → ${line.id}: M-path [${mPath.join(', ')}] → ${face}`);
         allFaces.push({ face, source: "M", mPath });
+      } else if (!line.selectedA) {
+        console.log(`  ⚠️ ${line.id}: Not selected as A-line but no Phase C decisions found`);
       }
     });
     
-    console.log("PHASE D - All faces for IL calculation:", allFaces);
+    console.log("📋 All faces collected for IL calculation:", allFaces.map(f => ({
+      face: f.face,
+      source: f.source,
+      path: f.source === "A" ? f.bPath : f.mPath
+    })));
     
     // Build shortlist using IL scoring
     const shortlist = this.buildInstallShortlist(allFaces, aCandFamilies, aCandPrizeFaces);
     
-    console.log("PHASE D - INSTALL SHORTLIST:", shortlist);
+    console.log("🎯 PHASE D - FINAL INSTALL SHORTLIST:", shortlist);
     return shortlist;
   }
 
@@ -482,6 +623,24 @@ export class SIFEngine {
   }
 
   /**
+   * Get IL scores for display in Face Scoreboard
+   */
+  public getILScores(): Record<string, number> {
+    // Return the IL scores that were calculated during Phase D
+    console.log('📊 getILScores called, current stored scores:', this.calculatedILScores);
+    console.log('📊 Number of stored scores:', Object.keys(this.calculatedILScores).length);
+    
+    if (Object.keys(this.calculatedILScores).length > 0) {
+      console.log('📊 Returning calculated IL scores:', this.calculatedILScores);
+      return { ...this.calculatedILScores };
+    }
+    
+    // Fallback to empty object if no scores calculated yet
+    console.log('⚠️ No IL scores calculated yet, returning empty object');
+    return {};
+  }
+
+  /**
    * NEW: SIF Canon v3 finalization with InstalledLikelihood
    */
   public finalizeSIFWithInstall(
@@ -495,8 +654,8 @@ export class SIFEngine {
     const prizeFace = getPrizeMirror(anchorFace);
     
     // Get installed choice from state
-    const installedChoice = state.sifResult?.installedChoice || "";
-    const shortlist = state.sifResult?.shortlist || [];
+    const installedChoice = state.installedChoice || "";
+    const shortlist = state.sifShortlist || [];
     
     console.log("SIF FINAL RESULT (CANON V3):", {
       anchorFace,
@@ -507,8 +666,21 @@ export class SIFEngine {
     });
     
     // Resolve Secondary using the new method
+    console.log("🔄 RESOLVING SECONDARY:", {
+      installedChoice,
+      anchorFace,
+      shortlist,
+      allFacesByIL: allFacesByIL || []
+    });
+    
     const secondaryFace = this.resolveSecondary(installedChoice, anchorFace, shortlist, allFacesByIL || []);
     const secondaryFamily = FACE_TO_FAMILY[secondaryFace];
+    
+    console.log("✅ SECONDARY RESOLVED:", {
+      secondaryFace,
+      secondaryFamily,
+      wasCollision: installedChoice === anchorFace
+    });
     
     // Compute badge from frozen verdicts (you'll need to implement this)
     const badge = this.computeSecondaryBadgeFromFrozen(secondaryFace, state);
@@ -811,7 +983,14 @@ export class SIFEngine {
    * Get current counters (for debugging)
    */
   getCounters(): SIFCounters {
-    return { ...this.counters };
+    const result = { ...this.counters };
+    console.log('📊 SIF getCounters called, returning:', {
+      sevF: result.sevF,
+      sevFKeys: Object.keys(result.sevF),
+      sevFValues: Object.values(result.sevF),
+      sevFEntries: Object.entries(result.sevF)
+    });
+    return result;
   }
 
   /**
@@ -819,5 +998,14 @@ export class SIFEngine {
    */
   reset(): void {
     this.initializeCounters();
+    // Don't clear IL scores on reset - they should persist through finalization
+    // this.calculatedILScores = {}; // Clear stored IL scores
+  }
+
+  /**
+   * Clear IL scores (call this when starting a new quiz)
+   */
+  clearILScores(): void {
+    this.calculatedILScores = {};
   }
 }

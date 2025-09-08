@@ -1,0 +1,100 @@
+[
+  {
+    "id": "Control:Sovereign",
+    "family": "Control",
+    "name": "Sovereign",
+    "nickname": "Commander",
+    "description": "Seen as the authority who sets the line and directs others to move with clarity."
+  },
+  {
+    "id": "Control:Rebel",
+    "family": "Control",
+    "name": "Rebel",
+    "nickname": "Disruptor",
+    "description": "Read as the spark that breaks rules to restart motion, though not always trusted with leadership."
+  },
+  {
+    "id": "Pace:Visionary",
+    "family": "Pace",
+    "name": "Visionary",
+    "nickname": "Future-seer",
+    "description": "Recognized for pointing to the long arc and painting the future picture, even if timing wobbles."
+  },
+  {
+    "id": "Pace:Navigator",
+    "family": "Pace",
+    "name": "Navigator",
+    "nickname": "Pathfinder",
+    "description": "Trusted to keep routes clean and tasks paced so work actually lands on time."
+  },
+  {
+    "id": "Boundary:Equalizer",
+    "family": "Boundary",
+    "name": "Equalizer",
+    "nickname": "Referee",
+    "description": "Installed as the fairness enforcer who redraws lines so no one overpowers the rest."
+  },
+  {
+    "id": "Boundary:Guardian",
+    "family": "Boundary",
+    "name": "Guardian",
+    "nickname": "Protector",
+    "description": "Read as the shield who protects the vulnerable and keeps harm from landing."
+  },
+  {
+    "id": "Truth:Seeker",
+    "family": "Truth",
+    "name": "Seeker",
+    "nickname": "Truth-hunter",
+    "description": "Cast as the one who hunts signals and tests reality directly in the field."
+  },
+  {
+    "id": "Truth:Architect",
+    "family": "Truth",
+    "name": "Architect",
+    "nickname": "Builder",
+    "description": "Seen as the structurer who defines frames and fits pieces together until the model holds."
+  },
+  {
+    "id": "Recognition:Spotlight",
+    "family": "Recognition",
+    "name": "Spotlight",
+    "nickname": "Performer",
+    "description": "Read as the one who shines a light publicly so others see and move."
+  },
+  {
+    "id": "Recognition:Diplomat",
+    "family": "Recognition",
+    "name": "Diplomat",
+    "nickname": "Bridge-builder",
+    "description": "Installed as the connector who negotiates sides quietly and aligns groups into motion."
+  },
+  {
+    "id": "Bonding:Partner",
+    "family": "Bonding",
+    "name": "Partner",
+    "nickname": "Ally",
+    "description": "Seen as the steady presence who stays close and loyal through difficulty."
+  },
+  {
+    "id": "Bonding:Provider",
+    "family": "Bonding",
+    "name": "Provider",
+    "nickname": "Caretaker",
+    "description": "Trusted as the one who carries burdens and meets needs to keep others steady."
+  },
+  {
+    "id": "Stress:Catalyst",
+    "family": "Stress",
+    "name": "Catalyst",
+    "nickname": "Spark",
+    "description": "Read as the initiator who ignites motion and starts the chain reaction under pressure."
+  },
+  {
+    "id": "Stress:Artisan",
+    "family": "Stress",
+    "name": "Artisan",
+    "nickname": "Craftsman",
+    "description": "Installed as the maker who holds quality steady and delivers clean, lasting pieces even in strain."
+  }
+]

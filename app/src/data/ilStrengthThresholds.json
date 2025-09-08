@@ -1,0 +1,21 @@
+{
+  "high": {
+    "min": 2.0,
+    "label": "high",
+    "color": "text-green-400",
+    "description": "People strongly expect you to fill this role"
+  },
+  "medium": {
+    "min": 1.0,
+    "max": 1.9,
+    "label": "medium", 
+    "color": "text-yellow-400",
+    "description": "Moderate expectation for this role"
+  },
+  "low": {
+    "max": 0.9,
+    "label": "low",
+    "color": "text-red-400", 
+    "description": "Low expectation for this role"
+  }
+}

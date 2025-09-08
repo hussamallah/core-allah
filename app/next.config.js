@@ -6,6 +6,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Allow external connections for development
+  serverExternalPackages: [],
 }
 
 module.exports = nextConfig

@@ -6,7 +6,7 @@ import { quizRecorder } from '@/utils/QuizRecorder';
 interface PhaseCProps {
   state: QuizState;
   onChoice: (lineId: string, choice: string, decisionType: 'CO1' | 'CO2' | 'CF') => void;
-  onSeveritySelect: (lineId: string, severity: 'high' | 'mid' | 'low', score: 1.0 | 0.5 | 0.0) => void;
+  onSeveritySelect: (lineId: string, severity: 'high' | 'mid', score: 1.0 | 0.5) => void;
   onProceedToD: () => void;
   stepDone: () => void;
   onAddUsedQuestion: (questionId: string) => void;
@@ -19,20 +19,15 @@ interface PhaseCProps {
 export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDone, onAddUsedQuestion, onAddQuestionToHistory, onRecordSIFAnswer, updateLine, setFamilyVerdicts }: PhaseCProps) {
   const nonALines = state.lines.filter(l => !l.selectedA);
   const used = useMemo(() => new Set(state.usedQuestions), [state.usedQuestions]);
+  
   const verdictsCalculated = useRef(false);
-  const [forceRefresh, setForceRefresh] = useState(0);
   
   // Track which lines have had severity assessed
   const [severityAssessed, setSeverityAssessed] = useState<Set<string>>(new Set());
 
-
-  // Force refresh when state changes
-  React.useEffect(() => {
-    setForceRefresh(prev => prev + 1);
-  }, [state.lines, state.usedQuestions]);
-
   // Find first line with <3 decisions (Phase C has CO1, CO2, CF questions)
   const pendingLine = nonALines.find(l => l.mod.decisions.length < 3);
+  
   
 
   // When all done, proceed to Phase D (no verdict calculation yet)
@@ -40,7 +35,6 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     if (!pendingLine && !verdictsCalculated.current) {
       verdictsCalculated.current = true;
       
-      console.log('🎯 PHASE C - All non-A lines completed, proceeding to Phase D');
       
       // Proceed to Phase D after a brief delay
       const timer = setTimeout(() => {
@@ -95,28 +89,6 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     return { id: l.id, verdict, key, decisions: l.mod.decisions, by };
   });
   
-  // Debug logging moved to useEffect
-  React.useEffect(() => {
-    console.log('🔍 F VERDICTS DEBUG:', {
-      allFVerdicts: allFVerdicts.map(l => ({ 
-        id: l.id, 
-        decisions: l.mod.decisions,
-        verdict: (() => {
-          const by = Object.fromEntries(l.mod.decisions.map(d => [d.type, d.pick]));
-          const key = `${by['CO1']}${by['CO2']}${by['CF']}`;
-          const table: Record<string, string> = {
-            "CCC": "C", "CCF": "O", "COC": "O", "COF": "F", 
-            "OCC": "O", "OCF": "F", "OOC": "O", "OOF": "F"
-          };
-          return table[key] || "O";
-        })()
-      })),
-      severityAssessed: Array.from(severityAssessed),
-      needSeverity: needSeverity?.id || 'none',
-      nonALinesCount: nonALines.length,
-      nonALinesWith3Decisions: nonALines.filter(l => l.mod.decisions.length === 3).length
-    });
-  }, [allFVerdicts, severityAssessed, needSeverity, nonALines.length, pendingLine]);
   
   const allLinesComplete = nonALines.every(l => l.mod.decisions.length === 3);
 
@@ -132,7 +104,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
       );
     }
 
-    const handleSeverityChoice = (level: 'high' | 'mid' | 'low', score: 1.0 | 0.5 | 0.0) => {
+    const handleSeverityChoice = (level: 'high' | 'mid', score: 1.0 | 0.5) => {
       // Mark this line as having severity assessed
       setSeverityAssessed(prev => {
         const newSet = new Set(prev);
@@ -142,7 +114,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
 
       onSeveritySelect(needSeverity.id, level, score);
       onAddQuestionToHistory('C', needSeverity.id, severityQuestion.id, 
-        level === 'high' ? 'F1' : level === 'mid' ? 'F0.5' : 'F0');
+        level === 'high' ? 'F1' : 'F0.5');
       
       // Record severity assessment
       quizRecorder.recordSeverityAssessment(needSeverity.id, level, state.sifCounters);
@@ -196,19 +168,6 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
             </div>
           </button>
           
-          {severityQuestion.options.C && (
-            <button
-              onClick={() => handleSeverityChoice('low', 0.0)}
-              className="w-full p-3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
-            >
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
-                  C
-                </div>
-                <span className="text-gray-100 text-sm font-medium leading-relaxed">{severityQuestion.options.C}</span>
-              </div>
-            </button>
-          )}
         </div>
       </div>
     );
@@ -305,7 +264,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
   const totalSteps = totalModules + severityNeeded;
 
   return (
-    <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}-${forceRefresh}`} className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+    <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}`} className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
         <div className="mb-4 text-center">

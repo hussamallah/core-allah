@@ -1,0 +1,146 @@
+/* Tab Navigation Styling */
+.tab-navigation {
+  display: flex;
+  border-bottom: 1px solid #374151;
+  margin-bottom: 2rem;
+}
+
+.tab-navigation button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.tab-navigation button:hover {
+  color: #F3F4F6;
+}
+
+.tab-navigation button.active {
+  color: #F59E0B;
+  border-bottom-color: #F59E0B;
+}
+
+/* Diagnostics Page Styling */
+.diagnostics-page {
+  max-width: 6xl;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.diagnostics-page h2 {
+  color: #F59E0B;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.diagnostics-page h3 {
+  color: #F3F4F6;
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem 0;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 0.5rem;
+}
+
+.diagnostics-page h4 {
+  color: #D1D5DB;
+  font-size: 1.25rem;
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+.diagnostics-page h5 {
+  color: #9CA3AF;
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem 0;
+}
+
+/* Grid layouts for diagnostics */
+.version-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.il-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.timing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+/* Export buttons */
+.export-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.export-buttons button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.export-buttons button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Candidate cards */
+.candidate {
+  transition: all 0.2s;
+}
+
+.candidate:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tab-navigation {
+    flex-direction: column;
+    border-bottom: none;
+  }
+  
+  .tab-navigation button {
+    border-bottom: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+  }
+  
+  .tab-navigation button.active {
+    border-left-color: #F59E0B;
+    border-bottom-color: transparent;
+  }
+  
+  .paths-grid,
+  .il-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .version-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .timing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

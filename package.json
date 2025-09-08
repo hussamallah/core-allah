@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "TypeScript core engine with Next.js 15+ frontend",
   "private": true,
-  "workspaces": [
-    "core-engine",
-    "app"
-  ],
   "scripts": {
     "dev": "pnpm --filter app dev",
     "build": "pnpm --filter core-engine build && pnpm --filter app build",

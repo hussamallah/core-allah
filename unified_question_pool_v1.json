@@ -1,0 +1,1786 @@
+{
+  "schema_version": "unified-pool-v1",
+  "canon": {
+    "meanings": {
+      "C": "Aligned to family axis; native signal.",
+      "O": "Off-axis wobble; no face vote on fused.",
+      "F": "Override needed/install signal; not a block."
+    }
+  },
+  "meta": {
+    "id": "unified-question-pool-v1",
+    "date": "2025-01-XX",
+    "reading_level": "G6-G7",
+    "total_questions": 28,
+    "questions_per_line": 4,
+    "lines": 7,
+    "question_types": [
+      "CO1",
+      "CO2",
+      "CF1",
+      "Severity1"
+    ],
+    "notes": "Unified pool v1: Phase A + 28 questions (4 per line: CO1, CO2, CF1, Severity1). Phase B uses family effects, Phase C uses face effects."
+  },
+  "phase_a": [
+    {
+      "id": "A-FAM-CTRL",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Control",
+      "blurb": "You set the call and move the plan.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-PACE",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Pace",
+      "blurb": "You keep time by picking a task and finishing it.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-BOUND",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Boundary",
+      "blurb": "You draw the line and say what can fit now.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-TRUTH",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Truth",
+      "blurb": "You hold the reason by checking facts and keeping signals clear.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-RECOG",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Recognition",
+      "blurb": "You show proof and claim the work you did.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-BOND",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Bonding",
+      "blurb": "You keep trust by caring for and protecting the link.",
+      "reading_level": "G5"
+    },
+    {
+      "id": "A-FAM-STRESS",
+      "phase": "A",
+      "kind": "family_card",
+      "family": "Stress",
+      "blurb": "You act when pressure is high and others stall.",
+      "reading_level": "G5"
+    }
+  ],
+  "unified_questions": [
+    {
+      "id": "CTRL-CO1-001",
+      "family": "Control",
+      "type": "CO1",
+      "prompt": "Your group is undecided on where to go. Time is short, and everyone looks at you to make the choice.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Name the place now so everyone moves together immediately. (Sovereign)",
+          "pick": "C",
+          "c_flavor": "Sovereign",
+          "effects": {
+            "famC": [
+              "Control"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Invite more suggestions and wait for consensus to appear. (off-axis wobble)",
+          "pick": "O",
+          "o_subtype": "consensus_wait",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Control"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceF": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "CTRL-CF1-001",
+      "family": "Control",
+      "type": "CF1",
+      "prompt": "The bus leaves in five minutes. Everyone is waiting, no one acts, and you are standing closest to the door.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Call the route and tell the group to move now.",
+          "pick": "C",
+          "c_flavor": "Sovereign",
+          "effects": {
+            "famC": [
+              "Control"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Say nothing and leave the call unmade as time passes.",
+          "pick": "F",
+          "f_flavor": "Sovereign_shadow",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Control"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "PACE-CO1-001",
+      "family": "Pace",
+      "type": "CO1",
+      "prompt": "You begin a project with a bold idea. Team asks where to start, and time is limited for the first move.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Name the striking first step that fits the big arc. (Visionary)",
+          "pick": "C",
+          "c_flavor": "Visionary",
+          "effects": {
+            "famC": [
+              "Pace"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Hesitate and browse options while the moment slips. (off-axis wobble)",
+          "pick": "O",
+          "o_subtype": "optimization_trap",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Pace"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceF": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "PACE-CF1-001",
+      "family": "Pace",
+      "type": "CF1",
+      "prompt": "You have twenty minutes left and two tasks half done. Switching now risks both failing before the end.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Finish one completely, accept the other may miss today.",
+          "pick": "C",
+          "c_flavor": "Navigator",
+          "effects": {
+            "famC": [
+              "Pace"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Keep switching and finish neither before the deadline.",
+          "pick": "F",
+          "f_flavor": "Visionary_drift",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Pace"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "BOUND-CO1-001",
+      "family": "Boundary",
+      "type": "CO1",
+      "prompt": "During a team chat, two people dominate. Others cannot speak, and time is slipping. They look to you to reset.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Restate turns and enforce equal time for each voice. (Equalizer)",
+          "pick": "C",
+          "c_flavor": "Equalizer",
+          "effects": {
+            "famC": [
+              "Boundary"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Let it run uneven and hope it balances later. (off-axis wobble)",
+          "pick": "O",
+          "o_subtype": "people_please",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Boundary"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceF": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "BOUND-CF1-001",
+      "family": "Boundary",
+      "type": "CF1",
+      "prompt": "Your focus block is half over. A friend pushes another task onto you, and your project deadline is tonight.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Say not now and protect this block for your project.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Boundary"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Guardian"
+        },
+        {
+          "key": "B",
+          "label": "Accept the task and sacrifice the line you set.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Boundary"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ]
+          },
+          "f_flavor": "Equalizer_guilt"
+        }
+      ]
+    },
+    {
+      "id": "TRUTH-CO1-001",
+      "family": "Truth",
+      "type": "CO1",
+      "prompt": "A strong claim spreads fast. Friends ask if it is real. You have one minute to check something useful.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Test one live source before repeating anything. (Seeker)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Truth"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Seeker"
+        },
+        {
+          "key": "B",
+          "label": "Repeat it as heard without testing details. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Truth"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "speed_over_check"
+        }
+      ]
+    },
+    {
+      "id": "TRUTH-CF1-001",
+      "family": "Truth",
+      "type": "CF1",
+      "prompt": "A product promises big results with vague details. You must buy within minutes, and no one else is verifying anything.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Check one concrete fact before spending money today.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Truth"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Seeker"
+        },
+        {
+          "key": "B",
+          "label": "Skip checking and trust the claim as written now.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Truth"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ]
+          },
+          "f_flavor": "Seeker_impatience"
+        }
+      ]
+    },
+    {
+      "id": "RECOG-CO1-001",
+      "family": "Recognition",
+      "type": "CO1",
+      "prompt": "Your team finished a hard push. Leadership asks for a summary now. Credit is unclear and the room feels tense.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Show outcomes publicly so people see what changed. (Spotlight)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Recognition"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Spotlight"
+        },
+        {
+          "key": "B",
+          "label": "Hold updates until feelings cool and time appears. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Recognition"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "perfection_hold"
+        }
+      ]
+    },
+    {
+      "id": "RECOG-CF1-001",
+      "family": "Recognition",
+      "type": "CF1",
+      "prompt": "You are asked to give a one-minute progress update. The report is not polished, but the group needs information.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Share the key points now so people can move forward.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Recognition"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Spotlight"
+        },
+        {
+          "key": "B",
+          "label": "Delay until you can make it perfect and risk missing the moment.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Recognition"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ]
+          },
+          "f_flavor": "Spotlight_perfection"
+        }
+      ]
+    },
+    {
+      "id": "BOND-CO1-001",
+      "family": "Bonding",
+      "type": "CO1",
+      "prompt": "A close friend is upset during a group hangout. You can either stay with them or keep moving with the group.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Stay and listen until they feel better. (Partner)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Bonding"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Partner"
+        },
+        {
+          "key": "B",
+          "label": "Keep moving and hope they join when ready. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Bonding"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "group_pressure"
+        }
+      ]
+    },
+    {
+      "id": "BOND-CF1-001",
+      "family": "Bonding",
+      "type": "CF1",
+      "prompt": "Your schedule is full. A teammate asks you to join another project. They look stressed and need extra support.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Say yes and find a way to make both work. (Partner)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Bonding"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Partner"
+        },
+        {
+          "key": "B",
+          "label": "Say no and watch them struggle alone.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Bonding"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ]
+          },
+          "f_flavor": "Partner_guilt"
+        }
+      ]
+    },
+    {
+      "id": "STRESS-CO1-001",
+      "family": "Stress",
+      "type": "CO1",
+      "prompt": "The timer shows two minutes left. The task is not started, and your team is waiting for action.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Start something bold and visible right now. (Catalyst)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Stress"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Catalyst"
+        },
+        {
+          "key": "B",
+          "label": "Wait for a better moment and risk missing the window. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Stress"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "timing_fear"
+        }
+      ]
+    },
+    {
+      "id": "STRESS-CF1-001",
+      "family": "Stress",
+      "type": "CF1",
+      "prompt": "Time is almost up and nothing is started. You can make a quick start or do nothing.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Start something now and build momentum fast.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Stress"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Catalyst"
+        },
+        {
+          "key": "B",
+          "label": "Do nothing and accept the missed opportunity.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Stress"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ]
+          },
+          "f_flavor": "Catalyst_shutdown"
+        }
+      ]
+    },
+    {
+      "id": "CTRL-CO2-001",
+      "family": "Control",
+      "type": "CO2",
+      "prompt": "Two teammates argue over what to do next. The deadline is close, and they both turn to you for direction.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Break the stalemate by choosing a bold next step right now. (Rebel)",
+          "pick": "C",
+          "c_flavor": "Rebel",
+          "effects": {
+            "famC": [
+              "Control"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Avoid the conflict and let them keep arguing without you. (off-axis wobble)",
+          "pick": "O",
+          "o_subtype": "conflict_avoid",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Control"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceF": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "CTRL-SEV1-001",
+      "family": "Control",
+      "type": "Severity1",
+      "prompt": "You must make a decision now, but the facts are unclear. Time is running out.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Make the best call with what you know.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Control"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Control"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Refuse to decide without clear facts.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Control"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Control:Rebel",
+              "Control:Sovereign"
+            ],
+            "sevF": [
+              "Control"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "PACE-CO2-001",
+      "family": "Pace",
+      "type": "CO2",
+      "prompt": "Two paths exist: one complex, one simple. A delivery deadline is today, and the team wants your immediate direction.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Pick the simple route that lands one result now. (Navigator)",
+          "pick": "C",
+          "c_flavor": "Navigator",
+          "effects": {
+            "famC": [
+              "Pace"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceO": [],
+            "faceF": []
+          }
+        },
+        {
+          "key": "B",
+          "label": "Keep comparing paths and delay your start further. (off-axis wobble)",
+          "pick": "O",
+          "o_subtype": "optimization_trap",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Pace"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceF": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "PACE-SEV1-001",
+      "family": "Pace",
+      "type": "Severity1",
+      "prompt": "You need to show progress but your work isn't perfect yet. The deadline is today.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Show what you have and explain the progress.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Pace"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Pace"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Wait until it's perfect before showing anything.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Pace"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Pace:Visionary",
+              "Pace:Navigator"
+            ],
+            "sevF": [
+              "Pace"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "BOUND-CO2-001",
+      "family": "Boundary",
+      "type": "CO2",
+      "prompt": "A rushed request asks you to skip safety steps. People are tired, and the shortcut could risk harm today.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Hold the safety line and decline the shortcut. (Guardian)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Boundary"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Guardian"
+        },
+        {
+          "key": "B",
+          "label": "Agree to skip a step and hope nothing breaks. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Boundary"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "risk_averse"
+        }
+      ]
+    },
+    {
+      "id": "BOUND-SEV1-001",
+      "family": "Boundary",
+      "type": "Severity1",
+      "prompt": "The project scope keeps expanding. You can enforce the original limits or let it grow.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Hold the line and keep the original scope.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Boundary"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Boundary"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Let it expand and deal with the consequences later.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Boundary"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Boundary:Equalizer",
+              "Boundary:Guardian"
+            ],
+            "sevF": [
+              "Boundary"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "TRUTH-CO2-001",
+      "family": "Truth",
+      "type": "CO2",
+      "prompt": "Two rules conflict in a shared document. People are confused, and a decision is due soon. They ask you to clarify.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Redraw a clear frame so parts fit and hold. (Architect)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Truth"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Architect"
+        },
+        {
+          "key": "B",
+          "label": "Let the conflict stand and hope context decides later. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Truth"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "defer_structure"
+        }
+      ]
+    },
+    {
+      "id": "TRUTH-SEV1-001",
+      "family": "Truth",
+      "type": "Severity1",
+      "prompt": "Someone shares a claim that sounds wrong to you. You can either check it quickly or let it pass.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Ask for one source to verify the claim.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Truth"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Truth"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Let it go and avoid the conflict.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Truth"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Truth:Seeker",
+              "Truth:Architect"
+            ],
+            "sevF": [
+              "Truth"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "RECOG-CO2-001",
+      "family": "Recognition",
+      "type": "CO2",
+      "prompt": "A colleague takes credit for your idea in a meeting. Others are watching, and you have seconds to respond.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Claim your part clearly so the record is straight. (Diplomat)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Recognition"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Diplomat"
+        },
+        {
+          "key": "B",
+          "label": "Stay quiet and hope someone else notices the truth. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Recognition"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "credit_avoid"
+        }
+      ]
+    },
+    {
+      "id": "RECOG-SEV1-001",
+      "family": "Recognition",
+      "type": "Severity1",
+      "prompt": "Credit for work is unclear between you and a teammate. You can claim your part or share it.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Show what you did and claim your credit.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Recognition"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Recognition"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Share credit equally to avoid conflict.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Recognition"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Recognition:Spotlight",
+              "Recognition:Diplomat"
+            ],
+            "sevF": [
+              "Recognition"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "BOND-CO2-001",
+      "family": "Bonding",
+      "type": "CO2",
+      "prompt": "Someone asks you to help with a heavy task. Your own plan is full, but they look at you with need.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Make room and share the load together. (Provider)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Bonding"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Provider"
+        },
+        {
+          "key": "B",
+          "label": "Say no and hope they find help elsewhere. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Bonding"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "boundary_rigid"
+        }
+      ]
+    },
+    {
+      "id": "BOND-SEV1-001",
+      "family": "Bonding",
+      "type": "Severity1",
+      "prompt": "A teammate is stressed and asks you to take on extra work. You're already overloaded.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Take some of their load to help them.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Bonding"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Bonding"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Refuse and let them handle their own stress.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Bonding"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Bonding:Partner",
+              "Bonding:Provider"
+            ],
+            "sevF": [
+              "Bonding"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STRESS-CO2-001",
+      "family": "Stress",
+      "type": "CO2",
+      "prompt": "Pressure is high and people are stressed. A decision must be made now, and everyone looks to you.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Make the call and own the outcome completely. (Artisan)",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Stress"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceO": [],
+            "faceF": []
+          },
+          "c_flavor": "Artisan"
+        },
+        {
+          "key": "B",
+          "label": "Ask for more time and let tension build further. (off-axis wobble)",
+          "pick": "O",
+          "effects": {
+            "famC": [],
+            "famO": [
+              "Stress"
+            ],
+            "famF": [],
+            "faceC": [],
+            "faceO": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceF": []
+          },
+          "o_subtype": "pressure_avoid"
+        }
+      ]
+    },
+    {
+      "id": "STRESS-SEV1-001",
+      "family": "Stress",
+      "type": "Severity1",
+      "prompt": "Time is almost up and nothing is started. You can make a quick start or do nothing.",
+      "options": [
+        {
+          "key": "A",
+          "label": "Start something quickly to show progress.",
+          "pick": "C",
+          "effects": {
+            "famC": [
+              "Stress"
+            ],
+            "famO": [],
+            "famF": [],
+            "faceC": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "faceO": [],
+            "faceF": [],
+            "sevF": [
+              "Stress"
+            ]
+          }
+        },
+        {
+          "key": "B",
+          "label": "Do nothing and let the time run out.",
+          "pick": "F",
+          "effects": {
+            "famC": [],
+            "famO": [],
+            "famF": [
+              "Stress"
+            ],
+            "faceC": [],
+            "faceO": [],
+            "faceF": [
+              "Stress:Catalyst",
+              "Stress:Artisan"
+            ],
+            "sevF": [
+              "Stress"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "phase_e": [
+    {
+      "id": "CORE-CTRL-01",
+      "family": "Control",
+      "archetypes": [
+        "Sovereign",
+        "Rebel"
+      ],
+      "prompt": "When you lead, what feels right at your core?",
+      "options": {
+        "A": "Set the line so others can move with you.",
+        "B": "Break the line so movement starts again."
+      },
+      "map": {
+        "A": "Sovereign",
+        "B": "Rebel"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-CTRL-02",
+      "family": "Control",
+      "archetypes": [
+        "Sovereign",
+        "Rebel"
+      ],
+      "prompt": "Rules to you are mainly…",
+      "options": {
+        "A": "Language I declare so work is clear.",
+        "B": "Material I bend to open the path."
+      },
+      "map": {
+        "A": "Sovereign",
+        "B": "Rebel"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-CTRL-03",
+      "family": "Control",
+      "archetypes": [
+        "Sovereign",
+        "Rebel"
+      ],
+      "prompt": "Power, in your body, feels like…",
+      "options": {
+        "A": "Calm authority that others align to.",
+        "B": "A spark that flips the room into motion."
+      },
+      "map": {
+        "A": "Sovereign",
+        "B": "Rebel"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-PACE-01",
+      "family": "Pace",
+      "archetypes": [
+        "Visionary",
+        "Navigator"
+      ],
+      "prompt": "What pulls you more when you move?",
+      "options": {
+        "A": "The end picture that calls from the future.",
+        "B": "The next step that keeps the route clean."
+      },
+      "map": {
+        "A": "Visionary",
+        "B": "Navigator"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-PACE-02",
+      "family": "Pace",
+      "archetypes": [
+        "Visionary",
+        "Navigator"
+      ],
+      "prompt": "Your time sense is mostly…",
+      "options": {
+        "A": "Timing the reveal when the arc is ready.",
+        "B": "Pacing the work so it finishes on time."
+      },
+      "map": {
+        "A": "Visionary",
+        "B": "Navigator"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-PACE-03",
+      "family": "Pace",
+      "archetypes": [
+        "Visionary",
+        "Navigator"
+      ],
+      "prompt": "When paths split, you trust…",
+      "options": {
+        "A": "The bold line that fits the long story.",
+        "B": "The simple line that lands a result now."
+      },
+      "map": {
+        "A": "Visionary",
+        "B": "Navigator"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOUND-01",
+      "family": "Boundary",
+      "archetypes": [
+        "Equalizer",
+        "Guardian"
+      ],
+      "prompt": "Your first duty feels like…",
+      "options": {
+        "A": "Keep the field fair so power is balanced.",
+        "B": "Keep people safe so harm does not land."
+      },
+      "map": {
+        "A": "Equalizer",
+        "B": "Guardian"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOUND-02",
+      "family": "Boundary",
+      "archetypes": [
+        "Equalizer",
+        "Guardian"
+      ],
+      "prompt": "When lines get fuzzy, you…",
+      "options": {
+        "A": "Redraw the rule so all play by it.",
+        "B": "Shield the person most at risk."
+      },
+      "map": {
+        "A": "Equalizer",
+        "B": "Guardian"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOUND-03",
+      "family": "Boundary",
+      "archetypes": [
+        "Equalizer",
+        "Guardian"
+      ],
+      "prompt": "What settles you more?",
+      "options": {
+        "A": "Shared limits that make things fair.",
+        "B": "Knowing the vulnerable are protected."
+      },
+      "map": {
+        "A": "Equalizer",
+        "B": "Guardian"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-TRUTH-01",
+      "family": "Truth",
+      "archetypes": [
+        "Seeker",
+        "Architect"
+      ],
+      "prompt": "Truth, to you, shows up first as…",
+      "options": {
+        "A": "A live signal I can test in the wild.",
+        "B": "A clear frame I can build and check."
+      },
+      "map": {
+        "A": "Seeker",
+        "B": "Architect"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-TRUTH-02",
+      "family": "Truth",
+      "archetypes": [
+        "Seeker",
+        "Architect"
+      ],
+      "prompt": "Your mind rests better when…",
+      "options": {
+        "A": "Patterns emerge from real examples.",
+        "B": "Definitions lock and terms stay clean."
+      },
+      "map": {
+        "A": "Seeker",
+        "B": "Architect"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-TRUTH-03",
+      "family": "Truth",
+      "archetypes": [
+        "Seeker",
+        "Architect"
+      ],
+      "prompt": "Your core move with confusion is…",
+      "options": {
+        "A": "Ask for the one signal that matters.",
+        "B": "Draw the structure so parts fit right."
+      },
+      "map": {
+        "A": "Seeker",
+        "B": "Architect"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-RECO-01",
+      "family": "Recognition",
+      "archetypes": [
+        "Spotlight",
+        "Diplomat"
+      ],
+      "prompt": "How do you make change real?",
+      "options": {
+        "A": "Shine a light so people see and move.",
+        "B": "Bridge sides so people align and move."
+      },
+      "map": {
+        "A": "Spotlight",
+        "B": "Diplomat"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-RECO-02",
+      "family": "Recognition",
+      "archetypes": [
+        "Spotlight",
+        "Diplomat"
+      ],
+      "prompt": "Your proof lives mostly in…",
+      "options": {
+        "A": "Public signal that carries far.",
+        "B": "Quiet deals that unlock doors."
+      },
+      "map": {
+        "A": "Spotlight",
+        "B": "Diplomat"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-RECO-03",
+      "family": "Recognition",
+      "archetypes": [
+        "Spotlight",
+        "Diplomat"
+      ],
+      "prompt": "What feels more honest to you?",
+      "options": {
+        "A": "Stand up and show the win.",
+        "B": "Line up the room, then share the win."
+      },
+      "map": {
+        "A": "Spotlight",
+        "B": "Diplomat"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOND-01",
+      "family": "Bonding",
+      "archetypes": [
+        "Partner",
+        "Provider"
+      ],
+      "prompt": "Care, in your body, is mostly…",
+      "options": {
+        "A": "Being there with you through the hard part.",
+        "B": "Doing the thing so your load is lighter."
+      },
+      "map": {
+        "A": "Partner",
+        "B": "Provider"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOND-02",
+      "family": "Bonding",
+      "archetypes": [
+        "Partner",
+        "Provider"
+      ],
+      "prompt": "What proves love to you more?",
+      "options": {
+        "A": "We face it side by side.",
+        "B": "I handle it so you can rest."
+      },
+      "map": {
+        "A": "Partner",
+        "B": "Provider"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-BOND-03",
+      "family": "Bonding",
+      "archetypes": [
+        "Partner",
+        "Provider"
+      ],
+      "prompt": "Your bond keeps strength by…",
+      "options": {
+        "A": "Staying close in the storm.",
+        "B": "Taking care of the needs."
+      },
+      "map": {
+        "A": "Partner",
+        "B": "Provider"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-STRESS-01",
+      "family": "Stress",
+      "archetypes": [
+        "Catalyst",
+        "Artisan"
+      ],
+      "prompt": "Under stress, your gift is…",
+      "options": {
+        "A": "Ignite motion and cut the drag.",
+        "B": "Keep quality and land one clean piece."
+      },
+      "map": {
+        "A": "Catalyst",
+        "B": "Artisan"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-STRESS-02",
+      "family": "Stress",
+      "archetypes": [
+        "Catalyst",
+        "Artisan"
+      ],
+      "prompt": "What do you trust more when it's tight?",
+      "options": {
+        "A": "Start the chain and push it forward.",
+        "B": "Craft the standard others can copy."
+      },
+      "map": {
+        "A": "Catalyst",
+        "B": "Artisan"
+      },
+      "reading_level": "G5"
+    },
+    {
+      "id": "CORE-STRESS-03",
+      "family": "Stress",
+      "archetypes": [
+        "Catalyst",
+        "Artisan"
+      ],
+      "prompt": "Your core pride comes from…",
+      "options": {
+        "A": "Making the first move that changes the field.",
+        "B": "Making the thing so well it holds up."
+      },
+      "map": {
+        "A": "Catalyst",
+        "B": "Artisan"
+      },
+      "reading_level": "G5"
+    }
+  ],
+  "phase_d_bundle": {
+    "final_probes": [],
+    "severity_probes": [],
+    "sif_micro_probes": []
+  }
+}

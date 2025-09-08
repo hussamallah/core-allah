@@ -56,7 +56,7 @@ class QuizRecorder {
     });
   }
 
-  recordSeverityAssessment(lineId: string, severity: 'high' | 'mid' | 'low', sifCounters: Record<string, any>) {
+  recordSeverityAssessment(lineId: string, severity: 'high' | 'mid', sifCounters: Record<string, any>) {
     this.record({
       phase: 'C',
       action: 'severity_assessed',

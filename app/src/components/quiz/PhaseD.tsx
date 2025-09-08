@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { QuizState } from '@/types/quiz';
-import { phaseDEngine } from '@/engine/PhaseD';
+// import { phaseDEngine } from '@/engine/PhaseD'; // Now using SIFEngine's Phase D engine
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { SIFEngine } from '@/engine/SIFEngine';
 
@@ -11,6 +11,7 @@ interface PhaseDProps {
   onProceedToE: () => void;
   onSetSIFShortlist: (shortlist: string[]) => void;
   onSetInstalledChoice: (choice: string) => void;
+  sifEngine: SIFEngine; // Add SIFEngine as prop
 }
 
 export default function PhaseD({ 
@@ -19,7 +20,8 @@ export default function PhaseD({
   onRecordAllSIFData, 
   onProceedToE,
   onSetSIFShortlist,
-  onSetInstalledChoice 
+  onSetInstalledChoice,
+  sifEngine
 }: PhaseDProps) {
   const [hasComputed, setHasComputed] = useState(false);
   const [shortlist, setShortlist] = useState<string[] | null>(null);
@@ -31,7 +33,8 @@ export default function PhaseD({
     cues: string[];
   }> | null>(null);
   const [installed, setInstalled] = useState<string | null>(null);
-  const [sifEngine] = useState(() => new SIFEngine());
+  // Use the SIFEngine from useQuizEngine instead of creating a new one
+  // const [sifEngine] = useState(() => new SIFEngine());
   const didCommit = useRef(false);
 
   // Phase D: Compute verdicts and build install shortlist
@@ -44,7 +47,7 @@ export default function PhaseD({
     console.log('🎯 PHASE D - Computing verdicts with deterministic table');
     console.log('🎯 PHASE D - State lines:', state.lines.map(l => ({ id: l.id, selectedA: l.selectedA, picks: l.B?.picks, decisions: l.mod?.decisions })));
     
-    const verdicts = phaseDEngine.computeVerdicts(state.lines);
+    const verdicts = sifEngine.phaseDEngine.computeVerdicts(state.lines, sifEngine);
     console.log('🎯 PHASE D - Verdicts computed:', verdicts);
     
     // Note: Verdicts are computed for display purposes only

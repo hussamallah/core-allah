@@ -135,12 +135,12 @@ export const PRIZE_MIRROR_MAP: Record<string, string> = {
   'Recognition:Diplomat': 'Control:Sovereign', // Diplomat → Sovereign
   
   // Bonding family
-  'Bonding:Partner': 'Boundary:Equalizer',     // Partner → Equalizer
-  'Bonding:Provider': 'Boundary:Guardian',     // Provider → Guardian
+  'Bonding:Partner': 'Boundary:Guardian',     // ✅ FIXED: Partner → Guardian (was Equalizer)
+  'Bonding:Provider': 'Boundary:Equalizer',   // ✅ FIXED: Provider → Equalizer (was Healer)
   
   // Stress family
   'Stress:Catalyst': 'Pace:Navigator',         // Catalyst → Navigator
-  'Stress:Artisan': 'Pace:Visionary'           // Artisan → Visionary
+  'Stress:Artisan': 'Pace:Visionary'          // Artisan → Visionary
 };
 
 // Legacy Prize mapping - kept for backward compatibility
@@ -223,6 +223,19 @@ export interface DuelQuestion {
     B: string;
   };
   kind: string;
+  // HTML simulator mappings
+  c_flavor?: string | null;
+  o_subtype?: string | null;
+  f_flavor?: string | null;
+  enhanced?: {
+    autoAdvance: boolean;
+    keyboardShortcuts: boolean;
+    timeContext: boolean;
+    socialDynamics: boolean;
+    c_flavor: string;
+    o_subtype: string;
+    f_flavor: string | null;
+  };
 }
 
 export interface ModuleQuestion {
@@ -243,6 +256,19 @@ export interface ModuleQuestion {
   };
   face: string;
   kind: string;
+  // HTML simulator mappings
+  c_flavor?: string | null;
+  o_subtype?: string | null;
+  f_flavor?: string | null;
+  enhanced?: {
+    autoAdvance: boolean;
+    keyboardShortcuts: boolean;
+    timeContext: boolean;
+    socialDynamics: boolean;
+    c_flavor: string;
+    o_subtype: string;
+    f_flavor: string | null;
+  };
 }
 
 export interface FinalProbeQuestion {

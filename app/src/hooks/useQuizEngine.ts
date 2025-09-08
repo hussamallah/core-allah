@@ -37,6 +37,28 @@ export function useQuizEngine() {
   const [state, setState] = useState<QuizState>(initialQuizState);
   const [sifEngine] = useState(() => new SIFEngine());
 
+  // Clear corrupted localStorage on initialization
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('quiz_engine_state');
+      if (savedState) {
+        try {
+          const parsed = JSON.parse(savedState);
+          // Check if the state has corrupted A-line assignments
+          if (parsed.selectedALines && parsed.selectedALines.length > 0) {
+            console.log('🔍 Found saved state, checking for corruption...');
+            // For now, clear any saved state to prevent corruption
+            localStorage.removeItem('quiz_engine_state');
+            console.log('🗑️ Cleared potentially corrupted saved state');
+          }
+        } catch (error) {
+          console.log('🗑️ Cleared corrupted saved state');
+          localStorage.removeItem('quiz_engine_state');
+        }
+      }
+    }
+  }, []);
+
   // Initialize SIF counters
   useEffect(() => {
     sifEngine.initializeCounters();
@@ -69,9 +91,15 @@ export function useQuizEngine() {
   }, []);
 
   const resetQuiz = useCallback(() => {
+    // Clear any corrupted localStorage data
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('quiz_engine_state');
+      console.log('🗑️ Cleared corrupted localStorage data');
+    }
     setState(initialQuizState);
     sifEngine.reset();
-  }, [sifEngine, state.lines]);
+    sifEngine.clearILScores(); // Clear IL scores when starting new quiz
+  }, [sifEngine]);
 
   const addUsedQuestion = useCallback((questionId: string) => {
     setState(prev => ({
@@ -102,28 +130,43 @@ export function useQuizEngine() {
     });
   }, [sifEngine, state.lines]);
 
-  const recordSIFSeverity = useCallback((family: string, severity: 'F0' | 'F0.5' | 'F1') => {
+  const recordSIFSeverity = useCallback((family: string, severity: 'F0.5' | 'F1') => {
+    // Record the severity probe in the SIFEngine first
     sifEngine.recordSeverityProbe(family, severity);
-    
+
+    // Update state to ensure the counters are properly synchronized
     setState(prev => {
       const newCounters = sifEngine.getCounters();
-      return { ...prev, sifCounters: newCounters };
+      return { 
+        ...prev, 
+        sifCounters: {
+          ...newCounters,
+          sevF: { ...newCounters.sevF }
+        }
+      };
     });
-  }, [sifEngine, state.lines]);
+  }, [sifEngine]);
 
 
   const recordAllSIFData = useCallback((quizData: any, primaryFamily: string, primaryFace: string) => {
     sifEngine.recordAllSIFData(quizData, primaryFamily, primaryFace);
     
-    // Only update state if counters actually changed
+    // Force state update to ensure counters are properly synchronized
     setState(prev => {
       const newCounters = sifEngine.getCounters();
-      const countersChanged = JSON.stringify(prev.sifCounters) !== JSON.stringify(newCounters);
+      console.log(`🔍 recordAllSIFData updating state:`, {
+        prevSevF: prev.sifCounters.sevF,
+        newSevF: newCounters.sevF,
+        sevFChanged: JSON.stringify(prev.sifCounters.sevF) !== JSON.stringify(newCounters.sevF)
+      });
       
-      if (countersChanged) {
-        return { ...prev, sifCounters: newCounters };
-      }
-      return prev; // No state change needed
+      return { 
+        ...prev, 
+        sifCounters: {
+          ...newCounters,
+          sevF: { ...newCounters.sevF } // Ensure sevF is properly copied
+        }
+      };
     });
   }, [sifEngine]);
 
@@ -148,7 +191,11 @@ export function useQuizEngine() {
   const finalizeSIFWithInstall = useCallback((primaryFamily: string, primaryFace: string) => {
     console.log("SIF FINAL RESULT (CANON V3): Starting finalization", { primaryFamily, primaryFace });
     
-    const sifResult = sifEngine.finalizeSIFWithInstall(state, primaryFace);
+    // Build allFacesByIL from the shortlist (ordered by IL score)
+    const allFacesByIL = state.sifShortlist || [];
+    console.log("🔍 allFacesByIL from shortlist:", allFacesByIL);
+    
+    const sifResult = sifEngine.finalizeSIFWithInstall(state, primaryFace, allFacesByIL);
     
     setState(prev => ({ ...prev, sifResult }));
     return sifResult;
@@ -281,31 +328,8 @@ export function useQuizEngine() {
     return table[key] || "O";
   }, []);
 
-  // Preseed A-line decisions based on Phase B picks
-  const preseedAlineDecisions = useCallback(() => {
-    selectedA().forEach(line => {
-      if (line.mod.decisions.length) return;
-      const p1 = line.B.picks[0];
-      const p2 = line.B.picks[1];
-      if (!p1 || !p2) return;
-
-      const decisions: Array<{ type: 'CO1' | 'CO2' | 'CF'; pick: 'C' | 'O' | 'F' }> = [];
-      // CO1 = B1 (convert F to O)
-      decisions.push({ type: "CO1", pick: p1 === "F" ? "O" : p1 as 'C' | 'O' | 'F' });
-      
-      if (p1 === "C") {
-        // CO2 = B2; CF = C (computed)
-        decisions.push({ type: "CO2", pick: p2 === "F" ? "O" : p2 as 'C' | 'O' | 'F' });
-        decisions.push({ type: "CF", pick: "C" });
-      } else { // p1 === 'O'
-        // CF = B2; CO2 = O (computed)
-        decisions.push({ type: "CF", pick: p2 === "O" ? "F" : p2 as 'C' | 'O' | 'F' });
-        decisions.push({ type: "CO2", pick: "O" });
-      }
-
-      updateLine(line.id, { mod: { decisions } });
-    });
-  }, [selectedA, updateLine]);
+  // A-lines should NOT have module decisions - they use Phase B picks only
+  // Only non-A-lines (module lines) will have module decisions from Phase C
 
   const addArchetypeAnswer = useCallback((questionId: string, choice: string) => {
     setState(prev => ({
@@ -346,6 +370,7 @@ export function useQuizEngine() {
     // SIF v3 methods
     setSIFShortlist,
     setInstalledChoice,
-    finalizeSIFWithInstall
+    finalizeSIFWithInstall,
+    sifEngine
   };
 }

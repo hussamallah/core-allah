@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ground Zero — Phase B Quiz Simulator (v3, single-question)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { height: 100%; }
+    .badge { display:inline-flex; align-items:center; border-radius:9999px; padding:2px 8px; font-size:11px; font-weight:600; }
+    .card { background:white; border:1px solid #e5e7eb; border-radius:16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .btn { border-radius:10px; padding:10px 14px; font-weight:600; }
+    .btn-primary { background:#4f46e5; color:white; }
+    .btn-primary:hover { background:#4338ca; }
+    .btn-soft { background:#f1f5f9; }
+    .btn-soft:hover { background:#e2e8f0; }
+    .mini { font-size:12px; color:#475569; }
+    .pill { padding:2px 8px; border:1px solid #e5e7eb; border-radius:9999px; font-size:11px; }
+    .tab-active { background:#eef2ff; color:#3730a3; border-color:#c7d2fe; }
+    .q-structure-CO { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
+    .q-structure-CF { background:#fffbeb; color:#b45309; border-color:#fde68a; }
+    .q-structure-F { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
+    .opt { border:1px solid #e5e7eb; border-radius:12px; padding:14px; background:white; cursor:pointer; display:block; }
+    .opt:hover { background:#f8fafc; }
+    .opt.checked { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(79,70,229,0.15); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .progress { height:10px; background:#e2e8f0; border-radius:9999px; overflow:hidden; }
+    .progress > div { height:100%; background:#4f46e5; width:0%; transition: width .25s ease; }
+  </style>
+</head>
+<body class="min-h-full bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-20 backdrop-blur bg-white/80 border-b border-slate-200">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <h1 class="text-xl md:text-2xl font-semibold tracking-tight">Ground Zero — <span class="text-slate-600">Phase B Simulator (v3)</span></h1>
+      <nav class="flex gap-2 text-sm">
+        <button id="tabQuiz" class="pill tab-active" type="button">Quiz</button>
+        <button id="tabShowcase" class="pill" type="button">Showcase</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 space-y-6">
+    <!-- Controls / Metrics -->
+    <section class="card p-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h2 class="font-semibold">Single-question flow • Auto-advance</h2>
+          <p class="mini">CO/CO/CF(+F if CF=F). O logs <code>o_subtype</code>. End goes to Showcase automatically. Keys: A / B.</p>
+        </div>
+        <div class="flex gap-2">
+          <button id="btnStart" class="btn btn-primary" type="button">Start new session</button>
+          <button id="btnExportJSON" class="btn btn-soft" type="button">Export JSON</button>
+          <button id="btnExportCSV" class="btn btn-soft" type="button">Export CSV</button>
+        </div>
+      </div>
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        <div class="p-3 rounded-xl border border-slate-200 bg-slate-50"><div class="mini">Question</div><div id="mQIdx" class="font-semibold">0 / 0</div></div>
+        <div class="p-3 rounded-xl border border-slate-200 bg-slate-50"><div class="mini">Answered</div><div id="mAnswered" class="font-semibold">0</div></div>
+        <div class="p-3 rounded-xl border border-slate-200 bg-slate-50"><div class="mini">C • O • F</div><div id="mCOF" class="font-semibold">0 • 0 • 0</div></div>
+      </div>
+      <div class="mt-3 progress"><div id="progressBar"></div></div>
+    </section>
+
+    <!-- QUIZ: single stage -->
+    <section id="quizPane" class="space-y-4">
+      <div id="stage" class="card p-5"></div>
+    </section>
+
+    <!-- SHOWCASE -->
+    <section id="showcasePane" class="hidden space-y-4">
+      <div class="card p-4">
+        <h3 class="font-semibold mb-2">How the system reads your picks</h3>
+        <ul class="list-disc pl-5 mini">
+          <li><b>C</b> = family axis move. We record <i>c_flavor</i> for that CO.</li>
+          <li><b>O</b> = wobble, not other face. We record <i>o_subtype</i> like <i>consensus_wait</i>, <i>conflict_avoid</i>.</li>
+          <li><b>F</b> = collapse. CF=F unlocks its F-probe immediately. Both F-probe answers are F with a collapse flavor.</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="card p-4">
+          <h4 class="font-semibold mb-2">By family: C / O / F counts & O-subtypes</h4>
+          <div id="aggFamilies" class="space-y-2 text-sm"></div>
+        </div>
+        <div class="card p-4">
+          <h4 class="font-semibold mb-2">Demo suspects (preview only)</h4>
+          <p class="mini mb-2">Ranks by C flavor counts; O-subtype orders copy emphasis on ties. This is just a preview, not SIF math.</p>
+          <div id="suspects" class="space-y-2 text-sm"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Bank (Phase B) ---
+    const bank = {
+      phase_b: [
+        // CONTROL
+        { id: "B-CTRL-CO-001", phase:"B", kind:"family", family:"Control", structure:"CO",
+          prompt:"Your group is undecided on where to go. Time is short, and everyone looks at you to make the choice.",
+          options:[
+            { key:"A", label:"Name the place now so everyone moves together immediately. (Sovereign)", pick:"C", c_flavor:"Sovereign" },
+            { key:"B", label:"Invite more suggestions and wait for consensus to appear. (off-axis wobble)", pick:"O", o_subtype:"consensus_wait" }
+          ]
+        },
+        { id: "B-CTRL-CO-002", phase:"B", kind:"family", family:"Control", structure:"CO",
+          prompt:"Two teammates argue over what to do next. The deadline is close, and they both turn to you for direction.",
+          options:[
+            { key:"A", label:"Break the stalemate by choosing a bold next step right now. (Rebel)", pick:"C", c_flavor:"Rebel" },
+            { key:"B", label:"Avoid the conflict and let them keep arguing without you. (off-axis wobble)", pick:"O", o_subtype:"conflict_avoid" }
+          ]
+        },
+        { id: "B-CTRL-CF-001", phase:"B", kind:"family", family:"Control", structure:"CF",
+          prompt:"The bus leaves in five minutes. Everyone is waiting, no one acts, and you are standing closest to the door.",
+          options:[
+            { key:"A", label:"Call the route and tell the group to move now.", pick:"C" },
+            { key:"B", label:"Say nothing and leave the call unmade as time passes.", pick:"F" }
+          ]
+        },
+        { id: "B-CTRL-F-001", phase:"B", kind:"family", family:"Control", structure:"F",
+          prompt:"When you avoid making the call, which reason fits closer in your body during those moments, really?",
+          options:[
+            { key:"A", label:"I fear choosing wrong and being blamed later. (Sovereign shadow)", pick:"F", f_flavor:"Sovereign_shadow" },
+            { key:"B", label:"I freeze and cannot bring words out at all. (Rebel collapse)", pick:"F", f_flavor:"Rebel_collapse" }
+          ]
+        },
+
+        // PACE
+        { id: "B-PACE-CO-001", phase:"B", kind:"family", family:"Pace", structure:"CO",
+          prompt:"You begin a project with a bold idea. Team asks where to start, and time is limited for the first move.",
+          options:[
+            { key:"A", label:"Name the striking first step that fits the big arc. (Visionary)", pick:"C", c_flavor:"Visionary" },
+            { key:"B", label:"Hesitate and browse options while the moment slips. (off-axis wobble)", pick:"O", o_subtype:"optimization_trap" }
+          ]
+        },
+        { id: "B-PACE-CO-002", phase:"B", kind:"family", family:"Pace", structure:"CO",
+          prompt:"Two paths exist: one complex, one simple. A delivery deadline is today, and the team wants your immediate direction.",
+          options:[
+            { key:"A", label:"Pick the simple route that lands one result now. (Navigator)", pick:"C", c_flavor:"Navigator" },
+            { key:"B", label:"Keep comparing paths and delay your start further. (off-axis wobble)", pick:"O", o_subtype:"optimization_trap" }
+          ]
+        },
+        { id: "B-PACE-CF-001", phase:"B", kind:"family", family:"Pace", structure:"CF",
+          prompt:"You have twenty minutes left and two tasks half done. Switching now risks both failing before the end.",
+          options:[
+            { key:"A", label:"Finish one completely, accept the other may miss today.", pick:"C" },
+            { key:"B", label:"Keep switching and finish neither before the deadline.", pick:"F" }
+          ]
+        },
+        { id: "B-PACE-F-001", phase:"B", kind:"family", family:"Pace", structure:"F",
+          prompt:"When you stall on finishing under time pressure, which explanation feels truer in your body right then, actually?",
+          options:[
+            { key:"A", label:"I chase new thoughts and lose track of the clock. (Visionary drift)", pick:"F", f_flavor:"Visionary_drift" },
+            { key:"B", label:"I cling to tiny steps and cannot advance the piece. (Navigator jam)", pick:"F", f_flavor:"Navigator_jam" }
+          ]
+        },
+
+        // BOUNDARY
+        { id: "B-BOUND-CO-001", phase:"B", kind:"family", family:"Boundary", structure:"CO",
+          prompt:"During a team chat, two people dominate. Others cannot speak, and time is slipping. They look to you to reset.",
+          options:[
+            { key:"A", label:"Restate turns and enforce equal time for each voice. (Equalizer)", pick:"C", c_flavor:"Equalizer" },
+            { key:"B", label:"Let it run uneven and hope it balances later. (off-axis wobble)", pick:"O", o_subtype:"people_please" }
+          ]
+        },
+        { id: "B-BOUND-CO-002", phase:"B", kind:"family", family:"Boundary", structure:"CO",
+          prompt:"A rushed request asks you to skip safety steps. People are tired, and the shortcut could risk harm today.",
+          options:[
+            { key:"A", label:"Hold the safety line and decline the shortcut. (Guardian)", pick:"C", c_flavor:"Guardian" },
+            { key:"B", label:"Agree to skip a step and hope nothing breaks. (off-axis wobble)", pick:"O", o_subtype:"risk_averse" }
+          ]
+        },
+        { id: "B-BOUND-CF-001", phase:"B", kind:"family", family:"Boundary", structure:"CF",
+          prompt:"Your focus block is half over. A friend pushes another task onto you, and your project deadline is tonight.",
+          options:[
+            { key:"A", label:"Say not now and protect this block for your project.", pick:"C" },
+            { key:"B", label:"Accept the task and sacrifice the line you set.", pick:"F" }
+          ]
+        },
+        { id: "B-BOUND-F-001", phase:"B", kind:"family", family:"Boundary", structure:"F",
+          prompt:"When you let extra scope in and lose your line, what reason fits your body more in those moments?",
+          options:[
+            { key:"A", label:"I fear disappointing people if I say no. (Equalizer guilt)", pick:"F", f_flavor:"Equalizer_guilt" },
+            { key:"B", label:"I worry someone gets hurt if I refuse them. (Guardian overreach)", pick:"F", f_flavor:"Guardian_overreach" }
+          ]
+        },
+
+        // TRUTH
+        { id: "B-TRUTH-CO-001", phase:"B", kind:"family", family:"Truth", structure:"CO",
+          prompt:"A strong claim spreads fast. Friends ask if it is real. You have one minute to check something useful.",
+          options:[
+            { key:"A", label:"Test one live source before repeating anything. (Seeker)", pick:"C", c_flavor:"Seeker" },
+            { key:"B", label:"Repeat it as heard without testing details. (off-axis wobble)", pick:"O", o_subtype:"speed_over_check" }
+          ]
+        },
+        { id: "B-TRUTH-CO-002", phase:"B", kind:"family", family:"Truth", structure:"CO",
+          prompt:"Two rules conflict in a shared document. People are confused, and a decision is due soon. They ask you to clarify.",
+          options:[
+            { key:"A", label:"Redraw a clear frame so parts fit and hold. (Architect)", pick:"C", c_flavor:"Architect" },
+            { key:"B", label:"Let the conflict stand and hope context decides later. (off-axis wobble)", pick:"O", o_subtype:"defer_structure" }
+          ]
+        },
+        { id: "B-TRUTH-CF-001", phase:"B", kind:"family", family:"Truth", structure:"CF",
+          prompt:"A product promises big results with vague details. You must buy within minutes, and no one else is verifying anything.",
+          options:[
+            { key:"A", label:"Check one concrete fact before spending money today.", pick:"C" },
+            { key:"B", label:"Skip checking and trust the claim as written now.", pick:"F" }
+          ]
+        },
+        { id: "B-TRUTH-F-001", phase:"B", kind:"family", family:"Truth", structure:"F",
+          prompt:"When you accept unclear claims without checking, which reason feels more true in your body right then?",
+          options:[
+            { key:"A", label:"I chase speed and skip details I should confirm. (Seeker impatience)", pick:"F", f_flavor:"Seeker_impatience" },
+            { key:"B", label:"I cling to old definitions and ignore new signals. (Architect rigidity)", pick:"F", f_flavor:"Architect_rigidity" }
+          ]
+        },
+
+        // RECOGNITION
+        { id: "B-RECO-CO-001", phase:"B", kind:"family", family:"Recognition", structure:"CO",
+          prompt:"Your team finished a hard push. Leadership asks for a summary now. Credit is unclear and the room feels tense.",
+          options:[
+            { key:"A", label:"Show outcomes publicly so people see what changed. (Spotlight)", pick:"C", c_flavor:"Spotlight" },
+            { key:"B", label:"Hold updates until feelings cool and time appears. (off-axis wobble)", pick:"O", o_subtype:"perfection_hold" }
+          ]
+        },
+        { id: "B-RECO-CO-002", phase:"B", kind:"family", family:"Recognition", structure:"CO",
+          prompt:"Two groups contributed unevenly. A joint announcement is planned today. They want you to present outcomes without triggering conflict.",
+          options:[
+            { key:"A", label:"Bridge both sides and share credit clearly. (Diplomat)", pick:"C", c_flavor:"Diplomat" },
+            { key:"B", label:"Delay the announcement to avoid difficult alignment work. (off-axis wobble)", pick:"O", o_subtype:"conflict_avoid" }
+          ]
+        },
+        { id: "B-RECO-CF-001", phase:"B", kind:"family", family:"Recognition", structure:"CF",
+          prompt:"A client asks for a one-minute update now. You have facts but rough language. The meeting clock is nearly finished.",
+          options:[
+            { key:"A", label:"Deliver the facts plainly and on time today.", pick:"C" },
+            { key:"B", label:"Withhold the update until you can polish everything.", pick:"F" }
+          ]
+        },
+        { id: "B-RECO-F-001", phase:"B", kind:"family", family:"Recognition", structure:"F",
+          prompt:"When you hold back on sharing progress, which reason fits your body more in that moment right now?",
+          options:[
+            { key:"A", label:"I fear being seen before it is perfect. (Spotlight shame)", pick:"F", f_flavor:"Spotlight_shame" },
+            { key:"B", label:"I worry updates cause conflict I must manage. (Diplomat overload)", pick:"F", f_flavor:"Diplomat_overload" }
+          ]
+        },
+
+        // BONDING
+        { id: "B-BOND-CO-001", phase:"B", kind:"family", family:"Bonding", structure:"CO",
+          prompt:"A friend struggles with bad news during a group hangout. The group wants to keep moving, and they glance at you.",
+          options:[
+            { key:"A", label:"Stay with them until they steady again. (Partner)", pick:"C", c_flavor:"Partner" },
+            { key:"B", label:"Move with the group and check much later. (off-axis wobble)", pick:"O", o_subtype:"people_please" }
+          ]
+        },
+        { id: "B-BOND-CO-002", phase:"B", kind:"family", family:"Bonding", structure:"CO",
+          prompt:"Someone you care about is overwhelmed with tasks. You have limited time, but they need visible help to finish today.",
+          options:[
+            { key:"A", label:"Jump in and shoulder part so they finish. (Provider)", pick:"C", c_flavor:"Provider" },
+            { key:"B", label:"Hold back to protect your schedule and energy. (off-axis wobble)", pick:"O", o_subtype:"self_protect" }
+          ]
+        },
+        { id: "B-BOND-CF-001", phase:"B", kind:"family", family:"Bonding", structure:"CF",
+          prompt:"Your week is already full. Another person asks you to support them tonight, and your energy is worn down.",
+          options:[
+            { key:"A", label:"Say no for now to keep your strength intact.", pick:"C" },
+            { key:"B", label:"Say yes and risk burning yourself out again.", pick:"F" }
+          ]
+        },
+        { id: "B-BOND-F-001", phase:"B", kind:"family", family:"Bonding", structure:"F",
+          prompt:"When you overextend and burn out helping others, which reason feels more true in your body then, really?",
+          options:[
+            { key:"A", label:"I fear losing closeness if I refuse requests. (Partner over-give)", pick:"F", f_flavor:"Partner_over_give" },
+            { key:"B", label:"I measure care by doing more than I can hold. (Provider overreach)", pick:"F", f_flavor:"Provider_overreach" }
+          ]
+        },
+
+        // STRESS
+        { id: "B-STRESS-CO-001", phase:"B", kind:"family", family:"Stress", structure:"CO",
+          prompt:"Silence fills the room during pressure. A small action might break the freeze. People look around without starting anything.",
+          options:[
+            { key:"A", label:"Spark motion with one fast visible move. (Catalyst)", pick:"C", c_flavor:"Catalyst" },
+            { key:"B", label:"Wait longer and hope someone else begins first. (off-axis wobble)", pick:"O", o_subtype:"freeze_wait" }
+          ]
+        },
+        { id: "B-STRESS-CO-002", phase:"B", kind:"family", family:"Stress", structure:"CO",
+          prompt:"A rushed plan is spreading. Quality is slipping fast, but delivery is near. They ask you how to move now.",
+          options:[
+            { key:"A", label:"Protect quality and land one solid piece. (Artisan)", pick:"C", c_flavor:"Artisan" },
+            { key:"B", label:"Join the push and accept sloppy output under pressure. (off-axis wobble)", pick:"O", o_subtype:"perfection_hold" }
+          ]
+        },
+        { id: "B-STRESS-CF-001", phase:"B", kind:"family", family:"Stress", structure:"CF",
+          prompt:"The countdown shows two minutes left. Tasks remain unclear, and nobody moves first. The team expects someone to break the stalemate.",
+          options:[
+            { key:"A", label:"Make a clear start so the team can follow immediately.", pick:"C" },
+            { key:"B", label:"Do nothing and let the time expire without action.", pick:"F" }
+          ]
+        },
+        { id: "B-STRESS-F-001", phase:"B", kind:"family", family:"Stress", structure:"F",
+          prompt:"When pressure spikes and you do nothing, which reason fits your body more in that exact moment best?",
+          options:[
+            { key:"A", label:"I fear the first step will expose mistakes immediately. (Catalyst stall)", pick:"F", f_flavor:"Catalyst_stall" },
+            { key:"B", label:"I tighten on perfection and cannot begin at all. (Artisan lock)", pick:"F", f_flavor:"Artisan_lock" }
+          ]
+        }
+      ]
+    };
+
+    // --- State ---
+    const state = {
+      sessionId: `sess_${Date.now()}`,
+      startedAt: new Date().toISOString(),
+      answers: new Map(),
+      telemetry: [],
+      seq: [],
+      idx: 0,
+      skipF: new Set()
+    };
+
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    function buildSequence() {
+      const items = bank.phase_b || [];
+      const byFam = {};
+      for (const it of items) (byFam[it.family] ||= []).push(it);
+      const seq = [];
+      for (const fam of Object.keys(byFam)) {
+        const arr = byFam[fam];
+        seq.push(...arr.filter(i=>i.structure==='CO'));
+        seq.push(...arr.filter(i=>i.structure==='CF'));
+        seq.push(...arr.filter(i=>i.structure==='F'));
+      }
+      return seq;
+    }
+
+    function metrics() {
+      const total = state.seq.length - state.skipF.size; // effective total (skipped F-probes excluded)
+      $("#mQIdx").textContent = `${Math.min(state.idx+1, total)} / ${total}`;
+      $("#mAnswered").textContent = state.answers.size;
+      const c = state.telemetry.filter(t=>t.pick==='C').length;
+      const o = state.telemetry.filter(t=>t.pick==='O').length;
+      const f = state.telemetry.filter(t=>t.pick==='F' && t.structure!=='F').length;
+      $("#mCOF").textContent = `${c} • ${o} • ${f}`;
+      const pct = total ? Math.round((state.answers.size/total)*100) : 0;
+      $("#progressBar").style.width = `${pct}%`;
+    }
+
+    function renderStage() {
+      const stage = $("#stage");
+      // Compute next valid index (skip F-probes if flagged)
+      while (state.idx < state.seq.length && state.skipF.has(state.seq[state.idx].id)) {
+        state.idx++;
+      }
+      if (state.idx >= state.seq.length) return finishFlow();
+
+      const q = state.seq[state.idx];
+      const badgeClass = q.structure === 'CO' ? 'q-structure-CO' : q.structure === 'CF' ? 'q-structure-CF' : 'q-structure-F';
+      const groupName = `grp_${q.id}`;
+      const optsHtml = q.options.map(opt => `
+        <label class="opt" data-qid="${q.id}" data-key="${opt.key}">
+          <input type="radio" class="sr-only" name="${groupName}" value="${opt.key}">
+          <div class="font-medium">${opt.key}. ${opt.label}</div>
+          <div class="mini">${opt.pick}${opt.o_subtype ? " • "+opt.o_subtype : ""}${opt.c_flavor ? " • "+opt.c_flavor : ""}${opt.f_flavor ? " • "+opt.f_flavor : ""}</div>
+        </label>
+      `).join("");
+
+      stage.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <div class="font-semibold">${q.family}</div>
+          <span class="badge ${badgeClass} border">${q.structure}</span>
+        </div>
+        <div class="text-base">${q.prompt}</div>
+        <div class="grid md:grid-cols-2 gap-3 mt-3" id="opts_${q.id}">${optsHtml}</div>
+        <div class="mt-3 mini text-slate-500">Press <b>A</b> or <b>B</b> to answer quickly.</div>
+      `;
+
+      // attach handlers
+      $("#stage").addEventListener("click", handleOptionClick);
+      $("#stage").addEventListener("change", handleOptionChange);
+
+      metrics();
+      renderShowcase(); // live update
+    }
+
+    function handleOptionClick(e) {
+      const label = e.target.closest("label.opt");
+      if (!label) return;
+      const qid = label.getAttribute("data-qid");
+      const key = label.getAttribute("data-key");
+      const input = label.querySelector("input[type=radio]");
+      if (input) { input.checked = true; onPickById(qid, key); }
+      const wrap = label.parentElement;
+      wrap.querySelectorAll(".opt").forEach(n => n.classList.remove("checked"));
+      label.classList.add("checked");
+    }
+
+    function handleOptionChange(e) {
+      if (e.target.matches("input[type=radio]")) {
+        const label = e.target.closest("label.opt");
+        const qid = label.getAttribute("data-qid");
+        const key = label.getAttribute("data-key");
+        onPickById(qid, key);
+        const wrap = label.parentElement;
+        wrap.querySelectorAll(".opt").forEach(n => n.classList.remove("checked"));
+        label.classList.add("checked");
+      }
+    }
+
+    function onPickById(qid, key) {
+      const q = state.seq.find(x => x.id === qid);
+      if (!q) return;
+      const opt = q.options.find(o => o.key === key);
+      if (!opt) return;
+
+      // record
+      const record = {
+        session_id: state.sessionId,
+        question_id: q.id,
+        family: q.family,
+        structure: q.structure,
+        key: opt.key,
+        pick: opt.pick,
+        c_flavor: opt.c_flavor || null,
+        o_subtype: opt.o_subtype || null,
+        f_flavor: opt.f_flavor || null,
+        timestamp: new Date().toISOString()
+      };
+      state.answers.set(q.id, record);
+      state.telemetry = state.telemetry.filter(t => t.question_id !== q.id);
+      state.telemetry.push(record);
+
+      // CF logic: if not F, skip that family's F-probe; if F, ensure we DON'T skip it
+      if (q.structure === "CF") {
+        const fProbe = state.seq.find(i => i.family === q.family && i.structure === "F");
+        if (fProbe) {
+          if (opt.pick === "F") state.skipF.delete(fProbe.id);
+          else state.skipF.add(fProbe.id);
+        }
+      }
+
+      // advance
+      state.idx++;
+      renderStage();
+    }
+
+    function finishFlow() {
+      // Completed; switch to showcase
+      $("#stage").innerHTML = `
+        <div class="text-center py-10">
+          <div class="text-2xl font-semibold mb-2">Phase B complete</div>
+          <p class="mini mb-4">Your picks were recorded. View the Showcase for aggregates and O-subtypes.</p>
+          <button id="goShowcase" class="btn btn-primary" type="button">Open Showcase</button>
+        </div>
+      `;
+      $("#goShowcase").addEventListener("click", () => {
+        $("#quizPane").classList.add("hidden");
+        $("#showcasePane").classList.remove("hidden");
+        $("#tabShowcase").classList.add("tab-active"); $("#tabQuiz").classList.remove("tab-active");
+        renderShowcase();
+      });
+      // auto jump after short delay
+      setTimeout(() => {
+        $("#goShowcase").click();
+      }, 600);
+      metrics();
+    }
+
+    // Showcase helpers from v2
+    function aggregate() {
+      const fams = {};
+      for (const t of state.telemetry) {
+        const f = t.family;
+        fams[f] ||= { C:0, O:0, F:0, o_subtypes:{}, c_flavors:{} };
+        if (t.structure !== 'F') fams[f][t.pick]++;
+        if (t.pick === 'O' && t.o_subtype) fams[f].o_subtypes[t.o_subtype] = (fams[f].o_subtypes[t.o_subtype]||0)+1;
+        if (t.pick === 'C' && t.c_flavor) fams[f].c_flavors[t.c_flavor] = (fams[f].c_flavors[t.c_flavor]||0)+1;
+      }
+      return fams;
+    }
+
+    function renderShowcase() {
+      const agg = aggregate();
+      const famDiv = $("#aggFamilies");
+      if (famDiv) {
+        famDiv.innerHTML = "";
+        for (const [fam, dat] of Object.entries(agg)) {
+          const subs = Object.entries(dat.o_subtypes).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `<span class="pill">${k}: ${v}</span>`).join(" ");
+          const cof = `C ${dat.C} • O ${dat.O} • F ${dat.F}`;
+          const box = document.createElement("div");
+          box.className = "p-3 rounded-xl border border-slate-200 bg-white";
+          box.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="font-semibold">${fam}</div>
+              <div class="mini">${cof}</div>
+            </div>
+            <div class="mini mt-1">O-subtypes: ${subs || '<span class="text-slate-400">none</span>'}</div>
+          `;
+          famDiv.appendChild(box);
+        }
+      }
+
+      const susDiv = $("#suspects");
+      if (susDiv) {
+        susDiv.innerHTML = "";
+        const faceMap = {
+          Control: ["Sovereign","Rebel"],
+          Pace: ["Visionary","Navigator"],
+          Boundary: ["Equalizer","Guardian"],
+          Truth: ["Seeker","Architect"],
+          Recognition: ["Spotlight","Diplomat"],
+          Bonding: ["Partner","Provider"],
+          Stress: ["Catalyst","Artisan"]
+        };
+        for (const [fam, dat] of Object.entries(agg)) {
+          const [A,B] = faceMap[fam] || ["FaceA","FaceB"];
+          const aC = dat.c_flavors[A] || 0;
+          const bC = dat.c_flavors[B] || 0;
+          const tieNote = (aC === bC) ? ` <span class="mini">(tie; order by O-subtype emphasis)</span>` : "";
+          const li = document.createElement("div");
+          li.className = "p-3 rounded-xl border border-slate-200 bg-white";
+          li.innerHTML = `
+            <div class="font-semibold">${fam}${tieNote}</div>
+            <div class="mini mt-1">${A}: ${aC} • ${B}: ${bC}</div>
+            <div class="mini mt-1">Copy emphasis: ${Object.keys(dat.o_subtypes)[0] || '—'}</div>
+          `;
+          susDiv.appendChild(li);
+        }
+      }
+    }
+
+    // Tabs & controls
+    $("#tabQuiz").addEventListener("click", () => {
+      $("#quizPane").classList.remove("hidden");
+      $("#showcasePane").classList.add("hidden");
+      $("#tabQuiz").classList.add("tab-active"); $("#tabShowcase").classList.remove("tab-active");
+    });
+    $("#tabShowcase").addEventListener("click", () => {
+      $("#quizPane").classList.add("hidden");
+      $("#showcasePane").classList.remove("hidden");
+      $("#tabShowcase").classList.add("tab-active"); $("#tabQuiz").classList.remove("tab-active");
+      renderShowcase();
+    });
+
+    $("#btnStart").addEventListener("click", () => {
+      state.sessionId = `sess_${Date.now()}`;
+      state.startedAt = new Date().toISOString();
+      state.answers.clear();
+      state.telemetry = [];
+      state.skipF = new Set();
+      state.seq = buildSequence();
+      state.idx = 0;
+      renderStage();
+    });
+
+    $("#btnExportJSON").addEventListener("click", () => {
+      const out = {
+        session_id: state.sessionId,
+        started_at: state.startedAt,
+        completed_at: new Date().toISOString(),
+        telemetry: state.telemetry,
+        aggregates: aggregate()
+      };
+      const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `gz_phase_b_${state.sessionId}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    $("#btnExportCSV").addEventListener("click", () => {
+      const rows = [["session_id","question_id","family","structure","key","pick","c_flavor","o_subtype","f_flavor","timestamp"]];
+      for (const t of state.telemetry) {
+        rows.push([state.sessionId, t.question_id, t.family, t.structure, t.key, t.pick, t.c_flavor||"", t.o_subtype||"", t.f_flavor||"", t.timestamp]);
+      }
+      const csv = rows.map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `gz_phase_b_${state.sessionId}.csv`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    // Keyboard shortcuts A/B
+    document.addEventListener("keydown", (e) => {
+      if ($("#quizPane").classList.contains("hidden")) return;
+      const q = state.seq[state.idx];
+      if (!q) return;
+      if (e.key === "a" || e.key === "A") {
+        onPickById(q.id, "A");
+      } else if (e.key === "b" || e.key === "B") {
+        onPickById(q.id, "B");
+      }
+    });
+
+    // Init session
+    state.seq = buildSequence();
+    state.idx = 0;
+    renderStage();
+  </script>
+</body>
+</html>

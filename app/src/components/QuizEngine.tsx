@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useQuizEngine } from '@/hooks/useQuizEngine';
 import { PhaseA } from './quiz/PhaseA';
-import { PhaseB } from './quiz/PhaseB';
+import { PhaseBIntegrated } from './quiz/PhaseBIntegrated';
 import { PhaseC } from './quiz/PhaseC';
 import { PhaseE } from './quiz/PhaseE';
 import PhaseD from './quiz/PhaseD';
-import { Summary } from './quiz/Summary';
+import { SummaryClean } from './quiz/SummaryClean';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { ProgressBar } from './ProgressBar';
 import { phaseDEngine } from '@/engine/PhaseD';
@@ -37,7 +37,8 @@ export function QuizEngine() {
     // SIF v3 methods
     setSIFShortlist,
     setInstalledChoice,
-    finalizeSIFWithInstall
+    finalizeSIFWithInstall,
+    sifEngine
   } = useQuizEngine();
 
   
@@ -289,29 +290,8 @@ export function QuizEngine() {
   };
 
   const handleProceedToC = () => {
-    // Preseed A-line decisions based on Phase B picks
-    selectedA().forEach(line => {
-      if (line.mod.decisions.length) return;
-      const p1 = line.B.picks[0];
-      const p2 = line.B.picks[1];
-      if (!p1 || !p2) return;
-
-      const decisions: Array<{ type: 'CO1' | 'CO2' | 'CF'; pick: 'C' | 'O' | 'F' }> = [];
-      // CO1 = B1 (convert F to O)
-      decisions.push({ type: "CO1", pick: p1 === "F" ? "O" : p1 as 'C' | 'O' | 'F' });
-      
-      if (p1 === "C") {
-        // CO2 = B2; CF = C (computed)
-        decisions.push({ type: "CO2", pick: p2 === "F" ? "O" : p2 as 'C' | 'O' | 'F' });
-        decisions.push({ type: "CF", pick: "C" });
-      } else { // p1 === 'O'
-        // CF = B2; CO2 = O (computed)
-        decisions.push({ type: "CF", pick: p2 === "O" ? "F" : p2 as 'C' | 'O' | 'F' });
-        decisions.push({ type: "CO2", pick: "O" });
-      }
-
-      updateLine(line.id, { mod: { decisions } });
-    });
+    // A-lines should NOT have module decisions - they use Phase B picks only
+    // Only non-A-lines (module lines) will have module decisions from Phase C
     
     // Determine primary family (anchor) before Phase C
     const selectedALines = state.lines.filter(l => l.selectedA);
@@ -533,13 +513,14 @@ export function QuizEngine() {
           )}
 
           {state.phase === 'B' && (
-            <PhaseB
+            <PhaseBIntegrated
               state={state}
               onChoice={handlePhaseBChoice}
               onProceedToC={handleProceedToC}
               onAddUsedQuestion={addUsedQuestion}
               onAddQuestionToHistory={addQuestionToHistory}
               onRecordSIFAnswer={recordSIFAnswer}
+              onSeveritySelect={handleSeveritySelect}
             />
           )}
 
@@ -566,6 +547,7 @@ export function QuizEngine() {
               onProceedToE={() => updatePhase('E')}
               onSetSIFShortlist={setSIFShortlist}
               onSetInstalledChoice={setInstalledChoice}
+              sifEngine={sifEngine}
             />
           )}
 
@@ -604,11 +586,12 @@ export function QuizEngine() {
           )}
 
           {state.phase === 'Summary' && (
-            <Summary
+            <SummaryClean
               state={state}
               onSIFCalculate={calculateSIF}
               onFinalizeSIFWithInstall={finalizeSIFWithInstall}
               onRestart={handleRestart}
+              sifEngine={sifEngine}
             />
           )}
           
