@@ -306,7 +306,7 @@ const SeverityProbes: React.FC<{ sifData: any }> = ({ sifData }) => {
     </div>
     
       <div className="space-y-4">
-        {severityProbes.map(probe => (
+        {severityProbes.map((probe: any) => (
           <div key={probe.family} className="p-4 bg-gray-800 rounded-lg border border-gray-700">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold">{probe.family} — F verdict</h4>

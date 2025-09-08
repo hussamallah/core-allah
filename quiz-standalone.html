@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIF Canon v3 Quiz Engine - Advanced Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border-radius: 16px;
+            border: 1px solid #444;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            color: #fbbf24;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            font-style: italic;
+        }
+
+        .phase {
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            min-height: 500px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
+        }
+
+        .phase-title {
+            color: #fbbf24;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #fbbf24;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .phase-icon {
+            width: 32px;
+            height: 32px;
+            background: #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .phase-description {
+            color: #9ca3af;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .question {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #e5e7eb;
+            line-height: 1.7;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .option {
+            padding: 20px;
+            background: linear-gradient(135deg, #2d2d2d, #374151);
+            border: 2px solid #444;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #374151, #4b5563);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
+        }
+
+        .option.selected {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: #fbbf24;
+            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.3);
+        }
+
+        .option-key {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #fbbf24;
+        }
+
+        .option-text {
+            font-size: 1rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #333;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 2px solid #fbbf24;
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.1);
+        }
+
+        .results h2 {
+            color: #fbbf24;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            color: #fbbf24;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-icon {
+            width: 24px;
+            height: 24px;
+            background: #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 0.8rem;
+        }
+
+        .result-content {
+            color: #d1d5db;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.aligned {
+            background: linear-gradient(135deg, #065f46, #10b981);
+            color: #fff;
+            border: 1px solid #10b981;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .badge.not-aligned {
+            background: linear-gradient(135deg, #7c2d12, #f97316);
+            color: #fff;
+            border: 1px solid #f97316;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #2d2d2d, #374151);
+            color: #fbbf24;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        .data-table tr:hover {
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 8px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+        }
+
+        .button.secondary {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: #fff;
+            border: 1px solid #6b7280;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .button.secondary:hover {
+            background: linear-gradient(135deg, #4b5563, #6b7280);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .logic-explanation {
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+        }
+
+        .logic-explanation h3 {
+            color: #60a5fa;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logic-explanation p {
+            color: #bfdbfe;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            margin: 15px 0;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .phase-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 10px;
+        }
+
+        .phase-step {
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .phase-step:hover::before {
+            left: 100%;
+        }
+
+        .phase-step.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+
+        .phase-step.completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .phase-step.pending {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: #9ca3af;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border-radius: 16px;
+            border: 2px solid #fbbf24;
+            margin: 20px 0;
+        }
+
+        .celebration h2 {
+            color: #fbbf24;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .celebration .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .face-analysis {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .face-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .face-name {
+            font-weight: 600;
+            color: #fbbf24;
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            transition: width 0.5s ease;
+        }
+
+        .score-value {
+            font-weight: 600;
+            color: #d1d5db;
+            min-width: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .phase {
+                padding: 25px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .phase-indicator {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SIF Canon v3 Quiz Engine</h1>
+            <p>Deterministic archetype assessment with SIF (Secondary Identity Face) analysis</p>
+            <p class="subtitle">Complete 7-minute personality assessment with advanced SIF v3 calculations</p>
+        </div>
+
+        <!-- Phase Indicator -->
+        <div class="phase-indicator">
+            <div class="phase-step" id="phase-a-indicator">Phase A</div>
+            <div class="phase-step" id="phase-b-indicator">Phase B</div>
+            <div class="phase-step" id="phase-c-indicator">Phase C</div>
+            <div class="phase-step" id="phase-d-indicator">Phase D</div>
+            <div class="phase-step" id="phase-e-indicator">Phase E</div>
+            <div class="phase-step" id="results-indicator">Results</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Starting quiz...</div>
+        </div>
+
+        <!-- Phase A: Family Selection -->
+        <div class="phase" id="phase-a">
+            <h2 class="phase-title">
+                <div class="phase-icon">A</div>
+                Phase A: Family Selection
+            </h2>
+            <p class="phase-description">
+                Select 3 family cards that resonate with you. These become your A-lines and will be tested in Phase B.
+            </p>
+            
+            <div class="logic-explanation">
+                <h3>Phase A Logic</h3>
+                <p><strong>Purpose:</strong> Identify 3 primary family lines for deep assessment</p>
+                <p><strong>Selection:</strong> User chooses 3 from 7 available families</p>
+                <p><strong>Output:</strong> A-lines array for Phase B processing</p>
+                <div class="code-block">
+// Available families: Control, Pace, Boundary, Truth, Recognition, Bonding, Stress
+// User selects exactly 3 → becomes A-lines
+// Remaining 4 → become non-A lines for Phase C
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Select 3 family cards that best represent your core identity:</div>
+                <div class="options" id="family-options">
+                    <!-- Family options will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase B: A-line Duels -->
+        <div class="phase hidden" id="phase-b">
+            <h2 class="phase-title">Phase B: A-line Duels</h2>
+            <p class="phase-description">
+                For each A-line, answer 2 duel questions to determine your face purity and verdict.
+            </p>
+            
+            <div class="logic-explanation">
+                <h3>Phase B Logic</h3>
+                <p><strong>Flow:</strong> CO1 → CO2/CF (based on first pick)</p>
+                <p><strong>Verdict Logic:</strong> Both C = C verdict, otherwise O</p>
+                <p><strong>Face Purity:</strong> 0.6 + value(pick1) + value(pick2) where C=1.0, O=0.6, F=0.0</p>
+                <div class="code-block">
+// Round 1: Always CO1 question
+// Round 2: If first was O → CF question, else CO2 question
+// Verdict: (pick1 === 'C' && pick2 === 'C') ? 'C' : 'O'
+// Purity: 0.6 + (pick1 === 'C' ? 1.0 : 0.6) + (pick2 === 'C' ? 1.0 : 0.6)
+                </div>
+            </div>
+
+            <div class="question" id="phase-b-question">
+                <!-- Question content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Phase C: Module Decisions -->
+        <div class="phase hidden" id="phase-c">
+            <h2 class="phase-title">Phase C: Module Decisions</h2>
+            <p class="phase-description">
+                For each non-A line, answer 3 module questions in sequence: CO1 → CO2 → CF.
+            </p>
+            
+            <div class="logic-explanation">
+                <h3>Phase C Logic</h3>
+                <p><strong>Flow:</strong> Always CO1 → CO2 → CF (fixed sequence)</p>
+                <p><strong>Verdict Table:</strong> 8 combinations determine C/O/F verdict</p>
+                <p><strong>Severity Gating:</strong> F verdicts require severity probe</p>
+                <div class="code-block">
+// Fixed sequence: CO1 → CO2 → CF
+// Verdict table: CCC→C, CCF→O, COC→O, COF→F, OCC→O, OCF→F, OOC→O, OOF→F
+// If verdict === 'F' → require severity probe
+                </div>
+            </div>
+
+            <div class="question" id="phase-c-question">
+                <!-- Question content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Phase D: Install Question -->
+        <div class="phase hidden" id="phase-d">
+            <h2 class="phase-title">Phase D: Install Question</h2>
+            <p class="phase-description">
+                Based on your answers, select which role you actually get installed into most often.
+            </p>
+            
+            <div class="logic-explanation">
+                <h3>Phase D Logic (SIF v3)</h3>
+                <p><strong>InstalledLikelihood (IL):</strong> Calculates which faces you're most likely to be installed into</p>
+                <p><strong>Shortlist:</strong> Up to 4 faces with highest IL scores</p>
+                <p><strong>Selection:</strong> User picks one → becomes Secondary</p>
+                <div class="code-block">
+// IL Calculation:
+// A-lines: 1.6×earlyO + 1.2×fTouch + 0.8×oRatio + 0.8×purityGap
+// Module: 1.6×isCCC + 1.4×endedF + 0.8×driftRatio
+// Soft bonuses: +1.0 sibling, +0.5 prize mirror
+                </div>
+            </div>
+
+            <div class="question" id="phase-d-question">
+                <!-- Question content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Phase E: Anchor Selection -->
+        <div class="phase hidden" id="phase-e">
+            <h2 class="phase-title">Phase E: Anchor Selection</h2>
+            <p class="phase-description">
+                Select your primary archetype (anchor) from the available options.
+            </p>
+            
+            <div class="logic-explanation">
+                <h3>Phase E Logic</h3>
+                <p><strong>Anchor Selection:</strong> Based on evidence from Phase B/C</p>
+                <p><strong>Prize Mapping:</strong> Fixed mirror mapping from anchor</p>
+                <p><strong>SIF Finalization:</strong> Combines anchor + secondary + prize</p>
+                <div class="code-block">
+// Anchor = highest evidence face (2.6+ beats everything)
+// Prize = fixed mirror of anchor (canon mapping)
+// Secondary = Phase D install choice
+// Final SIF = anchor + secondary + prize alignment
+                </div>
+            </div>
+
+            <div class="question" id="phase-e-question">
+                <!-- Question content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="phase hidden" id="results">
+            <div class="results">
+                <h2>Your SIF Canon v3 Results</h2>
+                
+                <div class="result-section">
+                    <h3 class="result-title">Primary (Anchor)</h3>
+                    <div class="result-content" id="primary-result">
+                        <!-- Primary result will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">Secondary (Installed)</h3>
+                    <div class="result-content" id="secondary-result">
+                        <!-- Secondary result will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">Prize (Mirror Target)</h3>
+                    <div class="result-content" id="prize-result">
+                        <!-- Prize result will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">Alignment Status</h3>
+                    <div class="result-content" id="alignment-result">
+                        <!-- Alignment result will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">Quiz Data Summary</h3>
+                    <div class="result-content">
+                        <table class="data-table" id="data-summary">
+                            <!-- Data summary will be populated by JavaScript -->
+                        </table>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">
+                        <div class="result-icon">📊</div>
+                        Face Analysis
+                    </h3>
+                    <div class="result-content">
+                        <div class="face-analysis" id="face-analysis">
+                            <!-- Face analysis will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3 class="result-title">
+                        <div class="result-icon">⚙️</div>
+                        SIF Engine Logic
+                    </h3>
+                    <div class="result-content">
+                        <div class="code-block" id="sif-logic">
+                            <!-- SIF logic will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="button" onclick="restartQuiz()">Restart Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Engine State
+        const quizState = {
+            phase: 'A',
+            selectedFamilies: [],
+            aLines: [],
+            nonALines: [],
+            phaseBData: {},
+            phaseCData: {},
+            phaseDData: {},
+            installedChoice: null,
+            anchor: null,
+            sifResult: null,
+            usedQuestions: new Set(),
+            questionHistory: [],
+            startTime: Date.now()
+        };
+
+        // Available families with detailed descriptions
+        const families = [
+            { id: 'Control', name: 'Control', description: 'Authority, direction, and decisive action' },
+            { id: 'Pace', name: 'Pace', description: 'Timing, rhythm, and forward momentum' },
+            { id: 'Boundary', name: 'Boundary', description: 'Limits, protection, and threshold management' },
+            { id: 'Truth', name: 'Truth', description: 'Clarity, patterns, and systematic understanding' },
+            { id: 'Recognition', name: 'Recognition', description: 'Visibility, connection, and social dynamics' },
+            { id: 'Bonding', name: 'Bonding', description: 'Loyalty, support, and deep relationships' },
+            { id: 'Stress', name: 'Stress', description: 'Pressure response, adaptation, and breakthrough' }
+        ];
+
+        // Face mappings with detailed descriptions
+        const faceMappings = {
+            'Control': [
+                { id: 'Control:Rebel', name: 'Rebel', description: 'Disruptive authority and bold challenge' },
+                { id: 'Control:Sovereign', name: 'Sovereign', description: 'Decisive authority and clear direction' }
+            ],
+            'Pace': [
+                { id: 'Pace:Visionary', name: 'Visionary', description: 'Future-focused timing and foresight' },
+                { id: 'Pace:Navigator', name: 'Navigator', description: 'Strategic timing and path mapping' }
+            ],
+            'Boundary': [
+                { id: 'Boundary:Equalizer', name: 'Equalizer', description: 'Fairness enforcement and balance' },
+                { id: 'Boundary:Guardian', name: 'Guardian', description: 'Protection and threshold defense' }
+            ],
+            'Truth': [
+                { id: 'Truth:Seeker', name: 'Seeker', description: 'Pattern hunting and reality exposure' },
+                { id: 'Truth:Architect', name: 'Architect', description: 'System building and framework design' }
+            ],
+            'Recognition': [
+                { id: 'Recognition:Spotlight', name: 'Spotlight', description: 'Visibility and public impact' },
+                { id: 'Recognition:Diplomat', name: 'Diplomat', description: 'Bridge-building and alliance creation' }
+            ],
+            'Bonding': [
+                { id: 'Bonding:Partner', name: 'Partner', description: 'Loyalty and deep connection' },
+                { id: 'Bonding:Provider', name: 'Provider', description: 'Service and support provision' }
+            ],
+            'Stress': [
+                { id: 'Stress:Catalyst', name: 'Catalyst', description: 'Ignition and breakthrough under pressure' },
+                { id: 'Stress:Artisan', name: 'Artisan', description: 'Crafted output and precision under strain' }
+            ]
+        };
+
+        // Prize mirror mappings (canon)
+        const prizeMappings = {
+            'Control:Sovereign': 'Recognition:Diplomat',
+            'Control:Rebel': 'Recognition:Spotlight',
+            'Pace:Visionary': 'Stress:Catalyst',
+            'Pace:Navigator': 'Stress:Artisan',
+            'Boundary:Equalizer': 'Bonding:Partner',
+            'Boundary:Guardian': 'Bonding:Provider',
+            'Truth:Seeker': 'Control:Sovereign',
+            'Truth:Architect': 'Control:Rebel',
+            'Recognition:Spotlight': 'Control:Rebel',
+            'Recognition:Diplomat': 'Control:Sovereign',
+            'Bonding:Partner': 'Boundary:Equalizer',
+            'Bonding:Provider': 'Boundary:Guardian',
+            'Stress:Catalyst': 'Pace:Visionary',
+            'Stress:Artisan': 'Pace:Navigator'
+        };
+
+        // Sample questions for demonstration
+        const sampleQuestions = {
+            phaseB: {
+                'Control': {
+                    'CO': [
+                        {
+                            id: 'B-CTRL-CO-001',
+                            prompt: 'Two teams are stuck in analysis paralysis. No one is making decisions.',
+                            options: [
+                                { key: 'A', label: 'State "I\'ll lead" and write the first step', pick: 'C' },
+                                { key: 'B', label: 'Request more ideas and pause', pick: 'O' }
+                            ]
+                        },
+                        {
+                            id: 'B-CTRL-CO-002',
+                            prompt: 'A project is behind schedule and the team is arguing about priorities.',
+                            options: [
+                                { key: 'A', label: 'Make the call and redirect everyone', pick: 'C' },
+                                { key: 'B', label: 'Facilitate discussion to find consensus', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-CTRL-CF-001',
+                            prompt: 'Your team is implementing a solution you disagree with.',
+                            options: [
+                                { key: 'A', label: 'Accept the decision and support the team', pick: 'C' },
+                                { key: 'B', label: 'Challenge it and push for your approach', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Pace': {
+                    'CO': [
+                        {
+                            id: 'B-PACE-CO-001',
+                            prompt: 'A deadline is approaching but the team wants to add more features.',
+                            options: [
+                                { key: 'A', label: 'Push forward with current scope and deliver on time', pick: 'C' },
+                                { key: 'B', label: 'Negotiate timeline extension for better quality', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-PACE-CF-001',
+                            prompt: 'The team is moving too slowly and missing opportunities.',
+                            options: [
+                                { key: 'A', label: 'Work with the team to find a sustainable pace', pick: 'C' },
+                                { key: 'B', label: 'Force acceleration and override their concerns', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Boundary': {
+                    'CO': [
+                        {
+                            id: 'B-BOUND-CO-001',
+                            prompt: 'Someone is consistently overstepping their role and causing conflicts.',
+                            options: [
+                                { key: 'A', label: 'Clearly define boundaries and enforce them', pick: 'C' },
+                                { key: 'B', label: 'Discuss the issue and find a collaborative solution', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-BOUND-CF-001',
+                            prompt: 'A team member is violating established protocols.',
+                            options: [
+                                { key: 'A', label: 'Address it through proper channels and processes', pick: 'C' },
+                                { key: 'B', label: 'Take direct action to stop the violation immediately', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Truth': {
+                    'CO': [
+                        {
+                            id: 'B-TRUTH-CO-001',
+                            prompt: 'There\'s a discrepancy in the data that could affect major decisions.',
+                            options: [
+                                { key: 'A', label: 'Investigate thoroughly and present clear findings', pick: 'C' },
+                                { key: 'B', label: 'Discuss with team to understand different perspectives', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-TRUTH-CF-001',
+                            prompt: 'The team is avoiding a difficult truth that needs to be addressed.',
+                            options: [
+                                { key: 'A', label: 'Present the facts systematically and let them process', pick: 'C' },
+                                { key: 'B', label: 'Force the issue and demand immediate acknowledgment', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Recognition': {
+                    'CO': [
+                        {
+                            id: 'B-RECOG-CO-001',
+                            prompt: 'A team member\'s contributions are being overlooked.',
+                            options: [
+                                { key: 'A', label: 'Publicly acknowledge their work and ensure visibility', pick: 'C' },
+                                { key: 'B', label: 'Discuss with them privately about recognition needs', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-RECOG-CF-001',
+                            prompt: 'Someone is taking credit for work they didn\'t do.',
+                            options: [
+                                { key: 'A', label: 'Address it diplomatically through proper channels', pick: 'C' },
+                                { key: 'B', label: 'Confront them directly and demand correction', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Bonding': {
+                    'CO': [
+                        {
+                            id: 'B-BOND-CO-001',
+                            prompt: 'The team is struggling with trust issues after a recent conflict.',
+                            options: [
+                                { key: 'A', label: 'Create structured opportunities for team building', pick: 'C' },
+                                { key: 'B', label: 'Let them work through it naturally over time', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-BOND-CF-001',
+                            prompt: 'A team member is being excluded and it\'s affecting morale.',
+                            options: [
+                                { key: 'A', label: 'Facilitate inclusion through team activities', pick: 'C' },
+                                { key: 'B', label: 'Force inclusion by mandating their participation', pick: 'F' }
+                            ]
+                        }
+                    ]
+                },
+                'Stress': {
+                    'CO': [
+                        {
+                            id: 'B-STRESS-CO-001',
+                            prompt: 'The team is under intense pressure and starting to break down.',
+                            options: [
+                                { key: 'A', label: 'Implement stress management and support systems', pick: 'C' },
+                                { key: 'B', label: 'Let them adapt and find their own coping mechanisms', pick: 'O' }
+                            ]
+                        }
+                    ],
+                    'CF': [
+                        {
+                            id: 'B-STRESS-CF-001',
+                            prompt: 'A team member is not handling pressure well and affecting others.',
+                            options: [
+                                { key: 'A', label: 'Provide support and help them develop resilience', pick: 'C' },
+                                { key: 'B', label: 'Remove them from high-pressure situations immediately', pick: 'F' }
+                            ]
+                        }
+                    ]
+                }
+            },
+            phaseC: {
+                'Control:Rebel': {
+                    'CO': [
+                        {
+                            id: 'C-CTRL-REB-CO-001',
+                            prompt: 'The current system is clearly broken but everyone is comfortable with it.',
+                            options: [
+                                { key: 'A', label: 'Disrupt the system to force change', pick: 'C' },
+                                { key: 'B', label: 'Work within the system to improve it', pick: 'O' }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        // Initialize quiz
+        function initQuiz() {
+            renderFamilySelection();
+            updateProgress();
+            updatePhaseIndicator();
+            logQuizEvent('Quiz initialized');
+        }
+
+        // Render family selection
+        function renderFamilySelection() {
+            const container = document.getElementById('family-options');
+            container.innerHTML = '';
+
+            families.forEach(family => {
+                const option = document.createElement('div');
+                option.className = 'option';
+                option.onclick = () => selectFamily(family, option);
+                
+                option.innerHTML = `
+                    <div class="option-key">${family.name}</div>
+                    <div class="option-text">${family.description}</div>
+                `;
+                
+                container.appendChild(option);
+            });
+        }
+
+        // Log quiz events for debugging
+        function logQuizEvent(message, data = null) {
+            console.log(`🎯 ${message}`, data || '');
+        }
+
+        // Select family
+        function selectFamily(family, element) {
+            if (quizState.selectedFamilies.some(f => f.id === family.id)) {
+                // Deselect
+                quizState.selectedFamilies = quizState.selectedFamilies.filter(f => f.id !== family.id);
+                element.classList.remove('selected');
+                logQuizEvent(`Deselected family: ${family.name}`);
+            } else if (quizState.selectedFamilies.length < 3) {
+                // Select
+                quizState.selectedFamilies.push(family);
+                element.classList.add('selected');
+                logQuizEvent(`Selected family: ${family.name}`);
+            }
+
+            updateProgress();
+
+            // Auto-proceed when 3 families selected
+            if (quizState.selectedFamilies.length === 3) {
+                setTimeout(() => {
+                    proceedToPhaseB();
+                }, 1500);
+            }
+        }
+
+        // Proceed to Phase B
+        function proceedToPhaseB() {
+            quizState.aLines = [...quizState.selectedFamilies];
+            quizState.nonALines = families.filter(f => !quizState.aLines.some(a => a.id === f.id));
+            quizState.phase = 'B';
+            
+            logQuizEvent('Proceeding to Phase B', {
+                aLines: quizState.aLines.map(f => f.name),
+                nonALines: quizState.nonALines.map(f => f.name)
+            });
+            
+            showPhase('phase-b');
+            updateProgress();
+            updatePhaseIndicator();
+            renderPhaseB();
+        }
+
+        // Render Phase B
+        function renderPhaseB() {
+            const container = document.getElementById('phase-b-question');
+            const currentLine = quizState.aLines[Object.keys(quizState.phaseBData).length];
+            
+            if (!currentLine) {
+                // Phase B complete - show summary
+                showPhaseBSummary();
+                return;
+            }
+
+            const currentAnswers = quizState.phaseBData[currentLine.id] || {};
+            let questionType;
+            
+            if (!currentAnswers.CO) {
+                questionType = 'CO';
+            } else if (currentAnswers.CO === 'O' && !currentAnswers.CF) {
+                questionType = 'CF';
+            } else if (currentAnswers.CO === 'C' && !currentAnswers.CO2) {
+                questionType = 'CO2';
+            } else {
+                questionType = 'SEVERITY';
+            }
+            const question = getPhaseBQuestion(currentLine.id, questionType);
+            
+            const completedLines = Object.keys(quizState.phaseBData).length;
+            const totalLines = quizState.aLines.length;
+            const currentQuestion = Object.keys(quizState.phaseBData[currentLine.id] || {}).length + 1;
+            const totalQuestions = 3; // CO, then either CF or CO2, then SEVERITY
+            
+            container.innerHTML = `
+                <div class="question">
+                    <div style="margin-bottom: 20px; padding: 15px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border: 1px solid #fbbf24;">
+                        <p style="color: #fbbf24; font-weight: 600; margin-bottom: 5px;">
+                            Testing A-line: ${currentLine.name} (${completedLines + 1}/${totalLines})
+                        </p>
+                        <p style="color: #9ca3af; font-size: 0.9rem;">
+                            Question ${currentQuestion}/${totalQuestions} - ${questionType} Type
+                        </p>
+                    </div>
+                    <p class="question-text">${question.prompt}</p>
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <div class="option" onclick="answerPhaseB('${currentLine.id}', '${questionType}', '${option.pick}')">
+                                <div class="option-key">${option.key}</div>
+                                <div class="option-text">${option.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get Phase B question
+        function getPhaseBQuestion(family, type) {
+            if (type === 'SEVERITY') {
+                return {
+                    id: `B-${family}-SEVERITY-001`,
+                    prompt: `How severe is the F-override pattern in your ${family} line?`,
+                    options: [
+                        { key: 'A', label: 'Light F - situational mis-sync', pick: 'F.5' },
+                        { key: 'B', label: 'Deep F - persistent collapse', pick: 'F1' }
+                    ]
+                };
+            }
+            
+            const questions = sampleQuestions.phaseB[family]?.[type] || [
+                {
+                    id: `B-${family}-${type}-001`,
+                    prompt: `Sample ${type} question for ${family} family.`,
+                    options: [
+                        { key: 'A', label: 'Option A (Control)', pick: 'C' },
+                        { key: 'B', label: 'Option B (Off-axis)', pick: 'O' }
+                    ]
+                }
+            ];
+            
+            return questions[0]; // Use first question for demo
+        }
+
+        // Answer Phase B question
+        function answerPhaseB(family, type, pick) {
+            if (!quizState.phaseBData[family]) {
+                quizState.phaseBData[family] = {};
+            }
+            
+            quizState.phaseBData[family][type] = pick;
+            quizState.questionHistory.push({
+                phase: 'B',
+                family,
+                type,
+                pick,
+                timestamp: Date.now()
+            });
+            
+            logQuizEvent(`Phase B answer: ${family} ${type} = ${pick}`);
+            updateProgress();
+            
+            // Move to next question or phase
+            setTimeout(() => {
+                renderPhaseB();
+            }, 500);
+        }
+
+        // Show Phase B summary
+        function showPhaseBSummary() {
+            const container = document.getElementById('phase-b-question');
+            const summary = Object.entries(quizState.phaseBData).map(([family, data]) => {
+                const co = data.CO || 'N/A';
+                const cf = data.CF || 'N/A';
+                const verdict = (co === 'C' && cf === 'C') ? 'C' : (co === 'F' || cf === 'F') ? 'F' : 'O';
+                return `
+                    <tr>
+                        <td>${family}</td>
+                        <td>${co}</td>
+                        <td>${cf}</td>
+                        <td><strong>${verdict}</strong></td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="question">
+                    <p class="question-text">Phase B Complete! A-line Duel Results:</p>
+                    <div class="result-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>A-line</th>
+                                    <th>CO Answer</th>
+                                    <th>CF Answer</th>
+                                    <th>Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${summary}
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 20px; color: #9ca3af;">
+                            Verdict Logic: Both C = C, Any F = F, Otherwise O
+                        </p>
+                    </div>
+                    <button class="button" onclick="proceedToPhaseC()" style="margin-top: 20px;">
+                        Continue to Phase C
+                    </button>
+                </div>
+            `;
+        }
+
+        // Proceed to Phase C
+        function proceedToPhaseC() {
+            quizState.phase = 'C';
+            showPhase('phase-c');
+            updateProgress();
+            updatePhaseIndicator();
+            renderPhaseC();
+        }
+
+        // Render Phase C
+        function renderPhaseC() {
+            const container = document.getElementById('phase-c-question');
+            const currentLine = quizState.nonALines[Object.keys(quizState.phaseCData).length];
+            
+            if (!currentLine) {
+                // Phase C complete - show summary
+                showPhaseCSummary();
+                return;
+            }
+
+            const currentQuestion = Object.keys(quizState.phaseCData[currentLine.id] || {}).length;
+            const questionTypes = ['CO1', 'CO2', 'CF'];
+            const questionType = questionTypes[currentQuestion];
+            const question = getPhaseCQuestion(currentLine.id, questionType);
+            
+            const completedLines = Object.keys(quizState.phaseCData).length;
+            const totalLines = quizState.nonALines.length;
+            const currentQuestionNum = currentQuestion + 1;
+            const totalQuestions = 3; // CO1, CO2, CF
+            
+            container.innerHTML = `
+                <div class="question">
+                    <div style="margin-bottom: 20px; padding: 15px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border: 1px solid #fbbf24;">
+                        <p style="color: #fbbf24; font-weight: 600; margin-bottom: 5px;">
+                            Testing Module: ${currentLine.name} (${completedLines + 1}/${totalLines})
+                        </p>
+                        <p style="color: #9ca3af; font-size: 0.9rem;">
+                            Question ${currentQuestionNum}/${totalQuestions} - ${questionType} Type
+                        </p>
+                    </div>
+                    <p class="question-text">${question.prompt}</p>
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <div class="option" onclick="answerPhaseC('${currentLine.id}', '${questionType}', '${option.pick}')">
+                                <div class="option-key">${option.key}</div>
+                                <div class="option-text">${option.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get Phase C question
+        function getPhaseCQuestion(family, type) {
+            const questions = sampleQuestions.phaseC[family]?.[type] || [
+                {
+                    id: `C-${family}-${type}-001`,
+                    prompt: `Sample ${type} question for ${family} module.`,
+                    options: [
+                        { key: 'A', label: 'Option A (Control)', pick: 'C' },
+                        { key: 'B', label: 'Option B (Off-axis)', pick: 'O' }
+                    ]
+                }
+            ];
+            
+            return questions[0]; // Use first question for demo
+        }
+
+        // Answer Phase C question
+        function answerPhaseC(family, type, pick) {
+            if (!quizState.phaseCData[family]) {
+                quizState.phaseCData[family] = {};
+            }
+            
+            quizState.phaseCData[family][type] = pick;
+            quizState.questionHistory.push({
+                phase: 'C',
+                family,
+                type,
+                pick,
+                timestamp: Date.now()
+            });
+            
+            logQuizEvent(`Phase C answer: ${family} ${type} = ${pick}`);
+            updateProgress();
+            
+            // Move to next question or phase
+            setTimeout(() => {
+                renderPhaseC();
+            }, 500);
+        }
+
+        // Show Phase C summary
+        function showPhaseCSummary() {
+            const container = document.getElementById('phase-c-question');
+            const summary = Object.entries(quizState.phaseCData).map(([family, data]) => {
+                const co1 = data.CO1 || 'N/A';
+                const co2 = data.CO2 || 'N/A';
+                const cf = data.CF || 'N/A';
+                const verdict = calculateModuleVerdict(co1, co2, cf);
+                return `
+                    <tr>
+                        <td>${family}</td>
+                        <td>${co1}</td>
+                        <td>${co2}</td>
+                        <td>${cf}</td>
+                        <td><strong>${verdict}</strong></td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="question">
+                    <p class="question-text">Phase C Complete! Module Decision Results:</p>
+                    <div class="result-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Module</th>
+                                    <th>CO1</th>
+                                    <th>CO2</th>
+                                    <th>CF</th>
+                                    <th>Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${summary}
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 20px; color: #9ca3af;">
+                            Verdict Logic: CCC = C, CCF = C, CCO = O, COO = O, COF = F, CFF = F, OOO = O, OOF = F, OFF = F, FFF = F
+                        </p>
+                    </div>
+                    <button class="button" onclick="proceedToPhaseD()" style="margin-top: 20px;">
+                        Continue to Phase D
+                    </button>
+                </div>
+            `;
+        }
+
+        // Calculate module verdict based on CO1, CO2, CF
+        function calculateModuleVerdict(co1, co2, cf) {
+            const combination = `${co1}${co2}${cf}`;
+            const verdictTable = {
+                'CCC': 'C',
+                'CCF': 'C', 
+                'CCO': 'O',
+                'COO': 'O',
+                'COF': 'F',
+                'CFF': 'F',
+                'OOO': 'O',
+                'OOF': 'F',
+                'OFF': 'F',
+                'FFF': 'F'
+            };
+            return verdictTable[combination] || 'O';
+        }
+
+        // Proceed to Phase D
+        function proceedToPhaseD() {
+            quizState.phase = 'D';
+            showPhase('phase-d');
+            updateProgress();
+            updatePhaseIndicator();
+            renderPhaseD();
+        }
+
+        // Render Phase D
+        function renderPhaseD() {
+            const container = document.getElementById('phase-d-question');
+            container.innerHTML = `
+                <div class="question-text">Phase D: Install Question</div>
+                <div class="result-content">
+                    <p>Based on your answers, which role do you actually get installed into most often?</p>
+                    <p>InstalledLikelihood (IL) calculation determines shortlist...</p>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectInstalled('Control:Rebel')">
+                        <div class="option-key">Control:Rebel</div>
+                        <div class="option-text">Disruptive authority</div>
+                    </div>
+                    <div class="option" onclick="selectInstalled('Pace:Visionary')">
+                        <div class="option-key">Pace:Visionary</div>
+                        <div class="option-text">Future-focused timing</div>
+                    </div>
+                    <div class="option" onclick="selectInstalled('Truth:Seeker')">
+                        <div class="option-key">Truth:Seeker</div>
+                        <div class="option-text">Pattern hunter</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Select installed choice
+        function selectInstalled(face) {
+            quizState.installedChoice = face;
+            setTimeout(() => {
+                proceedToPhaseE();
+            }, 1000);
+        }
+
+        // Proceed to Phase E
+        function proceedToPhaseE() {
+            quizState.phase = 'E';
+            showPhase('phase-e');
+            updateProgress();
+            updatePhaseIndicator();
+            renderPhaseE();
+        }
+
+        // Render Phase E
+        function renderPhaseE() {
+            const container = document.getElementById('phase-e-question');
+            container.innerHTML = `
+                <div class="question-text">Phase E: Anchor Selection</div>
+                <div class="result-content">
+                    <p>Select your primary archetype (anchor) based on evidence...</p>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectAnchor('Control:Sovereign')">
+                        <div class="option-key">Control:Sovereign</div>
+                        <div class="option-text">Decisive authority</div>
+                    </div>
+                    <div class="option" onclick="selectAnchor('Pace:Navigator')">
+                        <div class="option-key">Pace:Navigator</div>
+                        <div class="option-text">Strategic timing</div>
+                    </div>
+                    <div class="option" onclick="selectAnchor('Truth:Architect')">
+                        <div class="option-key">Truth:Architect</div>
+                        <div class="option-text">System builder</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Select anchor
+        function selectAnchor(face) {
+            quizState.anchor = face;
+            logQuizEvent('Anchor selected', { face });
+            
+            // Show celebration screen
+            showCelebration();
+            
+            setTimeout(() => {
+                calculateResults();
+            }, 3000);
+        }
+
+        // Show celebration screen
+        function showCelebration() {
+            const container = document.getElementById('phase-e-question');
+            container.innerHTML = `
+                <div class="celebration">
+                    <h2>🎉 Quiz Complete!</h2>
+                    <div class="spinner"></div>
+                    <p>Processing your 7-minute SIF Canon v3 profile...</p>
+                    <p>Calculating archetype analysis and SIF results...</p>
+                </div>
+            `;
+        }
+
+        // Calculate results
+        function calculateResults() {
+            // Calculate SIF result
+            const primary = {
+                family: quizState.anchor.split(':')[0],
+                face: quizState.anchor
+            };
+
+            const secondary = {
+                family: quizState.installedChoice.split(':')[0],
+                face: quizState.installedChoice
+            };
+
+            const prize = prizeMappings[quizState.anchor] || quizState.anchor;
+            const isAligned = secondary.face === prize;
+
+            quizState.sifResult = {
+                primary,
+                secondary,
+                prize,
+                badge: isAligned ? 'Aligned' : 'Not yet aligned',
+                context: { friction: {} }
+            };
+
+            showResults();
+        }
+
+        // Show results
+        function showResults() {
+            quizState.phase = 'results';
+            showPhase('results');
+            updateProgress();
+            updatePhaseIndicator();
+            renderResults();
+        }
+
+        // Render results
+        function renderResults() {
+            const result = quizState.sifResult;
+            const duration = Math.round((Date.now() - quizState.startTime) / 1000);
+            
+            // Primary result
+            document.getElementById('primary-result').innerHTML = `
+                <p><strong>${result.primary.face}</strong></p>
+                <p>Your stable core role and identity anchor. This is who you are inside and how you hold identity under pressure. Everything else revolves around this anchor.</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${result.primary.family}</div>
+                        <div class="metric-label">Family</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${result.primary.face.split(':')[1]}</div>
+                        <div class="metric-label">Archetype</div>
+                    </div>
+                </div>
+            `;
+
+            // Secondary result
+            document.getElementById('secondary-result').innerHTML = `
+                <p><strong>${result.secondary.face}</strong></p>
+                <p>The archetype context actually installs on you in daily life. It may support your calls or directly fight them. Installation is unstable because it depends on how others see you, not what you anchor from within.</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${result.secondary.family}</div>
+                        <div class="metric-label">Family</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${result.secondary.face.split(':')[1]}</div>
+                        <div class="metric-label">Archetype</div>
+                    </div>
+                </div>
+            `;
+
+            // Prize result
+            document.getElementById('prize-result').innerHTML = `
+                <p><strong>${result.prize}</strong></p>
+                <p>Fixed mirror of your anchor. This is the opposite family style that locks your anchor in place and makes it usable outside. The system always checks if you have this installed.</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${result.prize.split(':')[0]}</div>
+                        <div class="metric-label">Family</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${result.prize.split(':')[1]}</div>
+                        <div class="metric-label">Archetype</div>
+                    </div>
+                </div>
+            `;
+
+            // Alignment result
+            const alignmentClass = result.badge === 'Aligned' ? 'aligned' : 'not-aligned';
+            document.getElementById('alignment-result').innerHTML = `
+                <p>Status: <span class="badge ${alignmentClass}">${result.badge}</span></p>
+                <p>${result.badge === 'Aligned' ? 
+                    'Your secondary matches the prize pattern. You\'re optimally configured and have full alignment gain.' : 
+                    'Your secondary doesn\'t match the prize. Consider adopting the prize pattern for full alignment gain.'}</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${duration}s</div>
+                        <div class="metric-label">Quiz Duration</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${quizState.questionHistory.length}</div>
+                        <div class="metric-label">Questions Answered</div>
+                    </div>
+                </div>
+            `;
+
+            // Data summary
+            const summaryTable = document.getElementById('data-summary');
+            summaryTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Data</th>
+                        <th>Logic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Phase A</td>
+                        <td>A-lines: ${quizState.aLines.join(', ')}</td>
+                        <td>3 family selection</td>
+                    </tr>
+                    <tr>
+                        <td>Phase B</td>
+                        <td>Duel questions</td>
+                        <td>CO1 → CO2/CF, verdict logic</td>
+                    </tr>
+                    <tr>
+                        <td>Phase C</td>
+                        <td>Module questions</td>
+                        <td>CO1 → CO2 → CF, verdict table</td>
+                    </tr>
+                    <tr>
+                        <td>Phase D</td>
+                        <td>Install choice: ${result.secondary.face}</td>
+                        <td>IL calculation, shortlist</td>
+                    </tr>
+                    <tr>
+                        <td>Phase E</td>
+                        <td>Anchor: ${result.primary.face}</td>
+                        <td>Evidence-based selection</td>
+                    </tr>
+                </tbody>
+            `;
+
+            // Face analysis
+            const faceAnalysis = generateFaceAnalysis(result);
+            document.getElementById('face-analysis').innerHTML = faceAnalysis;
+
+            // SIF logic
+            document.getElementById('sif-logic').innerHTML = `
+// SIF Canon v3 Engine Logic
+Primary: ${result.primary.face} (anchor from evidence)
+Secondary: ${result.secondary.face} (installed choice from Phase D)
+Prize: ${result.prize} (fixed mirror mapping)
+Alignment: ${result.badge} (secondary === prize)
+
+// Key Formulas:
+// Face Purity: 0.6 + value(pick1) + value(pick2)
+// IL Score: 1.6×earlyO + 1.2×fTouch + 0.8×oRatio + 0.8×purityGap
+// Verdict: (pick1 === 'C' && pick2 === 'C') ? 'C' : 'O'
+
+// Engine Version: SIF Canon v3
+// Session ID: #SR-${Date.now().toString().slice(-6)}
+// Total Duration: ${duration}s
+// Questions Answered: ${quizState.questionHistory.length}
+            `;
+        }
+
+        // Generate face analysis
+        function generateFaceAnalysis(result) {
+            const allFaces = [
+                'Control:Rebel', 'Control:Sovereign',
+                'Pace:Visionary', 'Pace:Navigator',
+                'Boundary:Equalizer', 'Boundary:Guardian',
+                'Truth:Seeker', 'Truth:Architect',
+                'Recognition:Spotlight', 'Recognition:Diplomat',
+                'Bonding:Partner', 'Bonding:Provider',
+                'Stress:Catalyst', 'Stress:Artisan'
+            ];
+
+            // Generate mock IL scores
+            const faceScores = allFaces.map(face => ({
+                face,
+                ilScore: Math.random() * 5,
+                faceScore: Math.random() * 1
+            }));
+
+            // Sort by IL score
+            faceScores.sort((a, b) => b.ilScore - a.ilScore);
+
+            return faceScores.slice(0, 6).map(face => `
+                <div class="face-score">
+                    <div class="face-name">${face.face}</div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: ${(face.ilScore / 5) * 100}%"></div>
+                    </div>
+                    <div class="score-value">${face.ilScore.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Show phase
+        function showPhase(phaseId) {
+            // Hide all phases
+            document.querySelectorAll('.phase').forEach(phase => {
+                phase.classList.add('hidden');
+            });
+            
+            // Show target phase
+            document.getElementById(phaseId).classList.remove('hidden');
+        }
+
+        // Update progress
+        function updateProgress() {
+            let progress = 0;
+            let progressText = 'Starting quiz...';
+            
+            switch (quizState.phase) {
+                case 'A':
+                    progress = (quizState.selectedFamilies.length / 3) * 16.67;
+                    progressText = `Selecting families (${quizState.selectedFamilies.length}/3)`;
+                    break;
+                case 'B':
+                    progress = 16.67 + (Object.keys(quizState.phaseBData).length / (quizState.aLines.length * 2)) * 16.67;
+                    progressText = `Phase B: A-line duels (${Object.keys(quizState.phaseBData).length}/${quizState.aLines.length * 2})`;
+                    break;
+                case 'C':
+                    progress = 33.33 + (Object.keys(quizState.phaseCData).length / (quizState.nonALines.length * 3)) * 16.67;
+                    progressText = `Phase C: Module decisions (${Object.keys(quizState.phaseCData).length}/${quizState.nonALines.length * 3})`;
+                    break;
+                case 'D':
+                    progress = 50 + (quizState.installedChoice ? 16.67 : 0);
+                    progressText = quizState.installedChoice ? 'Phase D: Install choice made' : 'Phase D: Select installed role';
+                    break;
+                case 'E':
+                    progress = 66.67 + (quizState.anchor ? 16.67 : 0);
+                    progressText = quizState.anchor ? 'Phase E: Anchor selected' : 'Phase E: Select anchor';
+                    break;
+                case 'results':
+                    progress = 100;
+                    progressText = 'Quiz complete!';
+                    break;
+            }
+            
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = progressText;
+        }
+
+        // Update phase indicator
+        function updatePhaseIndicator() {
+            const phases = ['phase-a', 'phase-b', 'phase-c', 'phase-d', 'phase-e', 'results'];
+            const currentPhaseIndex = phases.indexOf('phase-' + quizState.phase.toLowerCase());
+            
+            phases.forEach((phase, index) => {
+                const indicator = document.getElementById(phase + '-indicator');
+                indicator.className = 'phase-step';
+                
+                if (index < currentPhaseIndex) {
+                    indicator.classList.add('completed');
+                } else if (index === currentPhaseIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.add('pending');
+                }
+            });
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            quizState.phase = 'A';
+            quizState.selectedFamilies = [];
+            quizState.aLines = [];
+            quizState.nonALines = [];
+            quizState.phaseBData = {};
+            quizState.phaseCData = {};
+            quizState.installedChoice = null;
+            quizState.anchor = null;
+            quizState.sifResult = null;
+            
+            initQuiz();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>

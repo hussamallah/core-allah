@@ -119,7 +119,16 @@ export class PrizeMirrorEngine {
    * Get mirror archetype for a family
    */
   getMirrorArchetype(family: string): string {
-    return this.MIRROR_ARCHETYPES[family] || 'Unknown';
+    // Find the first prize mapping for this family and extract the archetype
+    const prizeMapping = Object.entries(this.CANON_PRIZE_MAPPING)
+      .find(([key]) => key.startsWith(family + ':'));
+    
+    if (prizeMapping) {
+      const [, prizeFace] = prizeMapping;
+      return prizeFace.split(':')[1] || 'Unknown';
+    }
+    
+    return 'Unknown';
   }
 
   /**

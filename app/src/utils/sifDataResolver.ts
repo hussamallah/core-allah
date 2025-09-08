@@ -111,7 +111,7 @@ export function resolveSIFData(state: QuizState, sifResult: SIFResult, sifEngine
   const primaryArchetype = state.finalArchetype;
   const prizeArchetype = prizeFace.split(':')[1];
   const facePattern = getFacePattern(prizeArchetype);
-  const colorToken = ARCHETYPE_COLORS[primaryArchetype] || 'Unknown';
+  const colorToken = primaryArchetype ? ARCHETYPE_COLORS[primaryArchetype] || 'Unknown' : 'Unknown';
   
   // Calculate per-line data consistently
   const perLine = calculatePerLineData(state);
@@ -126,7 +126,7 @@ export function resolveSIFData(state: QuizState, sifResult: SIFResult, sifEngine
   const faceVsIL = calculateFaceVsIL(sifEngine);
   
   return {
-    primary: { family: state.anchor, face: primaryFace },
+    primary: { family: state.anchor || 'Unknown', face: primaryFace },
     prize: { family: prizeFace.split(':')[0], face: prizeFace },
     secondary: { family: secondaryFace.split(':')[0], face: secondaryFace },
     neededForAlignment: { family: prizeFace.split(':')[0], face: prizeFace },
@@ -167,7 +167,7 @@ function calculatePerLineData(state: QuizState) {
       const pick2 = p2 === 'F' ? 'O' : p2;
       
       // A-line verdict logic: if both picks are C, verdict is C; otherwise O
-      const verdict = (pick1 === 'C' && pick2 === 'C') ? 'C' : 'O';
+      const verdict = (pick1 === 'C' && pick2 === 'C') ? 'C' as const : 'O' as const;
       
       // Calculate face purity
       const purity = 0.6 + (pick1 === 'C' ? 1.0 : 0.6) + (pick2 === 'C' ? 1.0 : 0.6);
@@ -183,10 +183,10 @@ function calculatePerLineData(state: QuizState) {
       // Non-A line: use module decisions
       const by = Object.fromEntries(line.mod.decisions.map(d => [d.type, d.pick]));
       const key = `${by.CO1 ?? ''}${by.CO2 ?? ''}${by.CF ?? ''}`;
-      const verdict = {
+      const verdict = ({
         CCC: 'C', CCF: 'O', COC: 'O', COF: 'F',
         OCC: 'O', OCF: 'F', OOC: 'O', OOF: 'F'
-      }[key] || 'O';
+      }[key] || 'O') as 'C' | 'O' | 'F';
       
       // Calculate module purity
       let purity = 0;
