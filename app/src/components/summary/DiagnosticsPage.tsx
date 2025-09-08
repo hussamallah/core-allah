@@ -179,12 +179,13 @@ const FaceVsILAnalysis: React.FC<{ sifData: any }> = ({ sifData }) => {
           </thead>
           <tbody>
             {sifData.faceVsIL.map((item: any, index: number) => {
-              const analysisColor = {
+              const analysisColorMap: Record<string, string> = {
                 'Match': 'text-green-400',
                 'High IL, low Face': 'text-blue-400',
                 'Low IL, high Face': 'text-orange-400',
                 'Low Both': 'text-gray-400'
-              }[item.label] || 'text-gray-400';
+              };
+              const analysisColor = analysisColorMap[item.label] || 'text-gray-400';
               
               return (
                 <tr key={item.face} className="border-b border-gray-800 hover:bg-gray-800">
