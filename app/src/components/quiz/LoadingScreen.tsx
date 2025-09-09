@@ -15,6 +15,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const [textVisible, setTextVisible] = useState(false);
   const [skipButtonVisible, setSkipButtonVisible] = useState(false);
+  const [buttonLocked, setButtonLocked] = useState(true);
 
   useEffect(() => {
     // Show text after a brief delay for smoother entrance
@@ -22,6 +23,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
     
     // Show skip button after 3 seconds
     const skipButtonTimer = setTimeout(() => setSkipButtonVisible(true), 3000);
+    
+    // Unlock button after 1-2 seconds of being visible (total 4-5 seconds)
+    const unlockTimer = setTimeout(() => setButtonLocked(false), 4000);
     
     // Complete transition after duration
     const completeTimer = setTimeout(() => {
@@ -32,11 +36,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
     return () => {
       clearTimeout(textTimer);
       clearTimeout(skipButtonTimer);
+      clearTimeout(unlockTimer);
       clearTimeout(completeTimer);
     };
   }, [onComplete, duration]);
 
   const handleSkip = () => {
+    if (buttonLocked) return; // Button is locked, ignore click
     setIsVisible(false);
     setTimeout(onComplete, 500); // Allow fade out to complete
   };
@@ -55,39 +61,39 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         return {
           background: 'bg-black',
           emblem: '⚔️',
-          title: 'Phase B: Duels. Each family now forces your hand—firmness or drift. One choice becomes your anchor.',
+          title: 'Duels. Firmness or drift. Choose.',
           subtitle: 'Every click bends your code.',
           animation: 'fade'
         };
       case 'b-to-c':
         return {
-          background: 'bg-gradient-to-r from-purple-900 via-blue-900 to-indigo-900',
+          background: 'bg-gradient-to-r from-gray-900 via-black to-yellow-900',
           emblem: '🌀',
-          title: 'Phase C: The remaining lines. What you left behind in A returns here. Each verdict stacks into your record.',
-          subtitle: 'Silence tricks no one. You must answer all seven.',
+          title: 'What you left behind returns. Answer all seven.',
+          subtitle: 'Silence tricks no one.',
           animation: 'rotate'
         };
       case 'c-to-d':
         return {
-          background: 'bg-gradient-to-br from-gray-900 via-slate-800 to-black',
+          background: 'bg-gradient-to-br from-black via-yellow-900 to-gray-900',
           emblem: '🎭',
-          title: 'Phase D: Installation. Here you don\'t choose a family. You choose a face—what the world installs onto you.',
+          title: 'Installation. You don\'t choose a family. You choose a face.',
           subtitle: 'Installed ≠ chosen. Pay attention.',
           animation: 'shift'
         };
       case 'd-to-e':
         return {
-          background: 'bg-gradient-radial from-yellow-900 via-amber-900 to-orange-900',
+          background: 'bg-gradient-radial from-black via-yellow-900 to-amber-900',
           emblem: '⚡',
-          title: 'Phase E: Anchor. One line holds, all others orbit. Evidence and instinct collide here.',
+          title: 'Anchor. One line holds, all others orbit.',
           subtitle: 'Anchor = who you are when everything else collapses.',
           animation: 'pulse'
         };
       case 'final-result':
         return {
-          background: 'bg-black',
+          background: 'bg-gradient-to-br from-black via-yellow-900 to-black',
           emblem: '💎',
-          title: 'Your Chamber opens. Seven lines resolved. This is your code.',
+          title: 'Your Chamber opens. Seven lines resolved.',
           subtitle: 'No edits. No escapes. Face it.',
           animation: 'fracture'
         };
@@ -135,14 +141,19 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </div>
       </div>
 
-      {/* Skip button - positioned below the main container */}
+      {/* Begin button - positioned below the main container */}
       {skipButtonVisible && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
           <button
             onClick={handleSkip}
-            className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-2 border-yellow-400"
+            disabled={buttonLocked}
+            className={`px-8 py-4 text-black font-bold rounded-lg transition-all duration-300 transform border-2 uppercase tracking-wider ${
+              buttonLocked 
+                ? 'bg-gray-600 border-gray-500 cursor-not-allowed opacity-60' 
+                : 'bg-yellow-600 hover:bg-yellow-500 border-yellow-400 hover:scale-105 shadow-lg hover:shadow-xl'
+            }`}
           >
-            Skip
+            {buttonLocked ? 'Preparing...' : 'Begin'}
           </button>
         </div>
       )}
