@@ -47,6 +47,7 @@ export function Interstitial({
   minHoldMs = 1600,
   onBegin,
   beginLabel = "BEGIN",
+  pulseColor = "yellow", // Default to yellow
 }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -54,18 +55,55 @@ export function Interstitial({
     return () => clearTimeout(t);
   }, [minHoldMs]);
 
+  const getPulseColors = (color) => {
+    switch (color) {
+      case 'cyan':
+        return {
+          bg: 'bg-cyan-400/20',
+          pulse: 'bg-cyan-400/40'
+        };
+      case 'red':
+        return {
+          bg: 'bg-red-400/20',
+          pulse: 'bg-red-400/40'
+        };
+      case 'green':
+        return {
+          bg: 'bg-green-400/20',
+          pulse: 'bg-green-400/40'
+        };
+      case 'orange':
+        return {
+          bg: 'bg-orange-400/20',
+          pulse: 'bg-orange-400/40'
+        };
+      case 'purple':
+        return {
+          bg: 'bg-purple-400/20',
+          pulse: 'bg-purple-400/40'
+        };
+      default: // yellow
+        return {
+          bg: 'bg-yellow-400/20',
+          pulse: 'bg-yellow-400/40'
+        };
+    }
+  };
+
+  const colors = getPulseColors(pulseColor);
+
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black">
       <motion.div
-        className="flex flex-col items-center gap-6 text-center"
+        className="flex flex-col items-center gap-6 text-center scale-150"
         initial="hidden"
         animate="visible"
         variants={stagger}
       >
         <motion.div variants={scaleIn}>
-          <div className="relative mx-auto grid h-24 w-24 place-items-center rounded-full bg-yellow-500/10">
-            <div className="absolute inset-0 animate-ping rounded-full bg-yellow-500/10" />
-            <div className="text-yellow-400">{icon}</div>
+          <div className={`relative mx-auto grid h-32 w-32 place-items-center rounded-full ${colors.bg}`}>
+            <div className={`absolute inset-0 animate-ping rounded-full ${colors.pulse}`} />
+            <div className="relative z-10">{icon}</div>
           </div>
         </motion.div>
         <motion.h2
