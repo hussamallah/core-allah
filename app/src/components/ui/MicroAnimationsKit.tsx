@@ -11,22 +11,22 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
  *************************/
 export const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
+  visible: { opacity: 1 },
 };
 
 export const slideUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0 },
 };
 
 export const slideRight = {
   hidden: { opacity: 0, x: -24 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { opacity: 1, x: 0 },
 };
 
 export const scaleIn = {
   hidden: { opacity: 0, scale: 0.96 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.45, ease: "easeOut" } },
+  visible: { opacity: 1, scale: 1 },
 };
 
 /** Stagger container for lists/grids */
@@ -119,8 +119,9 @@ export function Interstitial({
         initial="hidden"
         animate="visible"
         variants={stagger}
+        transition={{ staggerChildren: 0.06, delayChildren: 0.04 }}
       >
-        <motion.div variants={scaleIn}>
+        <motion.div variants={scaleIn} transition={{ duration: 0.45, ease: "easeOut" }}>
           <div className={`relative mx-auto grid h-32 w-32 place-items-center rounded-full ${colors.bg}`}>
             <div className={`absolute inset-0 animate-ping rounded-full ${colors.pulse}`} />
             <div className="relative z-10">{icon}</div>
@@ -130,6 +131,7 @@ export function Interstitial({
           className="text-2xl font-semibold tracking-wide text-neutral-100"
           variants={slideUp}
           custom={0.05}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
         >
           {title}
         </motion.h2>
@@ -138,6 +140,7 @@ export function Interstitial({
             className="max-w-md text-sm text-neutral-300"
             variants={fadeIn}
             custom={0.1}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             {subtitle}
           </motion.p>
@@ -153,6 +156,7 @@ export function Interstitial({
           }`}
           variants={scaleIn}
           custom={0.15}
+          transition={{ duration: 0.45, ease: "easeOut", delay: 0.15 }}
         >
           {ready ? beginLabel : "PREPARING…"}
         </motion.button>
