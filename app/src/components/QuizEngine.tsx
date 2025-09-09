@@ -98,7 +98,7 @@ export function QuizEngine() {
         'd-to-e': 'E',
         'final-result': 'Summary'
       };
-      const quizPhase = phaseMap[currentLoadingPhase];
+      const quizPhase = phaseMap[currentLoadingPhase] as 'A' | 'B' | 'C' | 'D' | 'E' | 'Summary';
       if (quizPhase) {
         // Do all processing here during loading screen completion
         if (quizPhase === 'B') {
