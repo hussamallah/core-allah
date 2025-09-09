@@ -40,6 +40,16 @@ export const stagger = {
 /***********************
  * 2) Loading Interstitials
  ***********************/
+interface InterstitialProps {
+  icon: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  minHoldMs?: number;
+  onBegin?: () => void;
+  beginLabel?: string;
+  pulseColor?: string;
+}
+
 export function Interstitial({
   icon, // JSX icon
   title = "Phase",
@@ -48,7 +58,7 @@ export function Interstitial({
   onBegin,
   beginLabel = "BEGIN",
   pulseColor = "yellow", // Default to yellow
-}) {
+}: InterstitialProps) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setReady(true), minHoldMs);
@@ -76,6 +86,11 @@ export function Interstitial({
         return {
           bg: 'bg-orange-400/20',
           pulse: 'bg-orange-400/40'
+        };
+      case 'orange-orange':
+        return {
+          bg: 'bg-orange-500/25',
+          pulse: 'bg-orange-500/50'
         };
       case 'pink':
         return {
@@ -149,7 +164,12 @@ export function Interstitial({
 /***************************
  * 3) Title + Subhead with Shimmer
  ***************************/
-export function PhaseTitle({ label, kicker }) {
+interface PhaseTitleProps {
+  label: string;
+  kicker: string;
+}
+
+export function PhaseTitle({ label, kicker }: PhaseTitleProps) {
   return (
     <div className="mb-8">
       <motion.p className="text-xs uppercase tracking-[0.3em] text-neutral-400" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -170,7 +190,12 @@ export function PhaseTitle({ label, kicker }) {
 /**********************
  * 4) Hover / Focus States
  **********************/
-export function HoverLiftCard({ children, className = "" }) {
+interface HoverLiftCardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function HoverLiftCard({ children, className = "" }: HoverLiftCardProps) {
   return (
     <motion.div
       whileHover={{ y: -4, scale: 1.01 }}
@@ -183,7 +208,13 @@ export function HoverLiftCard({ children, className = "" }) {
   );
 }
 
-export function GlowButton({ children, onClick, disabled }) {
+interface GlowButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+export function GlowButton({ children, onClick, disabled }: GlowButtonProps) {
   return (
     <motion.button
       onClick={onClick}
@@ -205,7 +236,18 @@ export function GlowButton({ children, onClick, disabled }) {
 /***************************
  * 5) Slide Cards (for A/B choices or carousels)
  ***************************/
-export function SlideCards({ items = [], onPick }) {
+interface SlideCardItem {
+  id: string;
+  title: string;
+  body: string;
+}
+
+interface SlideCardsProps {
+  items?: SlideCardItem[];
+  onPick?: (id: string) => void;
+}
+
+export function SlideCards({ items = [], onPick }: SlideCardsProps) {
   // items: [{id, title, body}]
   const [index, setIndex] = useState(0);
   const direction = useMotionValue(0);
@@ -267,7 +309,11 @@ export function SlideCards({ items = [], onPick }) {
 /***************************
  * 6) Smoother Page Transition Wrapper
  ***************************/
-export function PageFade({ children }) {
+interface PageFadeProps {
+  children: React.ReactNode;
+}
+
+export function PageFade({ children }: PageFadeProps) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
       {children}
@@ -278,7 +324,18 @@ export function PageFade({ children }) {
 /***************************
  * 7) Result Reveal Sequence
  ***************************/
-export function ResultReveal({ title, lines = [], cta }) {
+interface ResultLine {
+  label: string;
+  verdict: string;
+}
+
+interface ResultRevealProps {
+  title: string;
+  lines?: ResultLine[];
+  cta?: React.ReactNode;
+}
+
+export function ResultReveal({ title, lines = [], cta }: ResultRevealProps) {
   return (
     <div className="mx-auto max-w-2xl">
       <motion.div initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="mb-6 text-center">

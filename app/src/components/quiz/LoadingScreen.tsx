@@ -60,7 +60,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           title: 'Your Chamber opens. Seven lines resolved.',
           subtitle: 'No edits. No escapes. Face it.',
           minHoldMs: 2000,
-          pulseColor: 'orange' // Orange star on Pelican
+          pulseColor: 'orange-orange' // More orange-orange star on Pelican
         };
       default:
         return {
