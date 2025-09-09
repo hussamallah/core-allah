@@ -276,13 +276,12 @@ export function SlideCards({ items = [], onPick }: SlideCardsProps) {
       </div>
 
       <div className="relative h-48">
-        <AnimatePresence initial={false} custom={direction.get()}>
+        <AnimatePresence initial={false}>
           <motion.div
             key={items[index]?.id}
-            custom={direction.get()}
-            initial={(dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 })}
+            initial={{ x: 40, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={(dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 })}
+            exit={{ x: -40, opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="absolute inset-0"
           >
