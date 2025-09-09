@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { QuizEngine } from '@/components/QuizEngine'
 import { LandingPage } from '@/components/LandingPage'
 import LoadingScreen from '@/components/quiz/LoadingScreen'
+import { PageFade } from '@/components/ui/MicroAnimationsKit'
 
 export default function Home() {
   const [hasStarted, setHasStarted] = useState(false)
@@ -29,8 +30,16 @@ export default function Home() {
   }
 
   if (!hasStarted) {
-    return <LandingPage onStartQuiz={handleStartQuiz} />
+    return (
+      <PageFade>
+        <LandingPage onStartQuiz={handleStartQuiz} />
+      </PageFade>
+    )
   }
 
-  return <QuizEngine />
+  return (
+    <PageFade>
+      <QuizEngine />
+    </PageFade>
+  )
 }

@@ -1,0 +1,260 @@
+// Ground Zero – UI Micro-Animations Kit
+// Stack: React + TailwindCSS + Framer Motion
+// Drop this into your Next.js/React project. Components are self-contained and composable.
+// npm i framer-motion
+
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+
+/*************************
+ * 1) Primitives & Variants
+ *************************/
+export const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: (delay = 0) => ({ opacity: 1, transition: { duration: 0.5, delay } }),
+};
+
+export const slideUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut", delay } }),
+};
+
+export const slideRight = {
+  hidden: { opacity: 0, x: -24 },
+  visible: (delay = 0) => ({ opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut", delay } }),
+};
+
+export const scaleIn = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: (delay = 0) => ({ opacity: 1, scale: 1, transition: { duration: 0.45, ease: "easeOut", delay } }),
+};
+
+/** Stagger container for lists/grids */
+export const stagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.04 },
+  },
+};
+
+/***********************
+ * 2) Loading Interstitials
+ ***********************/
+export function Interstitial({
+  icon, // JSX icon
+  title = "Phase",
+  subtitle = "",
+  minHoldMs = 1600,
+  onBegin,
+  beginLabel = "BEGIN",
+}) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), minHoldMs);
+    return () => clearTimeout(t);
+  }, [minHoldMs]);
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black">
+      <motion.div
+        className="flex flex-col items-center gap-6 text-center"
+        initial="hidden"
+        animate="visible"
+        variants={stagger}
+      >
+        <motion.div variants={scaleIn}>
+          <div className="relative mx-auto grid h-24 w-24 place-items-center rounded-full bg-yellow-500/10">
+            <div className="absolute inset-0 animate-ping rounded-full bg-yellow-500/10" />
+            <div className="text-yellow-400">{icon}</div>
+          </div>
+        </motion.div>
+        <motion.h2
+          className="text-2xl font-semibold tracking-wide text-neutral-100"
+          variants={slideUp}
+          custom={0.05}
+        >
+          {title}
+        </motion.h2>
+        {subtitle ? (
+          <motion.p
+            className="max-w-md text-sm text-neutral-300"
+            variants={fadeIn}
+            custom={0.1}
+          >
+            {subtitle}
+          </motion.p>
+        ) : null}
+
+        <motion.button
+          disabled={!ready}
+          onClick={onBegin}
+          className={`mt-2 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold tracking-wide transition [text-shadow:0_1px_0_rgba(0,0,0,0.25)] ${
+            ready
+              ? "bg-yellow-400 text-black hover:bg-yellow-300 active:scale-[0.99]"
+              : "bg-neutral-700 text-neutral-400"
+          }`}
+          variants={scaleIn}
+          custom={0.15}
+        >
+          {ready ? beginLabel : "PREPARING…"}
+        </motion.button>
+      </motion.div>
+    </div>
+  );
+}
+
+/***************************
+ * 3) Title + Subhead with Shimmer
+ ***************************/
+export function PhaseTitle({ label, kicker }) {
+  return (
+    <div className="mb-8">
+      <motion.p className="text-xs uppercase tracking-[0.3em] text-neutral-400" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        {kicker}
+      </motion.p>
+      <motion.h1
+        className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-[length:200%_100%] bg-clip-text text-3xl font-bold text-transparent"
+        initial={{ backgroundPositionX: "0%" }}
+        animate={{ backgroundPositionX: "100%" }}
+        transition={{ duration: 2.2, ease: "easeInOut", repeat: 0 }}
+      >
+        {label}
+      </motion.h1>
+    </div>
+  );
+}
+
+/**********************
+ * 4) Hover / Focus States
+ **********************/
+export function HoverLiftCard({ children, className = "" }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4, scale: 1.01 }}
+      whileTap={{ scale: 0.995 }}
+      className={`group relative rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.5)] transition ${className}`}
+    >
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10 group-hover:ring-yellow-400/40" />
+      {children}
+    </motion.div>
+  );
+}
+
+export function GlowButton({ children, onClick, disabled }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      disabled={disabled}
+      whileHover={{ y: -1 }}
+      whileTap={{ scale: 0.99 }}
+      className={`relative inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold ${
+        disabled ? "bg-neutral-800 text-neutral-500" : "bg-yellow-400 text-black hover:brightness-105"
+      }`}
+    >
+      {!disabled && (
+        <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-yellow-300/40" />
+      )}
+      {children}
+    </motion.button>
+  );
+}
+
+/***************************
+ * 5) Slide Cards (for A/B choices or carousels)
+ ***************************/
+export function SlideCards({ items = [], onPick }) {
+  // items: [{id, title, body}]
+  const [index, setIndex] = useState(0);
+  const direction = useMotionValue(0);
+
+  function go(next) {
+    direction.set(next > index ? 1 : -1);
+    setIndex(next);
+  }
+
+  function pick(id) {
+    onPick?.(id);
+  }
+
+  return (
+    <div className="relative overflow-hidden">
+      <div className="mb-4 flex items-center justify-between">
+        <PhaseTitle label={items[index]?.title || ""} kicker={`Card ${index + 1} / ${items.length}`} />
+        <div className="flex gap-2">
+          <GlowButton disabled={index === 0} onClick={() => go(index - 1)}>Prev</GlowButton>
+          <GlowButton disabled={index === items.length - 1} onClick={() => go(index + 1)}>Next</GlowButton>
+        </div>
+      </div>
+
+      <div className="relative h-48">
+        <AnimatePresence initial={false} custom={direction.get()}>
+          <motion.div
+            key={items[index]?.id}
+            custom={direction.get()}
+            initial={(dir) => ({ x: dir > 0 ? 40 : -40, opacity: 0 })}
+            animate={{ x: 0, opacity: 1 }}
+            exit={(dir) => ({ x: dir > 0 ? -40 : 40, opacity: 0 })}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <HoverLiftCard className="h-full">
+              <p className="text-sm text-neutral-300">{items[index]?.body}</p>
+              <div className="mt-4 flex gap-3">
+                <GlowButton onClick={() => pick(items[index]?.id + "_A")}>Choose A</GlowButton>
+                <GlowButton onClick={() => pick(items[index]?.id + "_B")}>Choose B</GlowButton>
+              </div>
+            </HoverLiftCard>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="mt-4 flex justify-center gap-2">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => go(i)}
+            className={`h-2 w-6 rounded-full ${i === index ? "bg-yellow-400" : "bg-neutral-700"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/***************************
+ * 6) Smoother Page Transition Wrapper
+ ***************************/
+export function PageFade({ children }) {
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/***************************
+ * 7) Result Reveal Sequence
+ ***************************/
+export function ResultReveal({ title, lines = [], cta }) {
+  return (
+    <div className="mx-auto max-w-2xl">
+      <motion.div initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="mb-6 text-center">
+        <h2 className="text-3xl font-bold text-neutral-100">{title}</h2>
+        <p className="mt-2 text-neutral-400">Seven lines resolved. This is your code.</p>
+      </motion.div>
+
+      <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-1 gap-3">
+        {lines.map((l, i) => (
+          <motion.div key={i} variants={slideRight} className="flex items-center justify-between rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3">
+            <span className="text-sm text-neutral-300">{l.label}</span>
+            <span className={`rounded-md px-2 py-1 text-xs font-semibold ${
+              l.verdict === "C" ? "bg-green-500/20 text-green-300" : l.verdict === "O" ? "bg-yellow-500/20 text-yellow-300" : "bg-red-500/20 text-red-300"
+            }`}>{l.verdict}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {cta}
+    </div>
+  );
+}
