@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { QuizState } from '@/types/quiz';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { FAMILY_CARDS } from '@/data/questions';
@@ -13,16 +13,25 @@ interface PhaseAProps {
 
 export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHistory }: PhaseAProps) {
   const selectedCount = state.lines.filter(l => l.selectedA).length;
-  
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="bg-gray-900 rounded-xl p-5">
-      <div className="text-center mb-5">
-        <h1 className="text-2xl font-bold text-white mb-2">Discover Your Core Profile</h1>
-        <p className="text-gray-200 text-base">Select the three families that resonate with your sovereign essence. Each choice shapes your alignment.</p>
+    <div className="card p-6 animate-fade-in-up">
+      <div className="text-center mb-6">
+        <h1 className="text-3xl font-bold text-brand-gray-100 mb-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          Discover Your Core Profile
+        </h1>
+        <p className="text-brand-gray-200 text-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          Select the three families that resonate with your sovereign essence. Each choice shapes your alignment.
+        </p>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
         {state.lines.map((line, index) => {
           const familyCard = FAMILY_CARDS.find(card => card.family === line.id);
           
@@ -51,11 +60,12 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
           return (
             <div 
               key={line.id} 
-              className={`rounded-lg p-3 border-2 cursor-pointer transition-all duration-200 flex flex-col gap-2 select-none h-[140px] ${
+              className={`rounded-xl p-4 border-2 cursor-pointer transition-all duration-300 flex flex-col gap-3 select-none h-[160px] touch-target touch-safe animate-scale-in ${
                 line.selectedA 
-                  ? 'bg-gradient-to-b from-yellow-900/20 to-orange-900/20 border-yellow-400 shadow-lg shadow-yellow-400/25 transform -translate-y-0.5' 
-                  : 'bg-gradient-to-b from-gray-800 to-gray-700 border-gray-600 hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/10'
+                  ? 'card-selected' 
+                  : 'card-interactive'
               }`}
+              style={{ animationDelay: `${0.1 + index * 0.1}s` }}
               onClick={() => {
                 onLineToggle(line.id);
                 if (!line.selectedA) {
@@ -70,10 +80,10 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                  <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
                     line.selectedA 
-                      ? 'border-yellow-400 bg-gray-800 text-yellow-400' 
-                      : 'border-gray-600 bg-gray-900'
+                      ? 'border-brand-gold-400 bg-brand-gray-800 text-brand-gold-400' 
+                      : 'border-brand-gray-600 bg-brand-gray-900'
                   }`}>
                     {line.selectedA && (
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -82,17 +92,17 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
                     )}
                   </div>
                   <div>
-                    <strong className="text-yellow-400 text-base">{line.id}</strong>
+                    <strong className="text-brand-gold-400 text-lg font-bold">{line.id}</strong>
                   </div>
                 </div>
                 {/* Line Icon - moved to top right */}
-                <div className={line.selectedA ? 'text-yellow-400' : 'text-yellow-600'}>
+                <div className={line.selectedA ? 'text-brand-gold-400' : 'text-brand-gold-600'}>
                   {getLineIcon(line.id)}
                 </div>
               </div>
               
               {familyCard && (
-                <div className="text-gray-200 text-base font-medium italic text-center leading-relaxed px-2">
+                <div className="text-brand-gray-200 text-sm font-medium italic text-center leading-relaxed px-2 flex-1 flex items-center">
                   {familyCard.blurb}
                 </div>
               )}
@@ -101,14 +111,14 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
         })}
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
         <button
           onClick={onStartPhaseB}
           disabled={selectedCount !== 3}
-          className={`px-6 py-3 rounded-lg font-bold text-lg transition-all duration-300 min-h-[48px] ${
+          className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 min-h-[48px] touch-target touch-safe ${
             selectedCount === 3
-              ? 'bg-gradient-to-r from-yellow-300 to-orange-400 text-black border-none hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(251,191,36,0.6)] shadow-[0_0_15px_rgba(251,191,36,0.4)]'
-              : 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-600'
+              ? 'btn-primary'
+              : 'btn-secondary'
           }`}
         >
           {selectedCount === 3 ? 'Continue to Step 2' : `Select ${3 - selectedCount} more families`}

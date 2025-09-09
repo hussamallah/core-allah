@@ -10,10 +10,10 @@ export function ProgressBar({ progress, total }: ProgressBarProps) {
   const isComplete = progress >= total;
 
   return (
-    <div className="w-full">
+    <div className="w-full animate-fade-in-up">
       <div className="flex justify-between items-center mb-3">
-        <span className="text-sm font-medium text-gray-300">Progress</span>
-        <span className="text-sm font-medium text-gray-300">{progress}/{total}</span>
+        <span className="text-sm font-medium text-brand-gray-300">Progress</span>
+        <span className="text-sm font-medium text-brand-gray-300">{progress}/{total}</span>
       </div>
       
       {/* Chunked progress markers */}
@@ -21,30 +21,35 @@ export function ProgressBar({ progress, total }: ProgressBarProps) {
         {Array.from({ length: total }, (_, i) => (
           <div
             key={i}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            className={`w-3 h-3 rounded-full transition-all duration-500 ${
               i < progress
                 ? isComplete 
-                  ? 'bg-yellow-300 shadow-[0_0_12px_rgba(253,224,71,0.8)]' 
-                  : 'bg-yellow-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]'
-                : 'bg-gray-700 border border-gray-600'
+                  ? 'bg-brand-gold-300 shadow-glow animate-pulse' 
+                  : 'bg-brand-gold-400 shadow-brand'
+                : 'bg-brand-gray-700 border border-brand-gray-600'
             }`}
+            style={{ animationDelay: `${i * 0.1}s` }}
           />
         ))}
       </div>
       
       {/* Progress bar */}
-      <div className="h-2 bg-gray-800 w-full rounded-full overflow-hidden border border-gray-600">
+      <div className="h-2 bg-brand-gray-800 w-full rounded-full overflow-hidden border border-brand-gray-600">
         <div 
-          className={`h-full transition-all duration-500 ease-out ${
+          className={`h-full transition-all duration-700 ease-out ${
             isComplete 
-              ? 'bg-gradient-to-r from-yellow-300 to-yellow-200 shadow-[0_0_15px_rgba(253,224,71,0.8)]' 
-              : 'bg-gradient-to-r from-yellow-300 to-orange-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]'
+              ? 'bg-gradient-brand shadow-glow-lg animate-pulse-glow' 
+              : 'bg-gradient-brand shadow-brand'
           }`}
           style={{ width: `${percentage}%` }}
         />
       </div>
       
-      <div className={`text-sm mt-2 text-center ${isComplete ? 'text-yellow-300 font-semibold' : 'text-gray-400'}`}>
+      <div className={`text-sm mt-2 text-center transition-all duration-300 ${
+        isComplete 
+          ? 'text-brand-gold-300 font-semibold animate-pulse' 
+          : 'text-brand-gray-400'
+      }`}>
         {isComplete ? 'Complete!' : `${percentage}% complete`}
       </div>
     </div>

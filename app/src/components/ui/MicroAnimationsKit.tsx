@@ -128,7 +128,7 @@ export function Interstitial({
           </div>
         </motion.div>
         <motion.h2
-          className="text-2xl font-semibold tracking-wide text-neutral-100"
+          className="text-2xl font-semibold tracking-wide text-neutral-100 uppercase"
           variants={slideUp}
           custom={0.05}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
@@ -137,7 +137,7 @@ export function Interstitial({
         </motion.h2>
         {subtitle ? (
           <motion.p
-            className="max-w-md text-sm text-neutral-300"
+            className="max-w-md text-sm text-neutral-300 uppercase"
             variants={fadeIn}
             custom={0.1}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -158,7 +158,7 @@ export function Interstitial({
           custom={0.15}
           transition={{ duration: 0.45, ease: "easeOut", delay: 0.15 }}
         >
-          {ready ? beginLabel : "PREPARING…"}
+          {ready ? beginLabel : "PREPARING..."}
         </motion.button>
       </motion.div>
     </div>
@@ -180,7 +180,7 @@ export function PhaseTitle({ label, kicker }: PhaseTitleProps) {
         {kicker}
       </motion.p>
       <motion.h1
-        className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-[length:200%_100%] bg-clip-text text-3xl font-bold text-transparent"
+        className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-[length:200%_100%] bg-clip-text text-3xl font-bold text-transparent uppercase"
         initial={{ backgroundPositionX: "0%" }}
         animate={{ backgroundPositionX: "100%" }}
         transition={{ duration: 2.2, ease: "easeInOut", repeat: 0 }}
@@ -270,8 +270,8 @@ export function SlideCards({ items = [], onPick }: SlideCardsProps) {
       <div className="mb-4 flex items-center justify-between">
         <PhaseTitle label={items[index]?.title || ""} kicker={`Card ${index + 1} / ${items.length}`} />
         <div className="flex gap-2">
-          <GlowButton disabled={index === 0} onClick={() => go(index - 1)}>Prev</GlowButton>
-          <GlowButton disabled={index === items.length - 1} onClick={() => go(index + 1)}>Next</GlowButton>
+          <GlowButton disabled={index === 0} onClick={() => go(index - 1)}>PREV</GlowButton>
+          <GlowButton disabled={index === items.length - 1} onClick={() => go(index + 1)}>NEXT</GlowButton>
         </div>
       </div>
 
@@ -288,8 +288,8 @@ export function SlideCards({ items = [], onPick }: SlideCardsProps) {
             <HoverLiftCard className="h-full">
               <p className="text-sm text-neutral-300">{items[index]?.body}</p>
               <div className="mt-4 flex gap-3">
-                <GlowButton onClick={() => pick(items[index]?.id + "_A")}>Choose A</GlowButton>
-                <GlowButton onClick={() => pick(items[index]?.id + "_B")}>Choose B</GlowButton>
+                <GlowButton onClick={() => pick(items[index]?.id + "_A")}>CHOOSE A</GlowButton>
+                <GlowButton onClick={() => pick(items[index]?.id + "_B")}>CHOOSE B</GlowButton>
               </div>
             </HoverLiftCard>
           </motion.div>
@@ -342,8 +342,8 @@ export function ResultReveal({ title, lines = [], cta }: ResultRevealProps) {
   return (
     <div className="mx-auto max-w-2xl">
       <motion.div initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="mb-6 text-center">
-        <h2 className="text-3xl font-bold text-neutral-100">{title}</h2>
-        <p className="mt-2 text-neutral-400">Seven lines resolved. This is your code.</p>
+        <h2 className="text-3xl font-bold text-neutral-100 uppercase">{title}</h2>
+        <p className="mt-2 text-neutral-400 uppercase">SEVEN LINES RESOLVED. THIS IS YOUR CODE.</p>
       </motion.div>
 
       <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-1 gap-3">

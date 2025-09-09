@@ -17,55 +17,55 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
       case 'home-to-a':
         return {
           icon: <img src="/Raven Emblem with Glowing Star.png" alt="Ground Zero" className="w-32 h-32 object-contain" />,
-          title: 'Ground Zero begins here. Choose three families.',
-          subtitle: 'No rewinds. You build your mirror now.',
+          title: 'GROUND ZERO BEGINS HERE. CHOOSE THREE FAMILIES.',
+          subtitle: 'NO REWINDS. YOU BUILD YOUR MIRROR NOW.',
           minHoldMs: 2000,
           pulseColor: 'red' // Red star on Raven
         };
       case 'a-to-b':
         return {
           icon: <img src="/Peregrine Falcon with Cyan Star Emblem.png" alt="Duels" className="w-32 h-32 object-contain" />,
-          title: 'Duels. Firmness or drift. Choose.',
-          subtitle: 'Every click bends your code.',
+          title: 'DUELS. FIRMNESS OR DRIFT. CHOOSE.',
+          subtitle: 'EVERY CLICK BENDS YOUR CODE.',
           minHoldMs: 2000,
           pulseColor: 'cyan' // Cyan star on Peregrine Falcon
         };
       case 'b-to-c':
         return {
           icon: <img src="/ChatGPT Image Sep 8, 2025, 10_06_00 AM.png" alt="What you left behind" className="w-32 h-32 object-contain" />,
-          title: 'What you left behind returns. Answer all seven.',
-          subtitle: 'Silence tricks no one.',
+          title: 'WHAT YOU LEFT BEHIND RETURNS. ANSWER ALL SEVEN.',
+          subtitle: 'SILENCE TRICKS NO ONE.',
           minHoldMs: 2000,
           pulseColor: 'pink' // Pink star on the bird
         };
       case 'c-to-d':
         return {
           icon: <img src="/Hawk Emblem with Glowing Star.png" alt="Installation" className="w-32 h-32 object-contain" />,
-          title: 'Installation. You don\'t choose a family. You choose a face.',
-          subtitle: 'Installed ≠ chosen. Pay attention.',
+          title: 'INSTALLATION. YOU DON\'T CHOOSE A FAMILY. YOU CHOOSE A FACE.',
+          subtitle: 'INSTALLED ≠ CHOSEN. PAY ATTENTION.',
           minHoldMs: 2000,
           pulseColor: 'green' // Green star on Hawk
         };
       case 'd-to-e':
         return {
           icon: <img src="/Symmetrical Canada Goose Emblem.png" alt="Anchor" className="w-32 h-32 object-contain" />,
-          title: 'Anchor. One line holds, all others orbit.',
-          subtitle: 'Anchor = who you are when everything else collapses.',
+          title: 'ANCHOR. ONE LINE HOLDS, ALL OTHERS ORBIT.',
+          subtitle: 'ANCHOR = WHO YOU ARE WHEN EVERYTHING ELSE COLLAPSES.',
           minHoldMs: 2000,
           pulseColor: 'cyan' // Cyan star on Canada Goose
         };
       case 'final-result':
         return {
           icon: <img src="/Stylized Pelican Emblem on Black.png" alt="Chamber opens" className="w-32 h-32 object-contain" />,
-          title: 'Your Chamber opens. Seven lines resolved.',
-          subtitle: 'No edits. No escapes. Face it.',
+          title: 'YOUR CHAMBER OPENS. SEVEN LINES RESOLVED.',
+          subtitle: 'NO EDITS. NO ESCAPES. FACE IT.',
           minHoldMs: 2000,
           pulseColor: 'orange-orange' // More orange-orange star on Pelican
         };
       default:
         return {
           icon: <img src="/ChatGPT Image Aug 26, 2025, 04_15_54 PM.png" alt="Loading" className="w-32 h-32 object-contain" />,
-          title: 'Loading...',
+          title: 'LOADING...',
           subtitle: '',
           minHoldMs: 1000
         };

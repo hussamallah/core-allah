@@ -569,8 +569,8 @@ export function QuizEngine() {
   }, [calculateSIF]);
 
   return (
-    <div className="bg-black text-gray-200 font-sans relative min-h-screen">
-      <div className={`mx-auto px-4 py-4 sm:py-8 bg-gray-900 rounded-xl ${
+    <div className="bg-brand-gray-950 text-brand-gray-100 font-sans relative min-h-screen safe-top safe-bottom">
+      <div className={`mx-auto px-4 py-4 sm:py-8 card ${
         state.phase === 'B' || state.phase === 'C' ? 'max-w-2xl' : 'max-w-4xl'
       }`}>
         
@@ -592,14 +592,14 @@ export function QuizEngine() {
           
           const stepInfo = getStepInfo();
           return total > 0 && (
-            <div className="mb-6">
+            <div className="mb-6 animate-fade-in-up">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Step {stepInfo.step}: {stepInfo.title}</h2>
-                  <p className="text-sm text-gray-400">{stepInfo.description}</p>
+                  <h2 className="text-lg font-semibold text-brand-gray-100">Step {stepInfo.step}: {stepInfo.title}</h2>
+                  <p className="text-sm text-brand-gray-400">{stepInfo.description}</p>
                 </div>
                 {state.phase === 'A' && (
-                  <div className="text-xs text-gray-500 bg-gray-800 px-3 py-1 rounded-full">
+                  <div className="text-xs text-brand-gray-500 bg-brand-gray-800 px-3 py-1 rounded-full">
                     ~7 minutes
                   </div>
                 )}
@@ -680,22 +680,23 @@ export function QuizEngine() {
 
 
           {state.phase === 'Celebration' && (
-            <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+            <div className="card p-8 min-h-[500px] flex items-center justify-center animate-bounce-in">
               <div className="text-center">
-                <div className="text-6xl mb-6">🎉</div>
-                <h2 className="text-3xl font-bold text-white mb-4">Done!</h2>
-                <p className="text-xl text-gray-500 mb-2">Processing results...</p>
-                <div className="animate-pulse text-gray-400 text-sm">This will just take a moment</div>
+                <div className="text-6xl mb-6 animate-float">🎉</div>
+                <h2 className="text-3xl font-bold text-brand-gray-100 mb-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>Done!</h2>
+                <p className="text-xl text-brand-gray-400 mb-2 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>Processing results...</p>
+                <div className="animate-pulse text-brand-gray-500 text-sm animate-fade-in-up" style={{ animationDelay: '0.6s' }}>This will just take a moment</div>
               </div>
             </div>
           )}
 
           {state.phase === 'FinalProcessing' && (
-            <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
+            <div className="card p-8 min-h-[500px] flex items-center justify-center animate-fade-in-up">
               <div className="text-center">
-                <div className="text-gray-500 text-xl font-medium mb-4">
+                <div className="text-brand-gray-400 text-xl font-medium mb-4 animate-pulse">
                   Processing final results
                 </div>
+                <div className="w-8 h-8 border-2 border-brand-gold-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
               </div>
             </div>
           )}

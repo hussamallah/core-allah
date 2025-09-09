@@ -95,15 +95,32 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
     }
   }, [hasEntered, lineResults, sifResult, sifEngine, onAnchorSelect, status]);
 
-  // Handle tie-break selection
-  const handleTieBreakSelection = (selectedLine: string) => {
+  // Handle tie-break selection with improved mobile touch handling
+  const handleTieBreakSelection = (selectedLine: string, event?: React.MouseEvent | React.TouchEvent) => {
+    // Prevent double-tap and rapid clicking on mobile
     if (status !== 'IDLE') {
       console.warn("[PhaseE] Already committed, ignoring selection");
       return;
     }
 
+    // Prevent event bubbling and default behavior
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     console.log('🎯 PHASE E - Tie-break selection:', selectedLine);
     setStatus('PROCESSING');
+    
+    // Add visual feedback immediately
+    const targetElement = event?.currentTarget as HTMLElement;
+    if (targetElement) {
+      targetElement.style.transform = 'scale(0.95)';
+      targetElement.style.transition = 'transform 0.1s ease-out';
+      setTimeout(() => {
+        targetElement.style.transform = 'scale(1)';
+      }, 100);
+    }
     
     phaseEEngine.selectAnchor(selectedLine);
     const newState = phaseEEngine.getState();
@@ -128,9 +145,11 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
     // Record in question history
     onAddQuestionToHistory('E', selectedLine, 'tie-break-question', 'selected');
     
-    // Show archetype selection
-    setStatus('COMMITTED');
-    setShowArchetypeSelection(true);
+    // Show archetype selection with a slight delay for better UX
+    setTimeout(() => {
+      setStatus('COMMITTED');
+      setShowArchetypeSelection(true);
+    }, 200);
 
     // Debug helper for development
     if (typeof window !== 'undefined') {
@@ -270,23 +289,39 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
           <div className="space-y-4">
             <div 
               onClick={() => handleArchetypeChoice('A')}
-              className="text-white p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
+              className="card-interactive p-6 touch-target touch-safe"
             >
-              <strong className="text-yellow-400 text-xl">A:</strong> 
-              <span className="text-xl font-bold ml-2">{currentQuestion.options.A}</span>
-              <div className="text-lg text-yellow-400 mt-1">
-                → {currentQuestion.map.A}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-brand-gold-400 text-brand-gray-950 rounded-full flex items-center justify-center font-bold text-lg">
+                  A
+                </div>
+                <div className="flex-1">
+                  <div className="text-brand-gray-100 text-xl font-bold mb-2">
+                    {currentQuestion.options.A}
+                  </div>
+                  <div className="text-brand-gold-400 text-lg font-semibold">
+                    → {currentQuestion.map.A}
+                  </div>
+                </div>
               </div>
             </div>
             
             <div 
               onClick={() => handleArchetypeChoice('B')}
-              className="text-white p-4 bg-gray-800 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
+              className="card-interactive p-6 touch-target touch-safe"
             >
-              <strong className="text-yellow-400 text-xl">B:</strong> 
-              <span className="text-xl font-bold ml-2">{currentQuestion.options.B}</span>
-              <div className="text-lg text-yellow-400 mt-1">
-                → {currentQuestion.map.B}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-brand-gold-400 text-brand-gray-950 rounded-full flex items-center justify-center font-bold text-lg">
+                  B
+                </div>
+                <div className="flex-1">
+                  <div className="text-brand-gray-100 text-xl font-bold mb-2">
+                    {currentQuestion.options.B}
+                  </div>
+                  <div className="text-brand-gold-400 text-lg font-semibold">
+                    → {currentQuestion.map.B}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -335,18 +370,19 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
               {phaseEState.purityCandidates.map(line => (
                 <button
                   key={line}
-                  onClick={() => handleTieBreakSelection(line)}
+                  onClick={(e) => handleTieBreakSelection(line, e)}
+                  onTouchEnd={(e) => handleTieBreakSelection(line, e)}
                   disabled={status !== 'IDLE'}
-                  className={`w-full p-6 border rounded-lg transition-all duration-300 text-left ${
+                  className={`w-full p-6 border rounded-xl transition-all duration-300 text-left touch-target touch-safe ${
                     status === 'IDLE' 
-                      ? 'bg-gray-800 border-yellow-400 hover:bg-gray-700 hover:border-yellow-300 hover:shadow-lg hover:shadow-yellow-400/20' 
-                      : 'bg-gray-900 border-gray-700 cursor-not-allowed opacity-50'
+                      ? 'card-interactive border-brand-gold-400 hover:border-brand-gold-300 hover:shadow-glow' 
+                      : 'bg-brand-gray-900 border-brand-gray-700 cursor-not-allowed opacity-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-bold text-ivory text-xl mb-2">{line}</div>
-                      <div className="text-yellow-400 text-sm font-bold uppercase tracking-wider">
+                      <div className="font-bold text-brand-gray-100 text-xl mb-2">{line}</div>
+                      <div className="text-brand-gold-400 text-sm font-bold uppercase tracking-wider">
                         {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
                         {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
                         {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
@@ -356,7 +392,7 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
                         {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
                       </div>
                     </div>
-                    <div className="text-yellow-400 text-sm font-semibold">Evidence-Based</div>
+                    <div className="text-brand-gold-400 text-sm font-semibold">Evidence-Based</div>
                   </div>
                 </button>
               ))}
@@ -375,18 +411,19 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
               {phaseEState.selfInstalledCandidates.map(line => (
                 <button
                   key={line}
-                  onClick={() => handleTieBreakSelection(line)}
+                  onClick={(e) => handleTieBreakSelection(line, e)}
+                  onTouchEnd={(e) => handleTieBreakSelection(line, e)}
                   disabled={status !== 'IDLE'}
-                  className={`w-full p-6 border rounded-lg transition-all duration-300 text-left ${
+                  className={`w-full p-6 border rounded-xl transition-all duration-300 text-left touch-target touch-safe ${
                     status === 'IDLE' 
-                      ? 'bg-gray-800 border-blue-400 hover:bg-gray-700 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-400/20' 
-                      : 'bg-gray-900 border-gray-700 cursor-not-allowed opacity-50'
+                      ? 'card-interactive border-brand-accent-blue hover:border-brand-accent-blue/80 hover:shadow-lg hover:shadow-brand-accent-blue/20' 
+                      : 'bg-brand-gray-900 border-brand-gray-700 cursor-not-allowed opacity-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-bold text-ivory text-xl mb-2">{line}</div>
-                      <div className="text-blue-400 text-sm font-bold uppercase tracking-wider">
+                      <div className="font-bold text-brand-gray-100 text-xl mb-2">{line}</div>
+                      <div className="text-brand-accent-blue text-sm font-bold uppercase tracking-wider">
                         {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
                         {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
                         {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
@@ -396,7 +433,7 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
                         {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
                       </div>
                     </div>
-                    <div className="text-blue-400 text-sm font-semibold">Your Preference</div>
+                    <div className="text-brand-accent-blue text-sm font-semibold">Your Preference</div>
                   </div>
                 </button>
               ))}
