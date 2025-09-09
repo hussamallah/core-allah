@@ -11,22 +11,22 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
  *************************/
 export const fadeIn = {
   hidden: { opacity: 0 },
-  visible: (delay = 0) => ({ opacity: 1, transition: { duration: 0.5, delay } }),
+  visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 export const slideUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut", delay } }),
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
 export const slideRight = {
   hidden: { opacity: 0, x: -24 },
-  visible: (delay = 0) => ({ opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut", delay } }),
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
 export const scaleIn = {
   hidden: { opacity: 0, scale: 0.96 },
-  visible: (delay = 0) => ({ opacity: 1, scale: 1, transition: { duration: 0.45, ease: "easeOut", delay } }),
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
 /** Stagger container for lists/grids */
@@ -179,7 +179,7 @@ export function PhaseTitle({ label, kicker }: PhaseTitleProps) {
         className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-[length:200%_100%] bg-clip-text text-3xl font-bold text-transparent"
         initial={{ backgroundPositionX: "0%" }}
         animate={{ backgroundPositionX: "100%" }}
-        transition={{ duration: 2.2, ease: "easeInOut", repeat: 0 }}
+        transition={{ duration: 2.2, ease: [0.4, 0, 0.2, 1], repeat: 0 }}
       >
         {label}
       </motion.h1>
@@ -252,12 +252,12 @@ export function SlideCards({ items = [], onPick }: SlideCardsProps) {
   const [index, setIndex] = useState(0);
   const direction = useMotionValue(0);
 
-  function go(next) {
+  function go(next: number) {
     direction.set(next > index ? 1 : -1);
     setIndex(next);
   }
 
-  function pick(id) {
+  function pick(id: string) {
     onPick?.(id);
   }
 
@@ -276,10 +276,10 @@ export function SlideCards({ items = [], onPick }: SlideCardsProps) {
           <motion.div
             key={items[index]?.id}
             custom={direction.get()}
-            initial={(dir) => ({ x: dir > 0 ? 40 : -40, opacity: 0 })}
+            initial={(dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 })}
             animate={{ x: 0, opacity: 1 }}
-            exit={(dir) => ({ x: dir > 0 ? -40 : 40, opacity: 0 })}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+            exit={(dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 })}
+            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="absolute inset-0"
           >
             <HoverLiftCard className="h-full">
