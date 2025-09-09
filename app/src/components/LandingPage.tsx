@@ -10,10 +10,12 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
       {/* AXIARCH image - centered at top middle */}
       <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
         <div className="w-88 h-88 flex items-center justify-center">
+          {/* Gradient light behind image - gold left, blue right */}
+          <div className="absolute w-48 h-48 bg-gradient-to-r from-yellow-400 to-blue-400 blur-[40px] opacity-90 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
           <img 
             src="/ChatGPT Image Sep 5, 2025, 08_06_22 AM.png" 
             alt="AXIARCH" 
-            className="w-full h-auto max-w-72"
+            className="w-full h-auto max-w-72 relative z-10"
           />
         </div>
       </div>

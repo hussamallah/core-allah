@@ -302,6 +302,10 @@ const SeverityProbes: React.FC<{ sifData: any }> = ({ sifData }) => {
             <p><span className="text-green-400">Option A (C pick):</span> Shows you can still act through the line → <span className="text-yellow-400">severity light F</span> (bend, not collapse)</p>
             <p><span className="text-red-400">Option B (F pick):</span> Shows the line fails under pressure → <span className="text-red-400">severity deep F</span> (collapsed)</p>
           </div>
+          <div className="mt-3 p-2 bg-gray-700 rounded border border-gray-600">
+            <p className="font-semibold text-purple-400 mb-1">Foreign Archetype Creep:</p>
+            <p className="text-xs">When a line fails, it reveals which <em>foreign archetype</em> takes over. Mild failures show supportive nearby archetypes; severe failures show hijacking archetypes that deny, block, or sever the line.</p>
+          </div>
       </div>
     </div>
     
@@ -322,13 +326,19 @@ const SeverityProbes: React.FC<{ sifData: any }> = ({ sifData }) => {
               <div className="mb-1">
                 <span className="text-yellow-400 font-semibold">Severity Assessment:</span> {probe.resolved === 'Light F' ? 'Light F (bend, not collapse)' : 'Deep F (collapsed)'}
               </div>
+              <div className="mb-1">
+                <span className="text-purple-400 font-semibold">Foreign Creep:</span> {probe.foreignCreep}
+              </div>
+              <div className="mb-2">
+                <span className="text-gray-400">Description:</span> {probe.description}
+              </div>
               <div className="mb-2">
                 <span className="text-gray-400">Outcome:</span> {probe.resolved === 'Light F' ? 'Transient collapse. Context mis-sync.' : 'Structural collapse. Core crack in the line.'}
-          </div>
+              </div>
               <div>
                 <span className="text-gray-400">Action:</span> {probe.action}
-      </div>
-    </div>
+              </div>
+            </div>
   </div>
         ))}
       </div>

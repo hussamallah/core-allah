@@ -87,6 +87,9 @@ export default function PhaseD({
     setInstalled(faceId);
     onSetInstalledChoice(faceId);
     
+    // Record user install for internal candidate tracking
+    sifEngine.recordUserInstalled(faceId);
+    
     // Record the install choice to QuizRecorder
     quizRecorder.recordQuestionAnswer('D', 'install', 'install-choice', faceId, {
       choice: faceId,

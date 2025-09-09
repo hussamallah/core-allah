@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { QuizState } from '@/types/quiz';
 import { DUEL_QUESTIONS_ENHANCED } from '@/data/questionsEnhanced';
+import { UNIFIED_QUESTIONS_ENHANCED } from '@/data/questionsEnhanced';
 import { SEVERITY_PROBE_QUESTIONS } from '@/data/questions';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { phaseBEngine } from '@/engine/PhaseB';
@@ -11,7 +12,8 @@ interface PhaseBEnhancedProps {
   onProceedToC: () => void;
   onAddUsedQuestion: (questionId: string) => void;
   onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
-  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void;
+  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void; // DEPRECATED
+  onRecordSIFAnswerWithEffects: (question: any, choice: 'A' | 'B' | 'C', family: string) => void; // NEW
   onSeveritySelect?: (lineId: string, level: 'high' | 'mid', score: 1.0 | 0.5) => void;
 }
 
@@ -21,7 +23,8 @@ export function PhaseBEnhanced({
   onProceedToC, 
   onAddUsedQuestion, 
   onAddQuestionToHistory, 
-  onRecordSIFAnswer,
+  onRecordSIFAnswer, // DEPRECATED
+  onRecordSIFAnswerWithEffects, // NEW
   onSeveritySelect 
 }: PhaseBEnhancedProps) {
   const selectedALines = state.lines.filter(l => l.selectedA);
@@ -134,13 +137,25 @@ export function PhaseBEnhanced({
       onAddUsedQuestion(question.id);
       onAddQuestionToHistory('B', line.id, question.id, pick);
       
-      const questionType = question.type as 'CO' | 'CF';
-      const choice = pick === 'C' ? 'A' : 'B';
-      onRecordSIFAnswer('B', line.id, questionType, choice);
+      // NEW: Use effect-based recording with original question data
+      const originalQuestion = UNIFIED_QUESTIONS_ENHANCED.find(q => q.id === question.id);
+      if (originalQuestion && onRecordSIFAnswerWithEffects) {
+        const choiceKey = pick === 'C' ? 'A' : pick === 'O' ? 'B' : 'C';
+        onRecordSIFAnswerWithEffects(originalQuestion, choiceKey as 'A' | 'B' | 'C', line.id);
+        console.log(`✅ Using new effect-based recording for ${line.id} ${pick}`);
+      } else {
+        // FALLBACK: Use old method if new method not available
+        const questionType = question.type as 'CO' | 'CF';
+        const choice = pick === 'C' ? 'A' : 'B';
+        onRecordSIFAnswer('B', line.id, questionType, choice);
+        console.log(`⚠️ Using deprecated recording for ${line.id} ${pick}`);
+      }
       
       phaseBEngine.recordPick(line.id, pick, round);
       
       // Enhanced recording with simulator data
+      const questionType = question.type as 'CO' | 'CF';
+      const choice = pick === 'C' ? 'A' : 'B';
       quizRecorder.recordQuestionAnswer('B', line.id, question.id, pick, {
         round,
         type: questionType,

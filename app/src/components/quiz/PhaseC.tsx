@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { QuizState, anchorFaceFor } from '@/types/quiz';
 import { MODULE_QUESTIONS, SEVERITY_PROBE_QUESTIONS } from '@/data/questions';
+import { UNIFIED_QUESTIONS_ENHANCED } from '@/data/questionsEnhanced';
 import { quizRecorder } from '@/utils/QuizRecorder';
 
 interface PhaseCProps {
@@ -11,12 +12,13 @@ interface PhaseCProps {
   stepDone: () => void;
   onAddUsedQuestion: (questionId: string) => void;
   onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
-  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void;
+  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void; // DEPRECATED
+  onRecordSIFAnswerWithEffects: (question: any, choice: 'A' | 'B' | 'C', family: string) => void; // NEW
   updateLine: (lineId: string, updates: Partial<any>) => void;
   setFamilyVerdicts: (verdicts: Array<{ family: string; type: 'F'; severity?: number }>) => void;
 }
 
-export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDone, onAddUsedQuestion, onAddQuestionToHistory, onRecordSIFAnswer, updateLine, setFamilyVerdicts }: PhaseCProps) {
+export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDone, onAddUsedQuestion, onAddQuestionToHistory, onRecordSIFAnswer, onRecordSIFAnswerWithEffects, updateLine, setFamilyVerdicts }: PhaseCProps) {
   const nonALines = state.lines.filter(l => !l.selectedA);
   const used = useMemo(() => new Set(state.usedQuestions), [state.usedQuestions]);
   
@@ -233,16 +235,25 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
       onAddUsedQuestion(question.id);
       onAddQuestionToHistory('C', pendingLine.id, question.id, pick);
       
-      // Record SIF face votes - simple mapping: C->A, O/F->B
-      const choice = pick === 'C' ? 'A' : 'B';
-      const questionType = type === 'CF' ? 'CF' : 'CO';
-      
-      // Get the real anchored face based on family and decision type
-      const anchoredFace = anchorFaceFor(pendingLine.id, decisionType as 'CO1' | 'CO2' | 'CF' | 'TIE');
-      
-      onRecordSIFAnswer('C', pendingLine.id, questionType, choice, anchoredFace);
+      // NEW: Use effect-based recording with original question data
+      const originalQuestion = UNIFIED_QUESTIONS_ENHANCED.find(q => q.id === question.id);
+      if (originalQuestion && onRecordSIFAnswerWithEffects) {
+        const choiceKey = pick === 'C' ? 'A' : pick === 'O' ? 'B' : 'C';
+        onRecordSIFAnswerWithEffects(originalQuestion, choiceKey as 'A' | 'B' | 'C', pendingLine.id);
+        console.log(`✅ Using new effect-based recording for ${pendingLine.id} ${pick}`);
+      } else {
+        // FALLBACK: Use old method if new method not available
+        const choice = pick === 'C' ? 'A' : 'B';
+        const questionType = type === 'CF' ? 'CF' : 'CO';
+        const anchoredFace = anchorFaceFor(pendingLine.id, decisionType as 'CO1' | 'CO2' | 'CF' | 'TIE');
+        onRecordSIFAnswer('C', pendingLine.id, questionType, choice, anchoredFace);
+        console.log(`⚠️ Using deprecated recording for ${pendingLine.id} ${pick}`);
+      }
       
       // Record the choice
+      const choice = pick === 'C' ? 'A' : 'B';
+      const questionType = type === 'CF' ? 'CF' : 'CO';
+      const anchoredFace = anchorFaceFor(pendingLine.id, decisionType as 'CO1' | 'CO2' | 'CF' | 'TIE');
       quizRecorder.recordQuestionAnswer('C', pendingLine.id, question.id, pick, {
         decisionType,
         questionType,

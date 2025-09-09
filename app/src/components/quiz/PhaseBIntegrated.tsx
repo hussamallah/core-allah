@@ -10,7 +10,8 @@ interface PhaseBIntegratedProps {
   onProceedToC: () => void;
   onAddUsedQuestion: (questionId: string) => void;
   onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
-  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void;
+  onRecordSIFAnswer: (phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => void; // DEPRECATED
+  onRecordSIFAnswerWithEffects: (question: any, choice: 'A' | 'B' | 'C', family: string) => void; // NEW
   onSeveritySelect?: (lineId: string, level: 'high' | 'mid' | 'low', score: 1.0 | 0.5 | 0.0) => void;
 }
 

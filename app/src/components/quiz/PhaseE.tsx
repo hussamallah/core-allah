@@ -8,10 +8,12 @@ type Family = 'Control' | 'Pace' | 'Boundary' | 'Truth' | 'Recognition' | 'Bondi
 
 interface PhaseEProps {
   state: QuizState;
+  sifResult?: any;
+  sifEngine?: any;
   onAddQuestionToHistory: (phase: 'A' | 'B' | 'C' | 'D' | 'E' | 'Archetype' | 'Celebration' | 'FinalProcessing' | 'Summary', lineId: string, questionId: string, choice: string) => void;
   onProceedToArchetype?: (payload: {
     selectedLine: Family;
-    anchorSource: "E:Purity" | "E:TieBreak";
+    anchorSource: "E:Purity" | "E:TieBreak" | "E:SelfInstalled";
   }) => void;
   onArchetypeSelect?: (archetype: string) => void;
   onAnchorSelect?: (anchor: string) => void;
@@ -19,7 +21,7 @@ interface PhaseEProps {
 
 type PhaseEStatus = 'IDLE' | 'PROCESSING' | 'COMMITTED';
 
-export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, onArchetypeSelect, onAnchorSelect }: PhaseEProps) {
+export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, onProceedToArchetype, onArchetypeSelect, onAnchorSelect }: PhaseEProps) {
   const [phaseEState, setPhaseEState] = useState(phaseEEngine.getState());
   const [hasEntered, setHasEntered] = useState(false);
   const [status, setStatus] = useState<PhaseEStatus>('IDLE');
@@ -69,9 +71,14 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
   useEffect(() => {
     if (!hasEntered) {
       console.log('🎯 PHASE E - Entering Phase E');
-      const newState = phaseEEngine.enterPhaseE(lineResults);
+      console.log('🎯 PHASE E - SIF Result:', sifResult);
+      console.log('🎯 PHASE E - SIF Engine:', sifEngine);
+      
+      const newState = phaseEEngine.enterPhaseE(lineResults, sifResult, sifEngine);
       setPhaseEState(newState);
       setHasEntered(true);
+
+      console.log('🎯 PHASE E - Phase E State:', newState);
 
       // Auto-select if single candidate - show archetype selection
       if (newState.anchor && status === 'IDLE') {
@@ -86,7 +93,7 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
         setShowArchetypeSelection(true);
       }
     }
-  }, [hasEntered, lineResults, proceed, status]);
+  }, [hasEntered, lineResults, sifResult, sifEngine, onAnchorSelect, status]);
 
   // Handle tie-break selection
   const handleTieBreakSelection = (selectedLine: string) => {
@@ -101,6 +108,17 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
     phaseEEngine.selectAnchor(selectedLine);
     const newState = phaseEEngine.getState();
     setPhaseEState(newState);
+    
+    // Determine source type
+    const isPurityCandidate = phaseEState.purityCandidates.includes(selectedLine);
+    const isSelfInstalledCandidate = phaseEState.selfInstalledCandidates.includes(selectedLine);
+    
+    let anchorSource: "E:Purity" | "E:TieBreak" | "E:SelfInstalled" = "E:TieBreak";
+    if (isPurityCandidate) {
+      anchorSource = "E:Purity";
+    } else if (isSelfInstalledCandidate) {
+      anchorSource = "E:SelfInstalled";
+    }
     
     // Update global anchor state immediately for progress bar
     if (onAnchorSelect) {
@@ -306,36 +324,85 @@ export function PhaseE({ state, onAddQuestionToHistory, onProceedToArchetype, on
           When it actually lands on you, which line do you trust to carry your week?
         </p>
         
-        <div className="space-y-4">
-          {phaseEState.candidates.map(line => (
-            <button
-              key={line}
-              onClick={() => handleTieBreakSelection(line)}
-              disabled={status !== 'IDLE'}
-              className={`w-full p-6 border rounded-lg transition-all duration-300 text-left ${
-                status === 'IDLE' 
-                  ? 'bg-gray-800 border-gray-600 hover:bg-gray-700 hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/10' 
-                  : 'bg-gray-900 border-gray-700 cursor-not-allowed opacity-50'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-ivory text-xl mb-2">{line}</div>
-                  <div className="text-yellow-400 text-sm font-bold uppercase tracking-wider">
-                    {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
-                    {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
-                    {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
-                    {line === 'Truth' && 'I NAME REALITY. CLARITY.'}
-                    {line === 'Recognition' && 'I MAKE IT SEEN. SPOTLIGHT.'}
-                    {line === 'Bonding' && 'I KEEP PEOPLE STEADY. SUPPORT.'}
-                    {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
+        {/* Purity Candidates Section */}
+        {phaseEState.purityCandidates.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-yellow-400 mb-4 flex items-center">
+              <span className="bg-yellow-400 text-gray-900 px-2 py-1 rounded text-sm font-bold mr-3">EVIDENCE</span>
+              Purity-Based Candidates
+            </h3>
+            <div className="space-y-4">
+              {phaseEState.purityCandidates.map(line => (
+                <button
+                  key={line}
+                  onClick={() => handleTieBreakSelection(line)}
+                  disabled={status !== 'IDLE'}
+                  className={`w-full p-6 border rounded-lg transition-all duration-300 text-left ${
+                    status === 'IDLE' 
+                      ? 'bg-gray-800 border-yellow-400 hover:bg-gray-700 hover:border-yellow-300 hover:shadow-lg hover:shadow-yellow-400/20' 
+                      : 'bg-gray-900 border-gray-700 cursor-not-allowed opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-ivory text-xl mb-2">{line}</div>
+                      <div className="text-yellow-400 text-sm font-bold uppercase tracking-wider">
+                        {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
+                        {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
+                        {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
+                        {line === 'Truth' && 'I NAME REALITY. CLARITY.'}
+                        {line === 'Recognition' && 'I MAKE IT SEEN. SPOTLIGHT.'}
+                        {line === 'Bonding' && 'I KEEP PEOPLE STEADY. SUPPORT.'}
+                        {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
+                      </div>
+                    </div>
+                    <div className="text-yellow-400 text-sm font-semibold">Evidence-Based</div>
                   </div>
-                </div>
-                <div className="text-yellow-400 text-sm font-semibold">Lock Anchor</div>
-              </div>
-            </button>
-          ))}
-        </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Self-Installed Candidates Section */}
+        {phaseEState.selfInstalledCandidates.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+              <span className="bg-blue-400 text-gray-900 px-2 py-1 rounded text-sm font-bold mr-3">PREFERENCE</span>
+              Self-Installed Candidates
+            </h3>
+            <div className="space-y-4">
+              {phaseEState.selfInstalledCandidates.map(line => (
+                <button
+                  key={line}
+                  onClick={() => handleTieBreakSelection(line)}
+                  disabled={status !== 'IDLE'}
+                  className={`w-full p-6 border rounded-lg transition-all duration-300 text-left ${
+                    status === 'IDLE' 
+                      ? 'bg-gray-800 border-blue-400 hover:bg-gray-700 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-400/20' 
+                      : 'bg-gray-900 border-gray-700 cursor-not-allowed opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-ivory text-xl mb-2">{line}</div>
+                      <div className="text-blue-400 text-sm font-bold uppercase tracking-wider">
+                        {line === 'Control' && 'I SET THE CALL. AUTHORITY.'}
+                        {line === 'Pace' && 'I SET THE TEMPO. DIRECTION.'}
+                        {line === 'Boundary' && 'I HOLD THE LINE. GATEKEEPER.'}
+                        {line === 'Truth' && 'I NAME REALITY. CLARITY.'}
+                        {line === 'Recognition' && 'I MAKE IT SEEN. SPOTLIGHT.'}
+                        {line === 'Bonding' && 'I KEEP PEOPLE STEADY. SUPPORT.'}
+                        {line === 'Stress' && 'I TURN PRESSURE INTO MOTION. RESPONSE.'}
+                      </div>
+                    </div>
+                    <div className="text-blue-400 text-sm font-semibold">Your Preference</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -8,7 +8,8 @@ const initialSIFCounters: SIFCounters = {
   famF: {},
   sevF: {},
   faceC: {},
-  faceO: {}
+  faceO: {},
+  faceF: {}
 };
 
 const initialQuizState: QuizState = {
@@ -115,8 +116,20 @@ export function useQuizEngine() {
     }));
   }, []);
 
-  // SIF-specific methods
+  // NEW: Record SIF answer with proper effects
+  const recordSIFAnswerWithEffects = useCallback((question: any, choice: 'A' | 'B' | 'C', family: string) => {
+    sifEngine.recordAnswerWithEffects(question, choice, family);
+
+    // Update state counters
+    setState(prev => {
+      const newCounters = sifEngine.getCounters();
+      return { ...prev, sifCounters: newCounters };
+    });
+  }, [sifEngine]);
+
+  // DEPRECATED: SIF-specific methods (kept for backward compatibility)
   const recordSIFAnswer = useCallback((phase: 'B' | 'C', family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace?: string) => {
+    console.warn('⚠️ Using deprecated recordSIFAnswer - use recordSIFAnswerWithEffects instead');
     if (phase === 'B') {
       sifEngine.recordPhaseBAnswer(family, questionType, choice);
     } else if (phase === 'C' && anchoredFace) {
@@ -362,7 +375,8 @@ export function useQuizEngine() {
     addArchetypeAnswer,
     setFinalArchetype,
     // SIF methods
-    recordSIFAnswer,
+    recordSIFAnswerWithEffects, // NEW
+    recordSIFAnswer, // DEPRECATED but kept for compatibility
     recordSIFSeverity,
     recordAllSIFData,
     calculateSIF,
@@ -371,6 +385,9 @@ export function useQuizEngine() {
     setSIFShortlist,
     setInstalledChoice,
     finalizeSIFWithInstall,
-    sifEngine
+    sifEngine,
+    // Enhanced context methods
+    getEnhancedReport: () => sifEngine.getEnhancedReport(),
+    getOriginInsights: (face: string) => sifEngine.getOriginInsights(face)
   };
 }

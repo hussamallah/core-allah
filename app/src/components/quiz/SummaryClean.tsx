@@ -705,6 +705,71 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
               </table>
             </div>
           </div>
+          
+          {/* Face vs IL Analysis Summary */}
+          <div className="mt-6 p-4 bg-gray-800 border border-gray-600 rounded-xl">
+            <h3 className="text-md font-bold text-yellow-400 mb-3">Analysis Summary</h3>
+            
+            <div className="space-y-4 text-sm text-gray-300">
+              <div>
+                <h4 className="font-semibold text-blue-400 mb-2">🎯 Core Definitions</h4>
+                <div className="space-y-2 ml-4">
+                  <div>
+                    <span className="font-medium text-green-400">Face Score (SIF):</span>
+                    <span className="text-gray-300"> "Can you own it?" - Tests if a face could genuinely belong to you</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-purple-400">IL (InstalledLikelihood):</span>
+                    <span className="text-gray-300"> "Do others stick you in it?" - How likely people actually install you into this face</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-yellow-400 mb-2">🔍 Match vs Mismatch Analysis</h4>
+                <div className="space-y-2 ml-4">
+                  <div>
+                    <span className="font-medium text-green-400">When They Match:</span>
+                    <span className="text-gray-300"> High Face Score + High IL = "This is not only the face you can hold, it's also the one people already push you into"</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-blue-400">High Face Score + Low IL:</span>
+                    <span className="text-gray-300"> "You could hold this face, but people don't install you there often" → Latent capacity</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-orange-400">Low Face Score + High IL:</span>
+                    <span className="text-gray-300"> "People keep installing you there, but it's unstable for you" → Mismatch tension</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-400">Low Both:</span>
+                    <span className="text-gray-300"> "Not strong inside; not expected outside" → Low priority</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-2">💡 Key Insights from Your Results</h4>
+                <div className="space-y-2 ml-4">
+                  <div>
+                    <span className="font-medium text-green-400">Top IL Candidates:</span>
+                    <span className="text-gray-300"> Faces with highest IL scores are most likely to appear in your Phase D shortlist</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-blue-400">Face Score determines:</span>
+                    <span className="text-gray-300"> Which of these high-IL faces you can actually "own" and hold stably</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-yellow-400">Match = Strong Secondary:</span>
+                    <span className="text-gray-300"> Both internal capacity and external reality align</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-orange-400">Mismatch = Diagnostic insight:</span>
+                    <span className="text-gray-300"> Reveals tension between what you can hold vs what others expect</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Session Info */}
@@ -860,6 +925,12 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
                   <div className="text-sm text-gray-300">
                     <div className="mb-1">
                       <span className="text-yellow-400 font-semibold">Severity Assessment:</span> {probe.resolved === 'Light F' ? 'Light F (bend, not collapse)' : 'Deep F (collapsed)'}
+                    </div>
+                    <div className="mb-1">
+                      <span className="text-purple-400 font-semibold">Foreign Creep:</span> {probe.foreignCreep}
+                    </div>
+                    <div className="mb-2">
+                      <span className="text-gray-400">Description:</span> {probe.description}
                     </div>
                     <div className="mb-2">
                       <span className="text-gray-400">Outcome:</span> {probe.resolved === 'Light F' ? 'Transient collapse. Context mis-sync.' : 'Structural collapse. Core crack in the line.'}

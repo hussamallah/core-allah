@@ -7,15 +7,22 @@
 
 import { SIFCounters, SIFResult, FACE_TO_FAMILY, FAMILY_TO_FACES, FAMILY_TO_PRIZE, PRIZE_MIRROR_MAP, getPrizeMirror } from '@/types/quiz';
 import { PhaseDEngine } from './PhaseD';
+import { SIFContextEnhancer } from './SIFContextEnhancer';
 
 export class SIFEngine {
-  private counters: SIFCounters;
+  public counters: SIFCounters;
   private didRecordAll: boolean = false;
   private didRecordPhaseD: boolean = false;
   private snapshot: any = null;
   private opportunities: Record<string, number> = {}; // Track opportunities per face
   private calculatedILScores: Record<string, number> = {}; // Store calculated IL scores
   public phaseDEngine: PhaseDEngine; // Make Phase D engine accessible
+  private contextEnhancer: SIFContextEnhancer; // Context-aware analysis
+  
+  // SIF user installs tracking for internal candidates
+  private sifUserInstalls: Record<string, number> = {}; // Track user installs per face
+  private sifLastPick: string | null = null; // Most recent user pick
+  private originEvents: Record<string, { internal: number; external: number; mixed: number }> = {}; // Track origin events per face
 
   // Family-to-archetype mapping for face determination
   private readonly FAMILY_FACES: Record<string, [string, string]> = {
@@ -128,13 +135,15 @@ export class SIFEngine {
       famF: {},
       sevF: {},
       faceC: {},
-      faceO: {}
+      faceO: {},
+      faceF: {}
     };
     this.phaseDEngine = new PhaseDEngine();
+    this.contextEnhancer = new SIFContextEnhancer();
   }
 
   // Helper to safely increment counters
-  private inc(obj: Record<string, number>, key: string, by = 1): void {
+  public inc(obj: Record<string, number>, key: string, by = 1): void {
     obj[key] = (typeof obj[key] === "number" ? obj[key] : 0) + by;
   }
 
@@ -155,6 +164,7 @@ export class SIFEngine {
     faces.forEach(face => {
       this.counters.faceC[face] = 0;
       this.counters.faceO[face] = 0;
+      this.counters.faceF[face] = 0;
     });
   }
 
@@ -203,9 +213,11 @@ export class SIFEngine {
   }
 
   /**
-   * Record answer during Phase B (duels)
+   * DEPRECATED: Record answer during Phase B (duels)
+   * @deprecated Use recordAnswerWithEffects instead for correct effect mapping
    */
   recordPhaseBAnswer(family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B'): void {
+    console.warn('⚠️ Using deprecated recordPhaseBAnswer - effects may be incorrect. Use recordAnswerWithEffects instead.');
     console.log(`📊 SIF Phase B: ${family} ${questionType} choice ${choice}`);
     
     if (questionType === 'CO') {
@@ -230,10 +242,99 @@ export class SIFEngine {
   }
 
   /**
-   * Record answer during Phase C (fused items)
+   * NEW: Record answer with proper effect mapping
+   * This replaces the old recordPhaseBAnswer and recordPhaseCAnswer methods
+   * Uses question effects to credit the correct faces based on new C/O/F semantics
+   */
+  recordAnswerWithEffects(question: any, choice: 'A' | 'B' | 'C', family: string): void {
+    console.log(`📊 SIF Recording: ${family} question ${question.id} choice ${choice}`);
+    
+    const option = question.options.find((opt: any) => opt.key === choice);
+    if (!option) {
+      console.warn(`No option found for choice ${choice} in question ${question.id}`);
+      return;
+    }
+    
+    const effects = option.effects || {};
+    console.log(`  → Effects:`, effects);
+    
+    // Record family-level effects
+    if (effects.famC?.length > 0) {
+      effects.famC.forEach((fam: string) => {
+        this.inc(this.counters.famC, fam);
+        console.log(`  → famC[${fam}] = ${this.counters.famC[fam]}`);
+      });
+    }
+    
+    if (effects.famO?.length > 0) {
+      effects.famO.forEach((fam: string) => {
+        this.inc(this.counters.famO, fam);
+        console.log(`  → famO[${fam}] = ${this.counters.famO[fam]}`);
+      });
+    }
+    
+    if (effects.famF?.length > 0) {
+      effects.famF.forEach((fam: string) => {
+        this.inc(this.counters.famF, fam);
+        console.log(`  → famF[${fam}] = ${this.counters.famF[fam]}`);
+      });
+    }
+    
+    // Record face-level effects (THE KEY FIX)
+    if (effects.faceC?.length > 0) {
+      effects.faceC.forEach((face: string) => {
+        this.inc(this.counters.faceC, face);
+        console.log(`  → faceC[${face}] = ${this.counters.faceC[face]}`);
+      });
+    }
+    
+    if (effects.faceO?.length > 0) {
+      effects.faceO.forEach((face: string) => {
+        this.inc(this.counters.faceO, face);
+        console.log(`  → faceO[${face}] = ${this.counters.faceO[face]}`);
+      });
+    }
+    
+    if (effects.faceF?.length > 0) {
+      effects.faceF.forEach((face: string) => {
+        this.inc(this.counters.faceF, face);
+        console.log(`  → faceF[${face}] = ${this.counters.faceF[face]}`);
+      });
+    }
+    
+    // Track context for origin analysis
+    if (effects.faceC?.length > 0) {
+      effects.faceC.forEach((face: string) => {
+        this.contextEnhancer.trackChoiceContext(question.id, choice as 'A' | 'B', face);
+        // Track origin events for internal candidate calculation
+        this.trackOriginEventFromContext(question, choice as 'A' | 'B', face);
+      });
+    }
+    if (effects.faceO?.length > 0) {
+      effects.faceO.forEach((face: string) => {
+        this.contextEnhancer.trackChoiceContext(question.id, choice as 'A' | 'B', face);
+        // Track origin events for internal candidate calculation
+        this.trackOriginEventFromContext(question, choice as 'A' | 'B', face);
+      });
+    }
+    if (effects.faceF?.length > 0) {
+      effects.faceF.forEach((face: string) => {
+        this.contextEnhancer.trackChoiceContext(question.id, choice as 'A' | 'B', face);
+        // Track origin events for internal candidate calculation
+        this.trackOriginEventFromContext(question, choice as 'A' | 'B', face);
+      });
+    }
+    
+    console.log('📊 SIF Counters after recording:', this.counters);
+  }
+
+  /**
+   * DEPRECATED: Record answer during Phase C (fused items)
    * Records both family and face counters for the anchored face
+   * @deprecated Use recordAnswerWithEffects instead for correct effect mapping
    */
   recordPhaseCAnswer(family: string, questionType: 'CO' | 'CF', choice: 'A' | 'B', anchoredFace: string): void {
+    console.warn('⚠️ Using deprecated recordPhaseCAnswer - effects may be incorrect. Use recordAnswerWithEffects instead.');
     console.log(`📊 SIF Phase C: ${family} ${questionType} choice ${choice} anchoredFace ${anchoredFace}`);
     
     // Handle CF/B case - only famF, no face vote
@@ -1007,5 +1108,193 @@ export class SIFEngine {
    */
   clearILScores(): void {
     this.calculatedILScores = {};
+  }
+
+  /**
+   * Get SIF results (placeholder method)
+   */
+  getSIFResults(): any {
+    // This is a placeholder method - SIF results are typically calculated elsewhere
+    // Return the current counters as a basic result
+    return {
+      counters: this.counters,
+      ilScores: this.calculatedILScores
+    };
+  }
+
+  /**
+   * Get enhanced report with SIF preference and IL origin analysis
+   */
+  getEnhancedReport(): any {
+    const sifResult = this.getSIFResults();
+    return this.contextEnhancer.generateEnhancedReport(sifResult);
+  }
+
+  /**
+   * Get origin insights for a specific face
+   */
+  getOriginInsights(face: string): any {
+    return this.contextEnhancer.getOriginInsights(face);
+  }
+
+  /**
+   * Clear context history (for new quiz sessions)
+   */
+  clearContextHistory(): void {
+    this.contextEnhancer.clearContextHistory();
+  }
+
+  /**
+   * Record user installed choice for internal candidate tracking
+   */
+  recordUserInstalled(face: string): void {
+    this.sifUserInstalls[face] = (this.sifUserInstalls[face] ?? 0) + 1;
+    this.sifLastPick = face;
+    console.log(`📊 SIF User Install recorded: ${face} (total: ${this.sifUserInstalls[face]})`);
+  }
+
+  /**
+   * Record origin event for internal origin share calculation
+   */
+  recordOriginEvent(face: string, locus: 'internal' | 'external' | 'mixed'): void {
+    if (!this.originEvents[face]) {
+      this.originEvents[face] = { internal: 0, external: 0, mixed: 0 };
+    }
+    this.originEvents[face][locus]++;
+    console.log(`📊 Origin Event recorded: ${face} -> ${locus} (${this.originEvents[face][locus]})`);
+  }
+
+  /**
+   * Track origin event from context tags in question options
+   */
+  private trackOriginEventFromContext(question: any, choice: 'A' | 'B', face: string): void {
+    const option = question.options.find((opt: any) => opt.key === choice);
+    if (!option?.context?.locus) return;
+    
+    const locus = option.context.locus;
+    if (locus === 'internal' || locus === 'external' || locus === 'mixed') {
+      this.recordOriginEvent(face, locus);
+    }
+  }
+
+  /**
+   * Get internal origin share for a face
+   */
+  getInternalOriginShare(face: string): number {
+    const events = this.originEvents[face] ?? { internal: 0, external: 0, mixed: 0 };
+    const total = events.internal + events.external + events.mixed;
+    if (total <= 0) return 0;
+    
+    const mixedAsInternal = 0.5 * events.mixed; // Tuneable weight for mixed events
+    return (events.internal + mixedAsInternal) / total;
+  }
+
+  /**
+   * Get normalized SIF user installs across all faces
+   */
+  getSifNorm(): Record<string, number> {
+    const values = Object.values(this.sifUserInstalls);
+    const min = Math.min(...values, 0);
+    const max = Math.max(...values, 1);
+    const range = max - min;
+    
+    if (range === 0) {
+      // If all values are the same, return equal weights
+      const faces = Object.keys(this.sifUserInstalls);
+      return faces.reduce((acc, face) => ({ ...acc, [face]: 0.5 }), {});
+    }
+    
+    return Object.entries(this.sifUserInstalls).reduce((acc, [face, count]) => {
+      acc[face] = (count - min) / range;
+      return acc;
+    }, {} as Record<string, number>);
+  }
+
+  /**
+   * Get all faces from Phase B and Phase C results
+   */
+  getAllFaces(): Array<{ id: string; family: string }> {
+    const faces: Array<{ id: string; family: string }> = [];
+    
+    // Add all faces from family mappings
+    Object.entries(this.FAMILY_FACES).forEach(([family, facePair]) => {
+      facePair.forEach(face => {
+        faces.push({ id: face, family });
+      });
+    });
+    
+    return faces;
+  }
+
+  /**
+   * Get internal candidates for Phase E anchor selection
+   */
+  getInternalCandidates(options: {
+    excludeFamilies: string[];
+    max: number;
+    fitFloor?: number;
+  }): Array<{ id: string; family: string; reason: string; internalSelect: number }> {
+    const { excludeFamilies, max, fitFloor = 0.20 } = options;
+    const sifNorm = this.getSifNorm();
+    const faces = this.getAllFaces();
+    
+    console.log('🔍 Computing internal candidates:', {
+      excludeFamilies,
+      max,
+      fitFloor,
+      sifNorm,
+      originEvents: this.originEvents
+    });
+    
+    const scored = faces
+      .filter(f => !excludeFamilies.includes(f.family))
+      .map(f => {
+        const internalShare = this.getInternalOriginShare(f.id);
+        const sifScore = sifNorm[f.id] ?? 0;
+        const internalSelect = 0.6 * internalShare + 0.4 * sifScore;
+        
+        return {
+          face: f,
+          internalSelect,
+          internalShare,
+          sifScore
+        };
+      })
+      .filter(f => f.internalSelect >= fitFloor) // Apply fit floor
+      .sort((a, b) => b.internalSelect - a.internalSelect);
+    
+    console.log('🔍 Scored internal candidates:', scored);
+    
+    // Prefer last installed choice if it scored high enough
+    const last = this.sifLastPick;
+    const candidates: Array<{ id: string; family: string; reason: string; internalSelect: number }> = [];
+    
+    if (last) {
+      const lastIndex = scored.findIndex(x => x.face.id === last);
+      if (lastIndex >= 0) {
+        const lastCandidate = scored[lastIndex];
+        candidates.push({
+          id: lastCandidate.face.id,
+          family: lastCandidate.face.family,
+          reason: `Recent pick: InternalShare=${lastCandidate.internalShare.toFixed(2)} · SIF=${lastCandidate.sifScore.toFixed(2)}`,
+          internalSelect: lastCandidate.internalSelect
+        });
+        scored.splice(lastIndex, 1); // Remove from remaining list
+      }
+    }
+    
+    // Add remaining candidates up to max
+    for (const candidate of scored) {
+      if (candidates.length >= max) break;
+      candidates.push({
+        id: candidate.face.id,
+        family: candidate.face.family,
+        reason: `InternalShare=${candidate.internalShare.toFixed(2)} · SIF=${candidate.sifScore.toFixed(2)}`,
+        internalSelect: candidate.internalSelect
+      });
+    }
+    
+    console.log('🔍 Final internal candidates:', candidates);
+    return candidates;
   }
 }

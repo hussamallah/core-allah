@@ -29,7 +29,8 @@ export function QuizEngine() {
     addArchetypeAnswer,
     setFinalArchetype,
     // SIF methods
-    recordSIFAnswer,
+    recordSIFAnswerWithEffects, // NEW
+    recordSIFAnswer, // DEPRECATED but kept for compatibility
     recordSIFSeverity,
     recordAllSIFData,
     calculateSIF,
@@ -328,22 +329,55 @@ export function QuizEngine() {
   }, [updatePhase]);
 
   const handleProceedToE = () => {
-    console.log('📈 Proceeding to Phase E');
+    console.log('📈 Proceeding to Phase E (Primary/Anchor selection)');
+    
+    // Build SIF shortlist before Phase E so it can use self-installed candidates
+    console.log('🔧 Building SIF shortlist for Phase E...');
+    
+    // Get anchor candidate families for SIF shortlist
+    const selectedALines = state.lines.filter(l => l.selectedA);
+    const nonALines = state.lines.filter(l => !l.selectedA);
+    
+    // Calculate face purity for A-lines
+    const facePurity: Record<string, number> = {};
+    selectedALines.forEach(l => facePurity[l.id] = l.B.C_evidence);
+    
+    // Calculate module purity for non-A lines
+    const modulePurity: Record<string, number> = {};
+    nonALines.forEach(l => modulePurity[l.id] = l.mod.decisions.filter(d => d.pick === "C").length * 1.0);
+    
+    // Find A-line 2.6 faces and module top families
+    const a26Faces = selectedALines
+      .filter(l => Math.abs(facePurity[l.id] - 2.6) < 1e-9)
+      .map(l => `${l.id}:Face`); // Convert to face format
+    
+    const topModulePurity = Math.max(...nonALines.map(l => modulePurity[l.id]));
+    const moduleTopFamilies = nonALines
+      .filter(l => Math.abs(modulePurity[l.id] - topModulePurity) < 1e-9)
+      .map(l => l.id);
+    
+    console.log('🔧 SIF shortlist inputs:', { a26Faces, moduleTopFamilies });
+    
+    // Build SIF shortlist using the engine
+    const shortlist = sifEngine.buildPhaseDInstallShortlist(state, a26Faces, moduleTopFamilies);
+    setSIFShortlist(shortlist);
+    
+    console.log('🔧 SIF shortlist built:', shortlist);
     
     // Show celebration screen first
     updatePhase('Celebration');
     
-    // After celebration, proceed to calculations
+    // After celebration, proceed to Phase E
     setTimeout(() => {
-      // Calculate anchor immediately after Phase D completes
+      // Calculate anchor immediately after Phase C completes
       const anchor = calculateAnchor();
       if (anchor) {
-        console.log('🎯 Auto-calculated anchor:', anchor);
+        console.log('🎯 Anchor determined immediately:', anchor);
         setAnchor(anchor);
-        updatePhase('Archetype'); // Go to Archetype phase to determine specific archetype
+        updatePhase('E');
       } else {
-        console.log('🎯 Need tie-breaker, going to Phase E');
-        updatePhase('E'); // Need tie-breaker
+        console.log('🎯 No clear anchor, proceeding to Phase E for tie-break');
+        updatePhase('E');
       }
     }, 2500); // 2.5 second celebration
   };
@@ -357,7 +391,7 @@ export function QuizEngine() {
 
   const handleProceedToArchetype = ({ selectedLine, anchorSource }: {
     selectedLine: string;
-    anchorSource: "E:Purity" | "E:TieBreak";
+    anchorSource: "E:Purity" | "E:TieBreak" | "E:SelfInstalled";
   }) => {
     console.log('🎯 Phase E proceeding to archetype:', { selectedLine, anchorSource });
     
@@ -520,7 +554,8 @@ export function QuizEngine() {
               onProceedToC={handleProceedToC}
               onAddUsedQuestion={addUsedQuestion}
               onAddQuestionToHistory={addQuestionToHistory}
-              onRecordSIFAnswer={recordSIFAnswer}
+              onRecordSIFAnswer={recordSIFAnswer} // DEPRECATED
+              onRecordSIFAnswerWithEffects={recordSIFAnswerWithEffects} // NEW
               onSeveritySelect={handleSeveritySelect}
             />
           )}
@@ -534,7 +569,8 @@ export function QuizEngine() {
               stepDone={stepDone}
               onAddUsedQuestion={addUsedQuestion}
               onAddQuestionToHistory={addQuestionToHistory}
-              onRecordSIFAnswer={recordSIFAnswer}
+              onRecordSIFAnswer={recordSIFAnswer} // DEPRECATED
+              onRecordSIFAnswerWithEffects={recordSIFAnswerWithEffects} // NEW
               updateLine={updateLine}
               setFamilyVerdicts={setFamilyVerdicts}
             />
@@ -555,6 +591,8 @@ export function QuizEngine() {
           {state.phase === 'E' && (
             <PhaseE
               state={state}
+              sifResult={state.sifResult}
+              sifEngine={sifEngine}
               onAddQuestionToHistory={addQuestionToHistory}
               onProceedToArchetype={handleProceedToArchetype}
               onArchetypeSelect={setFinalArchetype}

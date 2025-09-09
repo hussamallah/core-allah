@@ -81,6 +81,8 @@ export interface ResolvedSIFData {
     family: string;
     resolved: 'Light F' | 'Deep F';
     action: string;
+    foreignCreep: string;
+    description: string;
   }>;
   
   // Legacy data
@@ -219,10 +221,90 @@ function calculatePerLineData(state: QuizState) {
 }
 
 /**
- * Calculate severity probes
+ * Calculate severity probes with foreign archetype creep analysis
  */
 function calculateSeverityProbes(state: QuizState, sifEngine: any) {
-  const severityProbes: Array<{ family: string; resolved: 'Light F' | 'Deep F'; action: string }> = [];
+  const severityProbes: Array<{ 
+    family: string; 
+    resolved: 'Light F' | 'Deep F'; 
+    action: string;
+    foreignCreep: string;
+    description: string;
+  }> = [];
+  
+  // Foreign archetype creep mapping based on severity probe responses
+  const foreignCreepMap: Record<string, { mild: { archetype: string; description: string }; severe: { archetype: string; description: string } }> = {
+    'Control': {
+      mild: { 
+        archetype: 'Partner (Bonding)', 
+        description: 'Keeps harmony by outsourcing authority' 
+      },
+      severe: { 
+        archetype: 'Visionary (Pace)', 
+        description: 'Escapes into void, denies responsibility' 
+      }
+    },
+    'Pace': {
+      mild: { 
+        archetype: 'Diplomat (Recognition)', 
+        description: 'Negotiates with time instead of moving' 
+      },
+      severe: { 
+        archetype: 'Artisan (Stress)', 
+        description: 'Collapses into detail paralysis, nothing shipped' 
+      }
+    },
+    'Boundary': {
+      mild: { 
+        archetype: 'Provider (Bonding)', 
+        description: 'Chooses to carry others\' weight despite cost' 
+      },
+      severe: { 
+        archetype: 'Rebel (Control)', 
+        description: 'Rejects structure outright, burns the task' 
+      }
+    },
+    'Truth': {
+      mild: { 
+        archetype: 'Visionary (Pace)', 
+        description: 'Prefers "possibility" over clarity, shrugs detail' 
+      },
+      severe: { 
+        archetype: 'Sovereign (Control)', 
+        description: 'Forces a narrative by authority, not truth' 
+      }
+    },
+    'Recognition': {
+      mild: { 
+        archetype: 'Navigator (Pace)', 
+        description: 'Buys time, delays sharing clarity' 
+      },
+      severe: { 
+        archetype: 'Guardian (Boundary)', 
+        description: 'Withholds to protect or block access' 
+      }
+    },
+    'Bonding': {
+      mild: { 
+        archetype: 'Architect (Truth)', 
+        description: 'Manages connection like a structure, but coldly' 
+      },
+      severe: { 
+        archetype: 'Sovereign (Control)', 
+        description: 'Cuts the tie to enforce "my call first"' 
+      }
+    },
+    'Stress': {
+      mild: { 
+        archetype: 'Diplomat (Recognition)', 
+        description: 'Rationalizes with story to smooth failure' 
+      },
+      severe: { 
+        archetype: 'Mask (hidden face, adaptive)', 
+        description: 'Denies reality by erasing the demand' 
+      }
+    }
+  };
   
   state.lines.forEach(line => {
     // Check if line has F verdict
@@ -251,10 +333,17 @@ function calculateSeverityProbes(state: QuizState, sifEngine: any) {
         const resolved = severityValue === 1 || severityValue === '1' || severityValue === 0 || severityValue === '0' ? 'Light F' : 'Deep F';
         const action = resolved === 'Light F' ? 'Track pattern; no install needed' : 'Add counter-routine; monitor 30 days';
         
+        // Get foreign archetype creep information
+        const creepInfo = foreignCreepMap[line.id];
+        const foreignCreep = resolved === 'Light F' ? creepInfo?.mild.archetype : creepInfo?.severe.archetype;
+        const description = resolved === 'Light F' ? creepInfo?.mild.description : creepInfo?.severe.description;
+        
         severityProbes.push({
           family: line.id,
           resolved,
-          action
+          action,
+          foreignCreep: foreignCreep || 'Unknown',
+          description: description || 'Foreign archetype analysis not available'
         });
       }
     }

@@ -57,7 +57,35 @@ export const DUEL_QUESTIONS: DuelQuestion[] = UNIFIED_QUESTIONS.map((q: any) => 
     // HTML simulator mappings
     c_flavor: q.options[0].c_flavor || null,
     o_subtype: q.options[1].o_subtype || null,
-    f_flavor: q.options[1].f_flavor || null
+    f_flavor: q.options[1].f_flavor || null,
+    
+    // Enhanced semantic tags for SIF and IL engines
+    semantic_tags: {
+      behavior: {
+        A: q.options[0].behavior,
+        B: q.options[1].behavior
+      },
+      context: {
+        A: q.options[0].context,
+        B: q.options[1].context
+      },
+      sif_signals: {
+        A: q.options[0].sif_signals,
+        B: q.options[1].sif_signals
+      },
+      il_factors: {
+        A: q.options[0].il_factors,
+        B: q.options[1].il_factors
+      },
+      psychology: {
+        A: q.options[0].psychology,
+        B: q.options[1].psychology
+      },
+      relationships: {
+        A: q.options[0].relationships,
+        B: q.options[1].relationships
+      }
+    }
   };
 });
 
@@ -132,7 +160,35 @@ export const MODULE_QUESTIONS: ModuleQuestion[] = UNIFIED_QUESTIONS.map((q: any)
     type: typeMapping[q.type] as 'CO' | 'CF',
     order: orderMapping[q.type] as 1 | 2 | 3,
     face: generateFaceEffects(q.family, q.options[0].effects),
-    kind: 'fused_face'
+    kind: 'fused_face',
+    
+    // Enhanced semantic tags for SIF and IL engines
+    semantic_tags: {
+      behavior: {
+        A: q.options[0].behavior,
+        B: q.options[1].behavior
+      },
+      context: {
+        A: q.options[0].context,
+        B: q.options[1].context
+      },
+      sif_signals: {
+        A: q.options[0].sif_signals,
+        B: q.options[1].sif_signals
+      },
+      il_factors: {
+        A: q.options[0].il_factors,
+        B: q.options[1].il_factors
+      },
+      psychology: {
+        A: q.options[0].psychology,
+        B: q.options[1].psychology
+      },
+      relationships: {
+        A: q.options[0].relationships,
+        B: q.options[1].relationships
+      }
+    }
   };
 });
 
@@ -164,24 +220,50 @@ export const FINAL_PROBE_QUESTIONS: FinalProbeQuestion[] = unifiedQuestionsData.
 }));
 
 // Severity probe questions from unified pool
-export const SEVERITY_PROBE_QUESTIONS: SeverityProbeQuestion[] = UNIFIED_QUESTIONS
-  .filter((q: any) => q.type === 'Severity1')
-  .map((q: any) => ({
-    id: q.id,
-    phase: 'C' as 'C' | 'D', // Severity questions appear in Phase C, not Phase D
-    line: q.family,
-    lineId: q.family,
-    prompt: q.prompt,
-    options: {
-      A: q.options[0].label,
-      B: q.options[1].label
+export const SEVERITY_PROBE_QUESTIONS: SeverityProbeQuestion[] = unifiedQuestionsData.phase_d_bundle.severity_probes.map((q: any) => ({
+  id: q.id,
+  phase: 'C' as 'C' | 'D', // Severity questions appear in Phase C, not Phase D
+  line: q.family,
+  lineId: q.family,
+  prompt: q.prompt,
+  options: {
+    A: q.options[0].label,
+    B: q.options[1].label
+  },
+  mappings: {
+    A: q.options[0].pick,
+    B: q.options[1].pick
+  },
+  kind: 'severity_probe',
+  
+  // Enhanced semantic tags for SIF and IL engines
+  semantic_tags: {
+    behavior: {
+      A: q.options[0].behavior,
+      B: q.options[1].behavior
     },
-    mappings: {
-      A: q.options[0].pick,
-      B: q.options[1].pick
+    context: {
+      A: q.options[0].context,
+      B: q.options[1].context
     },
-    kind: 'severity_probe'
-  }));
+    sif_signals: {
+      A: q.options[0].sif_signals,
+      B: q.options[1].sif_signals
+    },
+    il_factors: {
+      A: q.options[0].il_factors,
+      B: q.options[1].il_factors
+    },
+    psychology: {
+      A: q.options[0].psychology,
+      B: q.options[1].psychology
+    },
+    relationships: {
+      A: q.options[0].relationships,
+      B: q.options[1].relationships
+    }
+  }
+}));
 
 export const ANCHOR_BLURBS: Record<string, string> = {
   "Control": "You are most yourself when you set the call and move the plan.",
@@ -192,6 +274,74 @@ export const ANCHOR_BLURBS: Record<string, string> = {
   "Bonding": "You are most yourself when you keep trust by caring for and protecting the link.",
   "Stress": "You are most yourself when you act under pressure while others stall."
 };
+
+// Enhanced tag helper functions for SIF and IL engines
+export function getEnhancedTagsForQuestion(questionId: string, choice: 'A' | 'B') {
+  const question = UNIFIED_QUESTIONS.find(q => q.id === questionId);
+  if (!question) return null;
+  
+  const option = question.options.find(opt => opt.key === choice);
+  if (!option) return null;
+  
+  return {
+    behavior: option.behavior,
+    context: option.context,
+    sif_signals: option.sif_signals,
+    il_factors: option.il_factors,
+    psychology: option.psychology,
+    relationships: option.relationships
+  };
+}
+
+export function calculateAlignmentStrength(questionId: string, choice: 'A' | 'B'): number {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.sif_signals?.alignment_strength || 0.5;
+}
+
+export function calculateWobbleFactor(questionId: string, choice: 'A' | 'B'): number {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.sif_signals?.wobble_factor || 0.5;
+}
+
+export function calculateOverridePotential(questionId: string, choice: 'A' | 'B'): number {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.sif_signals?.override_potential || 0.5;
+}
+
+export function calculateInstalledLikelihood(questionId: string, choice: 'A' | 'B'): number {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  if (!tags?.il_factors) return 0.5;
+  
+  const factors = tags.il_factors;
+  const weights = {
+    natural_instinct: 0.3,
+    situational_fit: 0.25,
+    social_expectation: 0.25,
+    internal_consistency: 0.2
+  };
+  
+  return (
+    factors.natural_instinct * weights.natural_instinct +
+    factors.situational_fit * weights.situational_fit +
+    factors.social_expectation * weights.social_expectation +
+    factors.internal_consistency * weights.internal_consistency
+  );
+}
+
+export function getBehavioralPattern(questionId: string, choice: 'A' | 'B'): string {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.behavior?.primary || 'unknown';
+}
+
+export function getContextualSituation(questionId: string, choice: 'A' | 'B'): string {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.context?.situation || 'routine';
+}
+
+export function getPsychologicalMotivation(questionId: string, choice: 'A' | 'B'): string {
+  const tags = getEnhancedTagsForQuestion(questionId, choice);
+  return tags?.psychology?.motivation || 'unknown';
+}
 
 // Load Phase E archetype questions from unified pool
 export const ARCHETYPE_QUESTIONS: ArchetypeQuestion[] = unifiedQuestionsData.phase_e.map((q: any) => ({
@@ -236,7 +386,7 @@ export function validateUnifiedQuestionPool() {
   console.log('🔍 Validating Unified Question Pool...');
   
   // Check total questions
-  const expectedTotal = 28;
+  const expectedTotal = 21;
   if (UNIFIED_QUESTIONS.length !== expectedTotal) {
     console.error(`❌ Expected ${expectedTotal} unified questions, got ${UNIFIED_QUESTIONS.length}`);
     return false;
@@ -244,7 +394,7 @@ export function validateUnifiedQuestionPool() {
   
   // Check questions per line
   const lines = ['Control', 'Pace', 'Boundary', 'Truth', 'Recognition', 'Bonding', 'Stress'];
-  const expectedPerLine = 4;
+  const expectedPerLine = 3;
   
   lines.forEach(line => {
     const lineQuestions = UNIFIED_QUESTIONS.filter((q: any) => q.family === line);
@@ -255,7 +405,7 @@ export function validateUnifiedQuestionPool() {
     
     // Check question types
     const types = lineQuestions.map((q: any) => q.type);
-    const expectedTypes = ['CO1', 'CO2', 'CF1', 'Severity1'];
+    const expectedTypes = ['CO1', 'CO2', 'CF1'];
     expectedTypes.forEach(type => {
       if (!types.includes(type)) {
         console.error(`❌ Line ${line} missing question type: ${type}`);
@@ -263,6 +413,13 @@ export function validateUnifiedQuestionPool() {
       }
     });
   });
+  
+  // Check severity probes
+  const expectedSeverityProbes = 14;
+  if (SEVERITY_PROBE_QUESTIONS.length !== expectedSeverityProbes) {
+    console.error(`❌ Expected ${expectedSeverityProbes} severity probes, got ${SEVERITY_PROBE_QUESTIONS.length}`);
+    return false;
+  }
   
   console.log('✅ Unified question pool validation passed');
   return true;

@@ -12,6 +12,8 @@ export interface LineResult {
 
 export interface PhaseEState {
   candidates: string[];
+  purityCandidates: string[];
+  selfInstalledCandidates: string[];
   questionBuilt: boolean;
   anchor: string | null;
   decidedAt: number | null;
@@ -21,11 +23,53 @@ export interface PhaseEState {
 export class PhaseEEngine {
   private state: PhaseEState = {
     candidates: [],
+    purityCandidates: [],
+    selfInstalledCandidates: [],
     questionBuilt: false,
     anchor: null,
     decidedAt: null,
     source: null
   };
+
+  /**
+   * Build self-installed candidates from SIF data
+   */
+  buildSelfInstalledCandidates(sifResult: any, sifEngine?: any): string[] {
+    if (!sifEngine) {
+      console.log('🎯 Phase E - No SIF engine available for self-installed candidates');
+      return [];
+    }
+
+    // Check if SIF shortlist is available (pre-built)
+    if (sifEngine.calculatedILScores && Object.keys(sifEngine.calculatedILScores).length > 0) {
+      console.log('🎯 Phase E - Using pre-built SIF shortlist for self-installed candidates');
+      
+      // Get top faces from IL scores
+      const sortedFaces = Object.entries(sifEngine.calculatedILScores)
+        .sort(([,a], [,b]) => (b as number) - (a as number))
+        .slice(0, 2) // Top 2 faces
+        .map(([face]) => face.split(':')[0]); // Extract family
+      
+      console.log('🎯 Phase E - Self-installed candidates from IL scores:', sortedFaces);
+      return sortedFaces;
+    }
+
+    // Fallback: Get internal candidates from SIF engine
+    const internalCandidates = sifEngine.getInternalCandidates({
+      excludeFamilies: [], // Will be set by caller
+      max: 2,
+      fitFloor: 0.20
+    });
+
+    const selfInstalled = internalCandidates.map((candidate: any) => candidate.family);
+    
+    console.log('🎯 Phase E - Self-installed candidates from SIF engine (fallback):', {
+      internalCandidates,
+      selfInstalled
+    });
+    
+    return selfInstalled;
+  }
 
   /**
    * Build candidates according to website canon
@@ -59,7 +103,7 @@ export class PhaseEEngine {
   /**
    * Enter Phase E - build candidates and determine if tie-break needed
    */
-  enterPhaseE(lines: LineResult[]): PhaseEState {
+  enterPhaseE(lines: LineResult[], sifResult?: any, sifEngine?: any): PhaseEState {
     if (this.state.questionBuilt) {
       console.log('🎯 Phase E - Already built, returning existing state');
       return this.state;
@@ -67,18 +111,40 @@ export class PhaseEEngine {
 
     console.log('🎯 Phase E - Building candidates from lines:', lines);
     
-    const candidates = this.buildCandidates(lines);
-    this.state.candidates = candidates;
+    // Build purity-based candidates (existing logic)
+    const purityCandidates = this.buildCandidates(lines);
+    this.state.purityCandidates = purityCandidates;
+    
+    // Build self-installed candidates from SIF engine
+    const selfInstalledCandidates = this.buildSelfInstalledCandidates(sifResult, sifEngine);
+    this.state.selfInstalledCandidates = selfInstalledCandidates;
+    
+    // Combine all candidates, prioritizing purity candidates
+    const allCandidates = [...purityCandidates];
+    selfInstalledCandidates.forEach(candidate => {
+      if (!allCandidates.includes(candidate)) {
+        allCandidates.push(candidate);
+      }
+    });
+    
+    // Truncate to max 4 candidates
+    this.state.candidates = allCandidates.slice(0, 4);
 
-    if (candidates.length === 1) {
+    console.log('🎯 Phase E - All candidates:', {
+      purity: purityCandidates,
+      selfInstalled: selfInstalledCandidates,
+      combined: this.state.candidates
+    });
+
+    if (this.state.candidates.length === 1) {
       // Auto-anchor
-      this.state.anchor = candidates[0];
+      this.state.anchor = this.state.candidates[0];
       this.state.decidedAt = Date.now();
       this.state.source = 'E:AutoAnchor';
-      console.log('🎯 Phase E - Auto-anchor selected:', candidates[0]);
-    } else if (candidates.length > 1) {
+      console.log('🎯 Phase E - Auto-anchor selected:', this.state.candidates[0]);
+    } else if (this.state.candidates.length > 1) {
       // Need tie-break
-      console.log('🎯 Phase E - Tie-break needed for candidates:', candidates);
+      console.log('🎯 Phase E - Tie-break needed for candidates:', this.state.candidates);
     } else {
       console.warn('⚠️ Phase E - No candidates found');
     }
@@ -140,6 +206,8 @@ export class PhaseEEngine {
   reset(): void {
     this.state = {
       candidates: [],
+      purityCandidates: [],
+      selfInstalledCandidates: [],
       questionBuilt: false,
       anchor: null,
       decidedAt: null,

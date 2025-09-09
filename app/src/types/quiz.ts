@@ -65,6 +65,7 @@ export interface SIFCounters {
   sevF: Record<string, number>;  // Severity F counts
   faceC: Record<string, number>; // Face C counts (using faceKey like "Control:Rebel")
   faceO: Record<string, number>; // Face O counts (using faceKey like "Control:Rebel")
+  faceF: Record<string, number>; // Face F counts (using faceKey like "Control:Rebel")
 }
 
 export interface SIFResult {
@@ -236,6 +237,33 @@ export interface DuelQuestion {
     o_subtype: string;
     f_flavor: string | null;
   };
+  // Enhanced semantic tags for SIF and IL engines
+  semantic_tags?: {
+    behavior: {
+      A: any;
+      B: any;
+    };
+    context: {
+      A: any;
+      B: any;
+    };
+    sif_signals: {
+      A: any;
+      B: any;
+    };
+    il_factors: {
+      A: any;
+      B: any;
+    };
+    psychology: {
+      A: any;
+      B: any;
+    };
+    relationships: {
+      A: any;
+      B: any;
+    };
+  };
 }
 
 export interface ModuleQuestion {
@@ -268,6 +296,33 @@ export interface ModuleQuestion {
     c_flavor: string;
     o_subtype: string;
     f_flavor: string | null;
+  };
+  // Enhanced semantic tags for SIF and IL engines
+  semantic_tags?: {
+    behavior: {
+      A: any;
+      B: any;
+    };
+    context: {
+      A: any;
+      B: any;
+    };
+    sif_signals: {
+      A: any;
+      B: any;
+    };
+    il_factors: {
+      A: any;
+      B: any;
+    };
+    psychology: {
+      A: any;
+      B: any;
+    };
+    relationships: {
+      A: any;
+      B: any;
+    };
   };
 }
 
