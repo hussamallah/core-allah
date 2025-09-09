@@ -77,6 +77,11 @@ export function Interstitial({
           bg: 'bg-orange-400/20',
           pulse: 'bg-orange-400/40'
         };
+      case 'pink':
+        return {
+          bg: 'bg-pink-400/20',
+          pulse: 'bg-pink-400/40'
+        };
       case 'purple':
         return {
           bg: 'bg-purple-400/20',

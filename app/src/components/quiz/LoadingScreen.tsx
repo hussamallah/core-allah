@@ -16,11 +16,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
     switch (phase) {
       case 'home-to-a':
         return {
-          icon: <img src="/Symmetrical Canada Goose Emblem.png" alt="Ground Zero" className="w-32 h-32 object-contain" />,
+          icon: <img src="/Raven Emblem with Glowing Star.png" alt="Ground Zero" className="w-32 h-32 object-contain" />,
           title: 'Ground Zero begins here. Choose three families.',
           subtitle: 'No rewinds. You build your mirror now.',
           minHoldMs: 2000,
-          pulseColor: 'cyan' // Cyan star on Canada Goose
+          pulseColor: 'red' // Red star on Raven
         };
       case 'a-to-b':
         return {
@@ -32,11 +32,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         };
       case 'b-to-c':
         return {
-          icon: <img src="/Raven Emblem with Glowing Star.png" alt="What you left behind" className="w-32 h-32 object-contain" />,
+          icon: <img src="/ChatGPT Image Sep 8, 2025, 10_06_00 AM.png" alt="What you left behind" className="w-32 h-32 object-contain" />,
           title: 'What you left behind returns. Answer all seven.',
           subtitle: 'Silence tricks no one.',
           minHoldMs: 2000,
-          pulseColor: 'red' // Red star on Raven
+          pulseColor: 'pink' // Pink star on the bird
         };
       case 'c-to-d':
         return {
@@ -48,11 +48,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         };
       case 'd-to-e':
         return {
-          icon: <img src="/ChatGPT Image Sep 8, 2025, 10_06_00 AM.png" alt="Anchor" className="w-32 h-32 object-contain" />,
+          icon: <img src="/Symmetrical Canada Goose Emblem.png" alt="Anchor" className="w-32 h-32 object-contain" />,
           title: 'Anchor. One line holds, all others orbit.',
           subtitle: 'Anchor = who you are when everything else collapses.',
           minHoldMs: 2000,
-          pulseColor: 'orange' // Orange star on the bird
+          pulseColor: 'cyan' // Cyan star on Canada Goose
         };
       case 'final-result':
         return {
