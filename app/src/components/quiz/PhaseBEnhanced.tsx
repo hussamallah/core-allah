@@ -304,7 +304,6 @@ export function PhaseBEnhanced({
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
         <div className="mb-4 text-center">
           <h2 className="text-white text-xl font-semibold">{line.id}</h2>
-          <div className="text-gray-400 text-sm mt-1">Round {round} • {type} Question</div>
         </div>
         
         <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>

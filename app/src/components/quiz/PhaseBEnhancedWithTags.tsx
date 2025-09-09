@@ -111,7 +111,6 @@ export function PhaseBEnhancedWithTags({
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
         <div className="mb-4 text-center">
           <h2 className="text-white text-xl font-semibold">{currentALine.id}</h2>
-          <div className="text-gray-400 text-sm mt-1">Round {round} • {type} Question</div>
           
           {/* Enhanced Context Display */}
           {question?.semantic_tags && (
