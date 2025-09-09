@@ -8,10 +8,12 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-black text-gray-200 flex items-center justify-center font-sans relative">
       {/* AXIARCH image - centered at top middle */}
-      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+      <div className="absolute -top-7 left-1/2 transform -translate-x-1/2">
         <div className="w-88 h-88 flex items-center justify-center">
-          {/* Gradient light behind image - gold left, blue right */}
-          <div className="absolute w-48 h-48 bg-gradient-to-r from-yellow-400 to-blue-400 blur-[40px] opacity-90 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+          {/* Gold to navy blue gradient light behind image with glow effect */}
+          <div className="absolute w-48 h-48 bg-gradient-to-r from-yellow-400 to-blue-900 blur-[40px] opacity-80 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+          {/* Additional light effect that involves the owl */}
+          <div className="absolute w-32 h-32 bg-blue-600 blur-[20px] opacity-60 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
           <img 
             src="/ChatGPT Image Sep 5, 2025, 08_06_22 AM.png" 
             alt="AXIARCH" 

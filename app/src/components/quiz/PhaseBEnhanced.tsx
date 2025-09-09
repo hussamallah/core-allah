@@ -258,8 +258,7 @@ export function PhaseBEnhanced({
     return (
       <div className="bg-gray-900 rounded-xl p-4 min-h-[300px] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-6 h-6 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-3"></div>
-          <div className="text-red-500 text-lg font-medium">THE ENGINE IS ADAPTING...</div>
+          <div className="text-gray-500 text-lg font-medium">Processing...</div>
         </div>
       </div>
     );

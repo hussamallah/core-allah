@@ -179,8 +179,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     return (
       <div className="bg-gray-900 rounded-xl p-4 min-h-[300px] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <div className="text-red-500 text-xl font-medium">THE ENGINE IS READING...</div>
+          <div className="text-gray-500 text-xl font-medium">Processing...</div>
         </div>
       </div>
     );

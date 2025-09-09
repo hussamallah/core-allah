@@ -11,6 +11,8 @@ import { ProgressBar } from './ProgressBar';
 import { phaseDEngine } from '@/engine/PhaseD';
 import { getArchetypeQuestionsForFamily, getArchetypesForFamily } from '@/data/questions';
 import { FACE_ANCHOR } from '@/types/quiz';
+import LoadingScreen from './quiz/LoadingScreen';
+import { useLoadingTransition } from '@/hooks/useLoadingTransition';
 
 export function QuizEngine() {
   const {
@@ -41,6 +43,100 @@ export function QuizEngine() {
     finalizeSIFWithInstall,
     sifEngine
   } = useQuizEngine();
+
+  // Loading screen state
+  const { isLoading, currentPhase: loadingPhase, showLoading, hideLoading } = useLoadingTransition();
+  const [previousPhase, setPreviousPhase] = useState<string | null>(null);
+
+  // Track when to show loading screens (only on user actions, not automatic phase changes)
+  const [shouldShowLoading, setShouldShowLoading] = useState(false);
+  const [targetPhase, setTargetPhase] = useState<string | null>(null);
+
+  const getLoadingPhase = (phase: string) => {
+    switch (phase) {
+      case 'A':
+        return 'home-to-a';
+      case 'B':
+        return 'a-to-b';
+      case 'C':
+        return 'b-to-c';
+      case 'D':
+        return 'c-to-d';
+      case 'E':
+        return 'd-to-e';
+      case 'Summary':
+        return 'final-result';
+      default:
+        return null;
+    }
+  };
+
+  // Show loading screen when user action triggers it
+  useEffect(() => {
+    if (shouldShowLoading && targetPhase) {
+      const loadingPhase = getLoadingPhase(targetPhase);
+      if (loadingPhase) {
+        showLoading(loadingPhase);
+        setShouldShowLoading(false);
+        setTargetPhase(null);
+      }
+    }
+  }, [shouldShowLoading, targetPhase, showLoading]);
+
+  const handleLoadingComplete = () => {
+    hideLoading();
+    // Now actually update the phase after loading screen completes
+    // We need to get the current target phase from the loading screen
+    const currentLoadingPhase = loadingPhase;
+    if (currentLoadingPhase) {
+      // Map loading phase back to quiz phase
+      const phaseMap: Record<string, string> = {
+        'home-to-a': 'A',
+        'a-to-b': 'B', 
+        'b-to-c': 'C',
+        'c-to-d': 'D',
+        'd-to-e': 'E',
+        'final-result': 'Summary'
+      };
+      const quizPhase = phaseMap[currentLoadingPhase];
+      if (quizPhase) {
+        // Do all processing here during loading screen completion
+        if (quizPhase === 'B') {
+          // Process Phase B initialization
+          console.log('🚀 Starting Phase B with A-lines:', selectedA().map(l => l.id));
+          selectedA().forEach(line => {
+            updateLine(line.id, {
+              B: { picks: [], C_evidence: 0.6 }
+            });
+          });
+        } else if (quizPhase === 'C') {
+          // Process Phase C initialization
+          const selectedALines = state.lines.filter(l => l.selectedA);
+          const nonALines = state.lines.filter(l => !l.selectedA);
+          
+          // Calculate face purity for A-lines
+          const facePurity: Record<string, number> = {};
+          selectedALines.forEach(l => facePurity[l.id] = l.B.C_evidence);
+          
+          // Calculate module purity for non-A lines
+          const modulePurity: Record<string, number> = {};
+          nonALines.forEach(l => modulePurity[l.id] = l.mod.decisions.filter(d => d.pick === "C").length * 1.0);
+
+          // Calculate purity for all lines
+          const allPurity: Record<string, number> = {};
+          state.lines.forEach(line => {
+            if (line.selectedA) {
+              allPurity[line.id] = facePurity[line.id];
+            } else {
+              allPurity[line.id] = modulePurity[line.id];
+            }
+          });
+        }
+        
+        updatePhase(quizPhase);
+      }
+    }
+  };
 
   
   // Calculate accurate progress based on current phase and completed steps
@@ -245,13 +341,9 @@ export function QuizEngine() {
   };
 
   const handleStartPhaseB = () => {
-    console.log('🚀 Starting Phase B with A-lines:', selectedA().map(l => l.id));
-    selectedA().forEach(line => {
-      updateLine(line.id, {
-        B: { picks: [], C_evidence: 0.6 }
-      });
-    });
-    updatePhase('B');
+    // Show loading screen immediately, do processing during loading
+    setTargetPhase('B');
+    setShouldShowLoading(true);
   };
 
   const handlePhaseBChoice = (lineId: string, choice: string) => {
@@ -292,41 +384,17 @@ export function QuizEngine() {
   };
 
   const handleProceedToC = () => {
-    // A-lines should NOT have module decisions - they use Phase B picks only
-    // Only non-A-lines (module lines) will have module decisions from Phase C
-    
-    // Determine primary family (anchor) before Phase C
-    const selectedALines = state.lines.filter(l => l.selectedA);
-    const nonALines = state.lines.filter(l => !l.selectedA);
-    
-    // Calculate face purity for A-lines
-    const facePurity: Record<string, number> = {};
-    selectedALines.forEach(l => facePurity[l.id] = l.B.C_evidence);
-    
-    // Calculate module purity for non-A lines (use existing decisions if any)
-    const modulePurity: Record<string, number> = {};
-    nonALines.forEach(l => modulePurity[l.id] = l.mod.decisions.filter(d => d.pick === "C").length * 1.0);
-
-    // Calculate purity for all lines
-    const allPurity: Record<string, number> = {};
-    state.lines.forEach(line => {
-      if (line.selectedA) {
-        allPurity[line.id] = facePurity[line.id];
-      } else {
-        allPurity[line.id] = modulePurity[line.id];
-      }
-    });
-
-    // Don't set anchor here - let Phase E handle tie-breaking
-    // The anchor will be determined after Phase D completes
-    
-    updatePhase('C');
+    // Show loading screen immediately, do processing during loading
+    setTargetPhase('C');
+    setShouldShowLoading(true);
   };
 
   const handleProceedToD = useCallback(() => {
     console.log('📈 Proceeding to Phase D');
-    updatePhase('D');
-  }, [updatePhase]);
+    // Show loading screen before transitioning to Phase D
+    setTargetPhase('D');
+    setShouldShowLoading(true);
+  }, []);
 
   const handleProceedToE = () => {
     console.log('📈 Proceeding to Phase E (Primary/Anchor selection)');
@@ -374,10 +442,14 @@ export function QuizEngine() {
       if (anchor) {
         console.log('🎯 Anchor determined immediately:', anchor);
         setAnchor(anchor);
-        updatePhase('E');
+        // Show loading screen before transitioning to Phase E
+        setTargetPhase('E');
+        setShouldShowLoading(true);
       } else {
         console.log('🎯 No clear anchor, proceeding to Phase E for tie-break');
-        updatePhase('E');
+        // Show loading screen before transitioning to Phase E
+        setTargetPhase('E');
+        setShouldShowLoading(true);
       }
     }, 2500); // 2.5 second celebration
   };
@@ -473,14 +545,16 @@ export function QuizEngine() {
     if (state.phase === 'FinalProcessing') {
       setFinalProcessingStep(0);
       
-      // Show "PATTERN FOUND" after 0.7 seconds
+      // Skip the pattern found step
       const patternTimer = setTimeout(() => {
         setFinalProcessingStep(1);
-      }, 700);
+      }, 100);
       
       // Go to Summary after 1.5 seconds
       const summaryTimer = setTimeout(() => {
-        updatePhase('Summary');
+        // Show loading screen before transitioning to Summary
+        setTargetPhase('Summary');
+        setShouldShowLoading(true);
       }, 1500);
       
       return () => {
@@ -510,7 +584,7 @@ export function QuizEngine() {
               case 'D': return { step: 4, title: 'Install question', description: `${completed}/${total} choice made` };
               case 'E': return { step: 5, title: 'Anchor selection', description: `${completed}/${total} choice made` };
               case 'Archetype': return { step: 5, title: 'Your profile', description: 'Determining your specific archetype...' };
-              case 'FinalProcessing': return { step: 6, title: 'Final processing', description: 'LOCKING PATTERN...' };
+              case 'FinalProcessing': return { step: 6, title: 'Final processing', description: 'Processing results...' };
               case 'Summary': return { step: 7, title: 'Complete', description: 'Your 7-minute profile is ready!' };
               default: return { step: 1, title: 'Getting started', description: 'This takes about 7 minutes' };
             }
@@ -536,31 +610,32 @@ export function QuizEngine() {
         })()}
 
 
-        {/* Phase Content */}
-        <div id="app" className="relative transition-all duration-300 ease-in-out">
-          {state.phase === 'A' && (
-            <PhaseA
-              state={state}
-              onLineToggle={handleLineToggle}
-              onStartPhaseB={handleStartPhaseB}
-              onAddQuestionToHistory={addQuestionToHistory}
-            />
-          )}
+        {/* Phase Content - Only show when not loading */}
+        {!isLoading && (
+          <div id="app" className="relative transition-all duration-300 ease-in-out">
+            {state.phase === 'A' && (
+              <PhaseA
+                state={state}
+                onLineToggle={handleLineToggle}
+                onStartPhaseB={handleStartPhaseB}
+                onAddQuestionToHistory={addQuestionToHistory}
+              />
+            )}
 
-          {state.phase === 'B' && (
-            <PhaseBIntegrated
-              state={state}
-              onChoice={handlePhaseBChoice}
-              onProceedToC={handleProceedToC}
-              onAddUsedQuestion={addUsedQuestion}
-              onAddQuestionToHistory={addQuestionToHistory}
-              onRecordSIFAnswer={recordSIFAnswer} // DEPRECATED
-              onRecordSIFAnswerWithEffects={recordSIFAnswerWithEffects} // NEW
-              onSeveritySelect={handleSeveritySelect}
-            />
-          )}
+            {state.phase === 'B' && (
+              <PhaseBIntegrated
+                state={state}
+                onChoice={handlePhaseBChoice}
+                onProceedToC={handleProceedToC}
+                onAddUsedQuestion={addUsedQuestion}
+                onAddQuestionToHistory={addQuestionToHistory}
+                onRecordSIFAnswer={recordSIFAnswer} // DEPRECATED
+                onRecordSIFAnswerWithEffects={recordSIFAnswerWithEffects} // NEW
+                onSeveritySelect={handleSeveritySelect}
+              />
+            )}
 
-          {state.phase === 'C' && (
+            {state.phase === 'C' && (
             <PhaseC
               state={state}
               onChoice={handlePhaseCChoice}
@@ -581,7 +656,10 @@ export function QuizEngine() {
               state={state}
               onSIFCalculate={calculateSIF}
               onRecordAllSIFData={recordAllSIFData}
-              onProceedToE={() => updatePhase('E')}
+              onProceedToE={() => {
+                setTargetPhase('E');
+                setShouldShowLoading(true);
+              }}
               onSetSIFShortlist={setSIFShortlist}
               onSetInstalledChoice={setInstalledChoice}
               sifEngine={sifEngine}
@@ -606,7 +684,7 @@ export function QuizEngine() {
               <div className="text-center">
                 <div className="text-6xl mb-6">🎉</div>
                 <h2 className="text-3xl font-bold text-white mb-4">Done!</h2>
-                <p className="text-xl text-red-500 mb-2">LOCKING PATTERN...</p>
+                <p className="text-xl text-gray-500 mb-2">Processing results...</p>
                 <div className="animate-pulse text-gray-400 text-sm">This will just take a moment</div>
               </div>
             </div>
@@ -615,11 +693,9 @@ export function QuizEngine() {
           {state.phase === 'FinalProcessing' && (
             <div className="bg-gray-900 rounded-xl p-8 min-h-[500px] flex items-center justify-center">
               <div className="text-center">
-                <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full mx-auto mb-6"></div>
-                <div className="text-red-500 text-2xl font-bold mb-4">
-                  {finalProcessingStep === 0 ? 'LOCKING PATTERN...' : 'PATTERN FOUND'}
+                <div className="text-gray-500 text-xl font-medium mb-4">
+                  Processing final results
                 </div>
-                <div className="text-gray-300 text-lg">Processing final results</div>
               </div>
             </div>
           )}
@@ -634,7 +710,8 @@ export function QuizEngine() {
             />
           )}
           
-        </div>
+          </div>
+        )}
 
         {/* Recording Data Display - TEMPORARILY HIDDEN */}
         {/* <div className="mt-8 p-4 bg-gray-800 rounded-lg">
@@ -668,6 +745,15 @@ export function QuizEngine() {
           © Spec implementation for testing. No tracking; results held in-memory only.
         </div> */}
       </div>
+
+      {/* Loading Screen */}
+      {isLoading && loadingPhase && (
+        <LoadingScreen
+          phase={loadingPhase}
+          onComplete={handleLoadingComplete}
+          duration={10000}
+        />
+      )}
     </div>
   );
 }

@@ -1,0 +1,160 @@
+/* Loading Screen Animations */
+
+@keyframes emblemPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes emblemRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes emblemShift {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(-10px) scale(1.05);
+  }
+  75% {
+    transform: translateX(10px) scale(1.05);
+  }
+}
+
+@keyframes emblemFracture {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.2) rotate(5deg);
+    filter: brightness(1.5);
+  }
+  50% {
+    transform: scale(0.8) rotate(-5deg);
+    filter: brightness(0.8);
+  }
+  75% {
+    transform: scale(1.1) rotate(3deg);
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+
+@keyframes textFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animation Classes */
+.animate-emblem-pulse {
+  animation: emblemPulse 2s ease-in-out infinite;
+}
+
+.animate-emblem-rotate {
+  animation: emblemRotate 3s linear infinite;
+}
+
+.animate-emblem-shift {
+  animation: emblemShift 2s ease-in-out infinite;
+}
+
+.animate-emblem-fracture {
+  animation: emblemFracture 2.5s ease-in-out infinite;
+}
+
+.animate-text-fade-in {
+  animation: textFadeIn 0.8s ease-out forwards;
+}
+
+.animate-background-shift {
+  animation: backgroundShift 8s ease-in-out infinite;
+}
+
+/* Custom Gradient Backgrounds */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Loading Screen Specific Styles */
+.loading-screen {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.loading-emblem {
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+}
+
+.loading-title {
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.05em;
+  filter: contrast(1.2) brightness(1.1);
+}
+
+.loading-subtitle {
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.3), 1px 1px 3px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.02em;
+  filter: contrast(1.1) brightness(1.05);
+}
+
+/* Phase-specific background effects */
+.phase-home-to-a {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+}
+
+.phase-a-to-b {
+  background: #000000;
+}
+
+.phase-b-to-c {
+  background: linear-gradient(135deg, #4c1d95 0%, #1e3a8a 50%, #312e81 100%);
+}
+
+.phase-c-to-d {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #000000 100%);
+}
+
+.phase-d-to-e {
+  background: radial-gradient(circle, #92400e 0%, #b45309 50%, #d97706 100%);
+}
+
+.phase-final-result {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+}
