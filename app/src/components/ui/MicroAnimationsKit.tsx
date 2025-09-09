@@ -65,7 +65,7 @@ export function Interstitial({
     return () => clearTimeout(t);
   }, [minHoldMs]);
 
-  const getPulseColors = (color) => {
+  const getPulseColors = (color: string) => {
     switch (color) {
       case 'cyan':
         return {
