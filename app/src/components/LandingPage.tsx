@@ -28,16 +28,29 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
         <h1 className="text-5xl md:text-6xl font-bold mb-2 text-white whitespace-nowrap uppercase">
           Awaken Your Sovereign Face
         </h1>
-        <p className="text-2xl md:text-3xl font-light mb-6 leading-relaxed text-gray-200 uppercase">
-          One face. Seven lines. Aligned, they reveal your core.<br />
-          When they align with your core, you don't just navigate reality—you direct it.
+        <p className="text-2xl md:text-3xl font-light mb-4 leading-relaxed text-gray-200 uppercase">
+          One face. Seven lines. Aligned, they reveal your core.
         </p>
+        <p className="text-xl md:text-2xl font-semibold mb-8 leading-relaxed text-yellow-300 uppercase">
+          CORE REVEALED? You don't just navigate reality—you direct it.
+        </p>
+        
+        <div className="text-lg md:text-xl font-light mb-8 leading-relaxed text-gray-300 uppercase space-y-2">
+          <p>Seven families await your choice.</p>
+          <p>Three will anchor your path.</p>
+          <p>The rest will test your resolve.</p>
+        </div>
+        
+        <div className="text-lg md:text-xl font-bold mb-8 leading-relaxed text-red-400 uppercase space-y-1">
+          <p>No rewinds. No escapes.</p>
+          <p>Your mirror forms now.</p>
+        </div>
         
         <button
           onClick={onStartQuiz}
           className="bg-gradient-to-r from-yellow-300 to-orange-400 text-black border-none px-16 py-6 text-2xl font-semibold rounded cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(251,191,36,1),0_0_80px_rgba(251,191,36,0.6)] active:translate-y-0.5 shadow-[0_0_30px_rgba(251,191,36,0.8),0_0_60px_rgba(251,191,36,0.4)] tracking-wider uppercase brightness-110"
         >
-          Start Now
+          START THE REVELATION
         </button>
         
         <p className="text-gray-400 text-lg mt-4 font-light uppercase">
