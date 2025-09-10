@@ -352,7 +352,7 @@ export function PhaseBEnhanced({
       {showDebug && (
         <SemanticTagsDebug 
           question={question} 
-          choice={selectedChoice} 
+          choice={selectedChoice || undefined} 
         />
       )}
 
