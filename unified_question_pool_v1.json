@@ -38,7 +38,7 @@
       "scoring": "Both options give sevF points for F-severity scoring in SIF system"
     },
     "enhanced_tags": {
-      "description": "Enhanced with semantic tags for SIF and IL engines",
+      "description": "Complete semantic tags for SIF and IL engines",
       "tag_categories": [
         "behavior",
         "context",
@@ -48,7 +48,7 @@
         "relationships"
       ],
       "total_questions_with_tags": 21,
-      "severity_probes_with_tags": 7
+      "severity_probes_with_tags": 14
     }
   },
   "phase_a": [
@@ -135,15 +135,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -154,14 +154,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -189,39 +189,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -243,38 +243,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -312,12 +312,12 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
@@ -331,14 +331,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -366,39 +366,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -420,38 +420,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -490,15 +490,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -509,14 +509,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -544,39 +544,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -598,38 +598,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -667,15 +667,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -686,14 +686,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -721,39 +721,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -775,38 +775,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -848,15 +848,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -867,14 +867,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -902,39 +902,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -956,38 +956,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1026,15 +1026,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -1045,14 +1045,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1081,39 +1081,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -1135,38 +1135,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1204,12 +1204,12 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
@@ -1223,14 +1223,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1258,39 +1258,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -1312,38 +1312,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1381,15 +1381,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "routine",
-            "pressure": "low",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -1400,14 +1400,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1435,39 +1435,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "routine",
-            "pressure": "low",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -1489,38 +1489,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "routine",
-            "pressure": "low",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1559,15 +1559,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -1578,14 +1578,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1613,39 +1613,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -1667,38 +1667,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1736,15 +1736,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -1755,14 +1755,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1790,39 +1790,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -1844,38 +1844,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -1913,15 +1913,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -1932,14 +1932,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -1967,39 +1967,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2021,38 +2021,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2091,15 +2091,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -2110,14 +2110,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -2145,39 +2145,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2199,38 +2199,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "planning",
+            "situation": "coordination",
             "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "flexible"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2268,15 +2268,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -2287,14 +2287,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -2323,39 +2323,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2377,38 +2377,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2446,15 +2446,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -2465,14 +2465,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -2501,39 +2501,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2555,38 +2555,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "following",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2625,15 +2625,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -2644,14 +2644,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -2679,39 +2679,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2733,38 +2733,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "collaboration",
-            "pressure": "low",
-            "social_dynamic": "following",
-            "time_urgency": "flexible"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2802,14 +2802,14 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
+            "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
@@ -2821,14 +2821,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -2856,39 +2856,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
+            "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -2910,38 +2910,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "conflict",
+            "situation": "coordination",
             "pressure": "medium",
-            "social_dynamic": "mediating",
+            "social_dynamic": "leading",
             "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -2979,15 +2979,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -2998,14 +2998,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -3034,39 +3034,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -3088,38 +3088,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -3158,15 +3158,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -3177,14 +3177,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -3213,39 +3213,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -3267,38 +3267,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
-            "social_dynamic": "mediating",
-            "time_urgency": "immediate"
+            "situation": "coordination",
+            "pressure": "medium",
+            "social_dynamic": "leading",
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -3336,15 +3336,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -3355,14 +3355,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -3390,39 +3390,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -3444,38 +3444,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -3513,15 +3513,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -3532,14 +3532,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -3567,39 +3567,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -3621,38 +3621,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -3691,15 +3691,15 @@
           },
           "behavior": {
             "primary": "assertive",
-            "secondary": "practical",
+            "secondary": "decisive",
             "energy": "high",
             "approach": "direct"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
             "alignment_strength": 0.9,
@@ -3710,14 +3710,14 @@
           "il_factors": {
             "natural_instinct": 0.8,
             "situational_fit": 0.9,
-            "social_expectation": 0.8,
+            "social_expectation": 0.6,
             "internal_consistency": 0.9
           },
           "psychology": {
             "motivation": "achievement",
-            "fear": "chaos",
+            "fear": "failure",
             "strength": "decisiveness",
-            "growth_area": "empathy"
+            "growth_area": "patience"
           },
           "relationships": {
             "leadership_style": "directive",
@@ -3745,39 +3745,39 @@
           },
           "behavior": {
             "primary": "collaborative",
-            "secondary": "empathetic",
+            "secondary": "consultative",
             "energy": "medium",
             "approach": "indirect"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.3,
-            "wobble_factor": 0.7,
-            "override_potential": 0.2,
+            "alignment_strength": 0.6,
+            "wobble_factor": 0.4,
+            "override_potential": 0.3,
             "face_credibility": 0.6
           },
           "il_factors": {
-            "natural_instinct": 0.7,
-            "situational_fit": 0.8,
-            "social_expectation": 0.9,
-            "internal_consistency": 0.8
+            "natural_instinct": 0.6,
+            "situational_fit": 0.7,
+            "social_expectation": 0.8,
+            "internal_consistency": 0.7
           },
           "psychology": {
             "motivation": "harmony",
             "fear": "conflict",
-            "strength": "patience",
+            "strength": "diplomacy",
             "growth_area": "assertiveness"
           },
           "relationships": {
             "leadership_style": "collaborative",
             "conflict_style": "compromising",
-            "communication_style": "assertive",
-            "decision_making": "consultative"
+            "communication_style": "passive",
+            "decision_making": "consensus"
           }
         },
         {
@@ -3799,38 +3799,38 @@
           },
           "behavior": {
             "primary": "avoidant",
-            "secondary": "empathetic",
+            "secondary": "deferential",
             "energy": "low",
-            "approach": "indirect"
+            "approach": "circular"
           },
           "context": {
-            "situation": "crisis",
-            "pressure": "high",
+            "situation": "coordination",
+            "pressure": "medium",
             "social_dynamic": "leading",
-            "time_urgency": "immediate"
+            "time_urgency": "moderate"
           },
           "sif_signals": {
-            "alignment_strength": 0.1,
-            "wobble_factor": 0.2,
-            "override_potential": 0.8,
-            "face_credibility": 0.4
+            "alignment_strength": 0.2,
+            "wobble_factor": 0.7,
+            "override_potential": 0.7,
+            "face_credibility": 0.2
           },
           "il_factors": {
-            "natural_instinct": 0.6,
-            "situational_fit": 0.4,
-            "social_expectation": 0.3,
-            "internal_consistency": 0.5
+            "natural_instinct": 0.2,
+            "situational_fit": 0.3,
+            "social_expectation": 0.2,
+            "internal_consistency": 0.3
           },
           "psychology": {
-            "motivation": "harmony",
-            "fear": "conflict",
+            "motivation": "avoidance",
+            "fear": "responsibility",
             "strength": "patience",
-            "growth_area": "assertiveness"
+            "growth_area": "initiative"
           },
           "relationships": {
-            "leadership_style": "supportive",
+            "leadership_style": "delegating",
             "conflict_style": "avoiding",
-            "communication_style": "passive",
+            "communication_style": "passive-aggressive",
             "decision_making": "delegated"
           }
         }
@@ -4250,15 +4250,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
+              "situation": "coordination",
+              "pressure": "medium",
               "social_dynamic": "leading",
-              "time_urgency": "immediate"
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -4269,14 +4269,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -4303,38 +4303,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
+              "situation": "coordination",
+              "pressure": "medium",
               "social_dynamic": "leading",
-              "time_urgency": "immediate"
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -4367,6 +4367,42 @@
               "sevF": [
                 "Control"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -4384,6 +4420,42 @@
               "sevF": [
                 "Control"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -4411,15 +4483,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
-              "social_dynamic": "mediating",
-              "time_urgency": "immediate"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -4430,14 +4502,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -4464,38 +4536,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
-              "social_dynamic": "mediating",
-              "time_urgency": "immediate"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -4528,6 +4600,42 @@
               "sevF": [
                 "Pace"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -4545,6 +4653,42 @@
               "sevF": [
                 "Pace"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -4572,15 +4716,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
-              "social_dynamic": "mediating",
-              "time_urgency": "immediate"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -4591,14 +4735,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -4625,38 +4769,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
-              "social_dynamic": "mediating",
-              "time_urgency": "immediate"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -4689,6 +4833,42 @@
               "sevF": [
                 "Boundary"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -4706,6 +4886,42 @@
               "sevF": [
                 "Boundary"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -4733,15 +4949,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "collaboration",
-              "pressure": "low",
-              "social_dynamic": "mediating",
-              "time_urgency": "flexible"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -4752,14 +4968,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -4786,38 +5002,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "collaboration",
-              "pressure": "low",
-              "social_dynamic": "mediating",
-              "time_urgency": "flexible"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -4850,6 +5066,42 @@
               "sevF": [
                 "Truth"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -4867,6 +5119,42 @@
               "sevF": [
                 "Truth"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -4894,15 +5182,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "collaboration",
-              "pressure": "low",
-              "social_dynamic": "following",
-              "time_urgency": "flexible"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -4913,14 +5201,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -4947,38 +5235,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "collaboration",
-              "pressure": "low",
-              "social_dynamic": "following",
-              "time_urgency": "flexible"
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -5011,6 +5299,42 @@
               "sevF": [
                 "Recognition"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -5028,6 +5352,42 @@
               "sevF": [
                 "Recognition"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -5055,14 +5415,14 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "conflict",
+              "situation": "coordination",
               "pressure": "medium",
-              "social_dynamic": "mediating",
+              "social_dynamic": "leading",
               "time_urgency": "moderate"
             },
             "sif_signals": {
@@ -5074,14 +5434,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -5108,38 +5468,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "conflict",
+              "situation": "coordination",
               "pressure": "medium",
-              "social_dynamic": "mediating",
+              "social_dynamic": "leading",
               "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -5172,6 +5532,42 @@
               "sevF": [
                 "Bonding"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -5189,6 +5585,42 @@
               "sevF": [
                 "Bonding"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]
@@ -5216,15 +5648,15 @@
             },
             "behavior": {
               "primary": "assertive",
-              "secondary": "practical",
+              "secondary": "decisive",
               "energy": "high",
               "approach": "direct"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
+              "situation": "coordination",
+              "pressure": "medium",
               "social_dynamic": "leading",
-              "time_urgency": "immediate"
+              "time_urgency": "moderate"
             },
             "sif_signals": {
               "alignment_strength": 0.9,
@@ -5235,14 +5667,14 @@
             "il_factors": {
               "natural_instinct": 0.8,
               "situational_fit": 0.9,
-              "social_expectation": 0.8,
+              "social_expectation": 0.6,
               "internal_consistency": 0.9
             },
             "psychology": {
               "motivation": "achievement",
-              "fear": "chaos",
+              "fear": "failure",
               "strength": "decisiveness",
-              "growth_area": "empathy"
+              "growth_area": "patience"
             },
             "relationships": {
               "leadership_style": "directive",
@@ -5269,38 +5701,38 @@
             },
             "behavior": {
               "primary": "avoidant",
-              "secondary": "empathetic",
+              "secondary": "deferential",
               "energy": "low",
-              "approach": "indirect"
+              "approach": "circular"
             },
             "context": {
-              "situation": "crisis",
-              "pressure": "high",
+              "situation": "coordination",
+              "pressure": "medium",
               "social_dynamic": "leading",
-              "time_urgency": "immediate"
+              "time_urgency": "moderate"
             },
             "sif_signals": {
-              "alignment_strength": 0.1,
-              "wobble_factor": 0.2,
-              "override_potential": 0.8,
-              "face_credibility": 0.4
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
             },
             "il_factors": {
-              "natural_instinct": 0.6,
-              "situational_fit": 0.4,
-              "social_expectation": 0.3,
-              "internal_consistency": 0.5
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
             },
             "psychology": {
-              "motivation": "harmony",
-              "fear": "conflict",
+              "motivation": "avoidance",
+              "fear": "responsibility",
               "strength": "patience",
-              "growth_area": "assertiveness"
+              "growth_area": "initiative"
             },
             "relationships": {
-              "leadership_style": "supportive",
+              "leadership_style": "delegating",
               "conflict_style": "avoiding",
-              "communication_style": "passive",
+              "communication_style": "passive-aggressive",
               "decision_making": "delegated"
             }
           }
@@ -5333,6 +5765,42 @@
               "sevF": [
                 "Stress"
               ]
+            },
+            "behavior": {
+              "primary": "assertive",
+              "secondary": "decisive",
+              "energy": "high",
+              "approach": "direct"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.9,
+              "wobble_factor": 0.1,
+              "override_potential": 0.1,
+              "face_credibility": 0.9
+            },
+            "il_factors": {
+              "natural_instinct": 0.8,
+              "situational_fit": 0.9,
+              "social_expectation": 0.6,
+              "internal_consistency": 0.9
+            },
+            "psychology": {
+              "motivation": "achievement",
+              "fear": "failure",
+              "strength": "decisiveness",
+              "growth_area": "patience"
+            },
+            "relationships": {
+              "leadership_style": "directive",
+              "conflict_style": "competing",
+              "communication_style": "assertive",
+              "decision_making": "autocratic"
             }
           },
           {
@@ -5350,6 +5818,42 @@
               "sevF": [
                 "Stress"
               ]
+            },
+            "behavior": {
+              "primary": "avoidant",
+              "secondary": "deferential",
+              "energy": "low",
+              "approach": "circular"
+            },
+            "context": {
+              "situation": "coordination",
+              "pressure": "medium",
+              "social_dynamic": "leading",
+              "time_urgency": "moderate"
+            },
+            "sif_signals": {
+              "alignment_strength": 0.2,
+              "wobble_factor": 0.7,
+              "override_potential": 0.7,
+              "face_credibility": 0.2
+            },
+            "il_factors": {
+              "natural_instinct": 0.2,
+              "situational_fit": 0.3,
+              "social_expectation": 0.2,
+              "internal_consistency": 0.3
+            },
+            "psychology": {
+              "motivation": "avoidance",
+              "fear": "responsibility",
+              "strength": "patience",
+              "growth_area": "initiative"
+            },
+            "relationships": {
+              "leadership_style": "delegating",
+              "conflict_style": "avoiding",
+              "communication_style": "passive-aggressive",
+              "decision_making": "delegated"
             }
           }
         ]

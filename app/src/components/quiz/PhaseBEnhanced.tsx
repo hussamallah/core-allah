@@ -5,6 +5,8 @@ import { UNIFIED_QUESTIONS_ENHANCED } from '@/data/questionsEnhanced';
 import { SEVERITY_PROBE_QUESTIONS } from '@/data/questions';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { phaseBEngine } from '@/engine/PhaseB';
+import { SemanticTagsDebug } from '../SemanticTagsDebug';
+import unifiedQuestionsData from '../../../../unified_question_pool_v1.json';
 
 interface PhaseBEnhancedProps {
   state: QuizState;
@@ -35,6 +37,10 @@ export function PhaseBEnhanced({
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
   const [showMetrics, setShowMetrics] = useState(true);
   const [keyboardEnabled, setKeyboardEnabled] = useState(true);
+  
+  // Debug panel state
+  const [showDebug, setShowDebug] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState<'A' | 'B' | null>(null);
   
   // Track which A-lines have had severity assessed
   const [severityAssessed, setSeverityAssessed] = useState<Set<string>>(new Set());
@@ -220,7 +226,7 @@ export function PhaseBEnhanced({
             <h2 className="text-white text-xl font-semibold">{needSeverity.id}</h2>
           </div>
           
-          <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{severityQuestion.prompt}</p>
+          <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center uppercase">{severityQuestion.prompt}</p>
         </div>
 
         {/* Options */}
@@ -233,7 +239,7 @@ export function PhaseBEnhanced({
               <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 A
               </div>
-              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
                 background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -254,7 +260,7 @@ export function PhaseBEnhanced({
               <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 B
               </div>
-              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
                 background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -300,10 +306,18 @@ export function PhaseBEnhanced({
     order = 2;
   }
 
-  const availableQuestions = DUEL_QUESTIONS_ENHANCED.filter(q => 
-    q.line === line.id && 
-    q.type === type && 
-    q.order === order &&
+  // Use unified questions with semantic tags
+  // Map CO/CF to CO1/CO2/CF1 based on round and type
+  let questionType;
+  if (type === "CO") {
+    questionType = round === 1 ? "CO1" : "CO2";
+  } else {
+    questionType = "CF1"; // CF questions always use CF1
+  }
+  
+  const availableQuestions = unifiedQuestionsData.unified_questions.filter((q: any) => 
+    q.family === line.id && 
+    q.type === questionType &&
     !used.has(q.id)
   );
 
@@ -321,23 +335,50 @@ export function PhaseBEnhanced({
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+      {/* Debug Toggle */}
+      <div className="mb-4 flex justify-between items-center">
+        <div className="text-gray-400 text-sm">
+          Round {round} of 2 • Progress: {progress}/4
+        </div>
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1 rounded"
+        >
+          {showDebug ? 'Hide' : 'Show'} Semantic Tags
+        </button>
+      </div>
+
+      {/* Debug Panel */}
+      {showDebug && (
+        <SemanticTagsDebug 
+          question={question} 
+          choice={selectedChoice} 
+        />
+      )}
 
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
+        <div className="mb-4 text-center">
+          <h2 className="text-white text-xl font-semibold">{line.id}</h2>
+        </div>
         <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>
       </div>
 
       {/* Enhanced Options with Keyboard Shortcuts */}
       <div className="space-y-4">
         <button
-          onClick={() => handleChoice('C')}
+          onClick={() => {
+            setSelectedChoice('A');
+            handleChoice('C');
+          }}
+          onMouseEnter={() => setSelectedChoice('A')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
-            <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+            <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
               background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -345,20 +386,24 @@ export function PhaseBEnhanced({
               textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
               filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
             }}>
-              {question.options.A}
+              {question.options[0].label}
             </span>
           </div>
         </button>
         
         <button
-          onClick={() => handleChoice(type === "CO" ? "O" : "F")}
+          onClick={() => {
+            setSelectedChoice('B');
+            handleChoice(type === "CO" ? "O" : "F");
+          }}
+          onMouseEnter={() => setSelectedChoice('B')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
-            <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+            <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
               background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -366,7 +411,7 @@ export function PhaseBEnhanced({
               textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
               filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
             }}>
-              {question.options.B}
+              {question.options[1].label}
             </span>
           </div>
         </button>

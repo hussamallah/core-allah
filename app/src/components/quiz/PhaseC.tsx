@@ -3,6 +3,8 @@ import { QuizState, anchorFaceFor } from '@/types/quiz';
 import { MODULE_QUESTIONS, SEVERITY_PROBE_QUESTIONS } from '@/data/questions';
 import { UNIFIED_QUESTIONS_ENHANCED } from '@/data/questionsEnhanced';
 import { quizRecorder } from '@/utils/QuizRecorder';
+import { SemanticTagsDebug } from '../SemanticTagsDebug';
+import unifiedQuestionsData from '../../../../unified_question_pool_v1.json';
 
 interface PhaseCProps {
   state: QuizState;
@@ -26,6 +28,10 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
   
   // Track which lines have had severity assessed
   const [severityAssessed, setSeverityAssessed] = useState<Set<string>>(new Set());
+  
+  // Debug panel state
+  const [showDebug, setShowDebug] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState<'A' | 'B' | null>(null);
 
   // Find first line with <3 decisions (Phase C has CO1, CO2, CF questions)
   const pendingLine = nonALines.find(l => l.mod.decisions.length < 3);
@@ -53,7 +59,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     if (severityAssessed.has(l.id)) return false; // Already assessed
     const by = Object.fromEntries(l.mod.decisions.map(d => [d.type, d.pick]));
     const verdict = (() => {
-      const key = `${by['CO1']}${by['CO2']}${by['CF']}`;
+      const key = `${by['CO1']}${by['CO2']}${by['CF1']}`;
       const table: Record<string, string> = {
         "CCC": "C", "CCF": "O", "COC": "O", "COF": "F", 
         "OCC": "O", "OCF": "F", "OOC": "O", "OOF": "F"
@@ -68,7 +74,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     if (l.mod.decisions.length !== 3) return false;
     const by = Object.fromEntries(l.mod.decisions.map(d => [d.type, d.pick]));
     const verdict = (() => {
-      const key = `${by['CO1']}${by['CO2']}${by['CF']}`;
+      const key = `${by['CO1']}${by['CO2']}${by['CF1']}`;
       const table: Record<string, string> = {
         "CCC": "C", "CCF": "O", "COC": "O", "COF": "F", 
         "OCC": "O", "OCF": "F", "OOC": "O", "OOF": "F"
@@ -82,7 +88,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
   const allVerdicts = nonALines.map(l => {
     if (l.mod.decisions.length !== 3) return { id: l.id, verdict: 'incomplete', decisions: l.mod.decisions };
     const by = Object.fromEntries(l.mod.decisions.map(d => [d.type, d.pick]));
-    const key = `${by['CO1']}${by['CO2']}${by['CF']}`;
+    const key = `${by['CO1']}${by['CO2']}${by['CF1']}`;
     const table: Record<string, string> = {
       "CCC": "C", "CCF": "O", "COC": "O", "COF": "F", 
       "OCC": "O", "OCF": "F", "OOC": "O", "OOF": "F"
@@ -129,7 +135,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     const totalModules = nonALines.length * 3; // Phase C has 3 rounds per family (CO1, CO2, CF)
     const severityNeeded = nonALines.filter(line => {
       const by = Object.fromEntries(line.mod.decisions.map(d => [d.type, d.pick]));
-      return by['CF'] === 'F';
+      return by['CF1'] === 'F';
     }).length;
     const totalSteps = totalModules + severityNeeded;
 
@@ -141,7 +147,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
           <h2 className="text-white text-xl font-semibold">{needSeverity.id}</h2>
         </div>
           
-          <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{severityQuestion.prompt}</p>
+          <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center uppercase">{severityQuestion.prompt}</p>
         </div>
 
         {/* Options */}
@@ -154,7 +160,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
               <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 A
               </div>
-              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
                 background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -175,7 +181,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
               <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 B
               </div>
-              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              <span className="text-base font-medium leading-relaxed flex-1 text-left" style={{
                 background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -217,20 +223,18 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     );
   }
 
-  // Phase C always follows strict CO1 → CO2 → CF pattern
-  const k = pendingLine.mod.decisions.length; // 0,1,2 (Phase C has CO1, CO2, CF questions)
-  const decisionType: 'CO1' | 'CO2' | 'CF' = k === 0 ? 'CO1' : k === 1 ? 'CO2' : 'CF';
-  const type = decisionType === 'CF' ? 'CF' : 'CO';
-  const order = decisionType === 'CF' ? 1 : (decisionType === 'CO1' ? 1 : 2);
+  // Phase C always follows strict CO1 → CO2 → CF1 pattern
+  const k = pendingLine.mod.decisions.length; // 0,1,2 (Phase C has CO1, CO2, CF1 questions)
+  const decisionType: 'CO1' | 'CO2' | 'CF1' = k === 0 ? 'CO1' : k === 1 ? 'CO2' : 'CF1';
+  const type = decisionType === 'CF1' ? 'CF' : 'CO';
+  const order = decisionType === 'CF1' ? 1 : (decisionType === 'CO1' ? 1 : 2);
 
   // Find available questions for this line, type, and order
-  // For Phase C, we need to allow CF questions from Phase B to be reused
-  const availableQuestions = MODULE_QUESTIONS.filter(q => 
-    q.line === pendingLine.id && 
-    q.type === type && 
-    q.order === order &&
-    // Allow CF questions to be reused from Phase B, but not CO questions
-    (q.type === 'CF' || !used.has(q.id))
+  // Use unified questions with semantic tags
+  const availableQuestions = unifiedQuestionsData.unified_questions.filter((q: any) => 
+    q.family === pendingLine.id && 
+    q.type === decisionType && // Use decisionType directly (CO1, CO2, CF1)
+    !used.has(q.id)
   );
 
 
@@ -287,54 +291,86 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
   const totalModules = nonALines.length * 3;
   const severityNeeded = nonALines.filter(line => {
     const by = Object.fromEntries(line.mod.decisions.map(d => [d.type, d.pick]));
-    return by['CF'] === 'F';
+    return by['CF1'] === 'F';
   }).length;
   const totalSteps = totalModules + severityNeeded;
 
   return (
     <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}`} className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+      {/* Debug Toggle */}
+      <div className="mb-4 flex justify-between items-center">
+        <div className="text-gray-400 text-sm">
+          {decisionType} • Progress: {moduleCompleted}/{totalSteps}
+        </div>
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1 rounded"
+        >
+          {showDebug ? 'Hide' : 'Show'} Semantic Tags
+        </button>
+      </div>
+
+      {/* Debug Panel */}
+      {showDebug && (
+        <SemanticTagsDebug 
+          question={question} 
+          choice={selectedChoice} 
+        />
+      )}
+
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
+        <div className="mb-4 text-center">
+          <h2 className="text-white text-xl font-semibold">{pendingLine.id}</h2>
+        </div>
         <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>
       </div>
 
       {/* Options */}
       <div className="space-y-4">
         <button
-          onClick={() => handleChoice('C')}
+          onClick={() => {
+            setSelectedChoice('A');
+            handleChoice('C');
+          }}
+          onMouseEnter={() => setSelectedChoice('A')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
-            <span className="text-base font-medium leading-relaxed uppercase" style={{
+            <span className="text-base font-medium leading-relaxed" style={{
               background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
               filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
-            }}>{question.options.A}</span>
+            }}>{question.options[0].label}</span>
           </div>
         </button>
         
         <button
-          onClick={() => handleChoice(type === 'CO' ? 'O' : 'F')}
+          onClick={() => {
+            setSelectedChoice('B');
+            handleChoice(type === 'CO' ? 'O' : 'F');
+          }}
+          onMouseEnter={() => setSelectedChoice('B')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
-            <span className="text-base font-medium leading-relaxed uppercase" style={{
+            <span className="text-base font-medium leading-relaxed" style={{
               background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
               filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
-            }}>{question.options.B}</span>
+            }}>{question.options[1].label}</span>
           </div>
         </button>
       </div>

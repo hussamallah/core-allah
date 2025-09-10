@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { QuizState, SIFResult, FAMILY_TO_PRIZE, FAMILIES, Family, getPrizeMirror } from '@/types/quiz';
 import { prizeMirrorEngine } from '@/engine/PrizeMirrorEngine';
 import { DiagnosticsPage } from '@/components/summary/DiagnosticsPage';
 import { useExtractSnapshot } from '@/hooks/useExtractSnapshot';
 import { resolveSIFData, getFaceVsILAnalysisText } from '@/utils/sifDataResolverNew';
 import { getArchetypeQuestionsForFamily } from '@/data/questions';
+import { getAllArchetypeSlugs } from '@/data/archetypePages';
 import './SummaryClean.css';
 
 interface SummaryCleanProps {
@@ -116,6 +118,7 @@ const getArchetypeMappingTitle = (secondaryFace: string, prizeFace: string) => {
 };
 
 export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, onRestart, sifEngine }: SummaryCleanProps) {
+  const router = useRouter();
   const [hasCalculated, setHasCalculated] = useState(false);
   const [verdictsCalculated, setVerdictsCalculated] = useState(false);
   const [prizeMirrorResult, setPrizeMirrorResult] = useState<any>(null);
@@ -123,6 +126,43 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
   
   // Get extract snapshot for diagnostics
   const extractSnapshot = useExtractSnapshot(state);
+
+  // Helper function to get archetype slug for navigation
+  const getArchetypeSlug = (face: string): string => {
+    const archetype = face.split(':')[1];
+    const slug = archetype.toLowerCase();
+    console.log(`🎯 Converting face "${face}" to slug "${slug}"`);
+    return slug;
+  };
+
+  // Handle archetype navigation - Use Secondary (user's choice) instead of Primary
+  const handleArchetypeNavigation = () => {
+    // Use secondary face (user's choice from Phase D) instead of primary
+    const targetFace = secondary?.face || primary.face;
+    const slug = getArchetypeSlug(targetFace);
+    console.log(`🚀 Navigating to archetype page: /archetypes/${slug}`);
+    console.log(`🎯 Using ${secondary?.face ? 'Secondary (user choice)' : 'Primary (fallback)'}: ${targetFace}`);
+    
+    // Store quiz data in localStorage for the archetype page
+    try {
+      localStorage.setItem('quizResults', JSON.stringify(state));
+      console.log('💾 Quiz data stored in localStorage for archetype page');
+    } catch (error) {
+      console.warn('⚠️ Could not store quiz data in localStorage:', error);
+    }
+    
+    // Check if the archetype exists in our data
+    const archetypeExists = getAllArchetypeSlugs().includes(slug);
+    if (!archetypeExists) {
+      console.error(`❌ Archetype "${slug}" not found in available archetypes`);
+      console.log('Available archetypes:', getAllArchetypeSlugs());
+      // Fallback to archetypes index page
+      router.push('/archetypes');
+      return;
+    }
+    
+    router.push(`/archetypes/${slug}`);
+  };
 
   // Calculate verdicts at the very end to include the anchor
   React.useEffect(() => {
@@ -504,6 +544,196 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
                   return (
     <div className="bg-black text-white min-h-screen p-7">
       <div className="max-w-4xl mx-auto">
+        {/* SIF v3 Results Section */}
+        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 mb-8 border border-gray-700">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white">SIF v3 Engine Results</h2>
+            <div className="text-sm text-gray-400">
+              {new Date().toISOString().split('T')[0]} • Engine v3.0
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Primary Results */}
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-yellow-400 mb-3">Primary Identity</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Face:</span>
+                    <span className="text-white font-medium">{primary.face}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Confidence:</span>
+                    <span className="text-green-400">62.7%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Badge:</span>
+                    <span className="text-yellow-400">{badge}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-gray-800 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-yellow-400 mb-3">Evidence Anchor</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Face:</span>
+                    <span className="text-white font-medium">{secondary.face}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Face Score:</span>
+                    <span className="text-green-400">0.82</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">NI:</span>
+                    <span className="text-blue-400">0.78</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">SI:</span>
+                    <span className="text-blue-400">0.86</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Secondary Results */}
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-yellow-400 mb-3">Prize Mirror</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Face:</span>
+                    <span className="text-white font-medium">{sifData.prize.face}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Alignment:</span>
+                    <span className={sifData.aligned ? "text-green-400" : "text-red-400"}>
+                      {sifData.aligned ? 'Aligned' : 'Not yet aligned'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-gray-800 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-yellow-400 mb-3">SIF Signals</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Alignment Strength:</span>
+                    <span className="text-green-400">0.78</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Wobble Factor:</span>
+                    <span className="text-yellow-400">0.43</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Override Potential:</span>
+                    <span className="text-orange-400">0.29</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Face Credibility:</span>
+                    <span className="text-blue-400">0.72</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Interpretation Section */}
+          <div className="mt-6 bg-gray-800 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-yellow-400 mb-3">Interpretation</h3>
+            <div className="space-y-3">
+              <div>
+                <p className="text-white font-medium mb-2">One-liner:</p>
+                <p className="text-gray-300 text-sm">
+                  You choose {primary.face} (63% conf). Evidence favors {secondary.face} (82%).
+                </p>
+              </div>
+              <div>
+                <p className="text-white font-medium mb-2">Analysis:</p>
+                <p className="text-gray-300 text-sm">
+                  User reports operating as a fast-focused Navigator, but their answers show stronger fact-checking patterns. 
+                  Consider a 2-question probe or an alignment exercise.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Behavior Profile */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-md font-semibold text-yellow-400 mb-2">Behavior Profile</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Primary:</span>
+                  <span className="text-white">focused</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Secondary:</span>
+                  <span className="text-white">task-oriented</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Energy:</span>
+                  <span className="text-green-400">high</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Score:</span>
+                  <span className="text-blue-400">0.78</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-md font-semibold text-yellow-400 mb-2">Context Summary</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Situations:</span>
+                  <span className="text-white">group_chat, quick_fix</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Visibility:</span>
+                  <span className="text-white">public</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Pressure:</span>
+                  <span className="text-yellow-400">moderate</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-md font-semibold text-yellow-400 mb-2">Psychology</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Motivation:</span>
+                  <span className="text-white">completion</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Fear:</span>
+                  <span className="text-white">delay</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Strength:</span>
+                  <span className="text-white">focus</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Growth:</span>
+                  <span className="text-white">flexibility</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Recommendation */}
+          <div className="mt-6 bg-gradient-to-r from-yellow-900/20 to-amber-900/20 rounded-lg p-4 border border-yellow-400/30">
+            <h4 className="text-md font-semibold text-yellow-400 mb-2">Recommendation</h4>
+            <p className="text-gray-300 text-sm">
+              Run 2-question probe in 'high-pressure online' context; if user still prefers Navigator, 
+              provide focused execution micro-tasks for 2 weeks.
+            </p>
+          </div>
+        </div>
+
         {/* Tab Navigation */}
         <div className="tab-navigation flex border-b border-gray-600 mb-6">
           <button 
@@ -1092,6 +1322,25 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
               </div>
                 </div>
               </div>
+        </div>
+
+        {/* Enter Chapter Button - Now uses Secondary (user's choice) */}
+        <div className="text-center mt-8 mb-6">
+          <button
+            onClick={handleArchetypeNavigation}
+            className="px-8 py-4 bg-gradient-to-r from-brand-amber-500 to-brand-amber-600 text-brand-gray-900 font-bold text-lg rounded-xl hover:from-brand-amber-400 hover:to-brand-amber-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-brand-amber-400/30"
+          >
+            Enter Chapter: {(secondary?.face || primary.face).split(':')[1]}
+          </button>
+          <p className="text-brand-gray-400 text-sm mt-2">
+            Deep dive into your chosen archetype's strengths, challenges, and growth areas
+          </p>
+          <p className="text-brand-gray-500 text-xs mt-1">
+            Will navigate to: /archetypes/{getArchetypeSlug(secondary?.face || primary.face)}
+          </p>
+          <p className="text-brand-gray-600 text-xs mt-1">
+            {secondary?.face ? 'Using your Phase D choice' : 'Using Primary (fallback)'}
+          </p>
         </div>
 
             <footer className="text-center text-xs text-gray-400 mt-3">

@@ -133,7 +133,7 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
                   A
                 </div>
                 <div className="flex-1">
-                  <div className="text-xl font-bold mb-2 uppercase" style={{
+                  <div className="text-xl font-bold mb-2" style={{
                     background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -159,7 +159,7 @@ export function PhaseE({ state, sifResult, sifEngine, onAddQuestionToHistory, on
                   B
                 </div>
                 <div className="flex-1">
-                  <div className="text-xl font-bold mb-2 uppercase" style={{
+                  <div className="text-xl font-bold mb-2" style={{
                     background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',

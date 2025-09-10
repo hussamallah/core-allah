@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { QuizState } from '@/types/quiz';
 import { DUEL_QUESTIONS } from '@/data/questions';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { phaseBEngine } from '@/engine/PhaseB';
+import { SemanticTagsDebug } from '../SemanticTagsDebug';
+import unifiedQuestionsData from '../../../../unified_question_pool_v1.json';
 
 interface PhaseBProps {
   state: QuizState;
@@ -18,6 +20,9 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
   const remaining = selectedALines.filter(l => l.B.picks.length < 2);
   const progress = selectedALines.reduce((a, l) => a + l.B.picks.length, 0);
   
+  // State for debug panel
+  const [showDebug, setShowDebug] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState<'A' | 'B' | null>(null);
 
   const used = useMemo(() => new Set(state.usedQuestions), [state.usedQuestions]);
 
@@ -68,10 +73,18 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
   }
 
   // Find available questions for this line, type, and order
-  const availableQuestions = DUEL_QUESTIONS.filter(q => 
-    q.line === line.id && 
-    q.type === type && 
-    q.order === order &&
+  // Use unified questions with semantic tags
+  // Map CO/CF to CO1/CO2/CF1 based on round and type
+  let questionType;
+  if (type === "CO") {
+    questionType = round === 1 ? "CO1" : "CO2";
+  } else {
+    questionType = "CF1"; // CF questions always use CF1
+  }
+  
+  const availableQuestions = unifiedQuestionsData.unified_questions.filter((q: any) => 
+    q.family === line.id && 
+    q.type === questionType &&
     !used.has(q.id)
   );
 
@@ -113,6 +126,27 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
+      {/* Debug Toggle */}
+      <div className="mb-4 flex justify-between items-center">
+        <div className="text-gray-400 text-sm">
+          Round {round} of 2 • Progress: {progress}/4
+        </div>
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1 rounded"
+        >
+          {showDebug ? 'Hide' : 'Show'} Semantic Tags
+        </button>
+      </div>
+
+      {/* Debug Panel */}
+      {showDebug && (
+        <SemanticTagsDebug 
+          question={question} 
+          choice={selectedChoice} 
+        />
+      )}
+
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
         <div className="mb-4 text-center">
@@ -125,26 +159,34 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
       {/* Options */}
       <div className="space-y-4">
         <button
-          onClick={() => handleChoice('C')}
+          onClick={() => {
+            setSelectedChoice('A');
+            handleChoice('C');
+          }}
+          onMouseEnter={() => setSelectedChoice('A')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.A}</span>
+            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options[0].label}</span>
           </div>
         </button>
         
         <button
-          onClick={() => handleChoice(type === "CO" ? "O" : "F")}
+          onClick={() => {
+            setSelectedChoice('B');
+            handleChoice(type === "CO" ? "O" : "F");
+          }}
+          onMouseEnter={() => setSelectedChoice('B')}
           className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
         >
           <div className="flex items-center justify-center gap-4">
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.B}</span>
+            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options[1].label}</span>
           </div>
         </button>
       </div>
