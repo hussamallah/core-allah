@@ -37,7 +37,7 @@ export function QuizResultsHeatMap({ quizState, className = '' }: QuizResultsHea
     const aLinePicks = line.selectedA ? (line.B?.picks || []) : []
     
     // Get module picks if this line was not selected as A-line
-    const modulePicks = !line.selectedA ? (line.C?.picks || []) : []
+    const modulePicks = !line.selectedA ? (line.mod?.decisions?.map(d => d.pick) || []) : []
     
     // Ensure we have valid arrays
     const validALinePicks = Array.isArray(aLinePicks) ? aLinePicks : []

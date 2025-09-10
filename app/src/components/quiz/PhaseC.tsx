@@ -282,7 +282,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
         sifChoice: choice
       });
     }
-    onChoice(pendingLine.id, pick, decisionType);
+    onChoice(pendingLine.id, pick, decisionType === 'CF1' ? 'CF' : decisionType);
     stepDone();
   };
 
@@ -314,7 +314,7 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
       {showDebug && (
         <SemanticTagsDebug 
           question={question} 
-          choice={selectedChoice} 
+          choice={selectedChoice || undefined} 
         />
       )}
 
