@@ -227,21 +227,43 @@ export function PhaseBEnhanced({
         <div className="space-y-4">
           <button
             onClick={() => handleSeverityChoice('high', 1.0)}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
           >
-            <div className="text-left">
-              <div className="font-semibold text-lg">A: {severityQuestion.options.A}</div>
-              <div className="text-red-100 text-sm mt-1">High severity (F1)</div>
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
+                A
+              </div>
+              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+                filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+              }}>
+                {severityQuestion.options.A}
+              </span>
             </div>
           </button>
 
           <button
             onClick={() => handleSeverityChoice('mid', 0.5)}
-            className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500 hover:to-yellow-600 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
           >
-            <div className="text-left">
-              <div className="font-semibold text-lg">B: {severityQuestion.options.B}</div>
-              <div className="text-yellow-100 text-sm mt-1">Medium severity (F0.5)</div>
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
+                B
+              </div>
+              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+                filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+              }}>
+                {severityQuestion.options.B}
+              </span>
             </div>
           </button>
         </div>
@@ -302,10 +324,6 @@ export function PhaseBEnhanced({
 
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
-        <div className="mb-4 text-center">
-          <h2 className="text-white text-xl font-semibold">{line.id}</h2>
-        </div>
-        
         <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>
       </div>
 
@@ -319,7 +337,14 @@ export function PhaseBEnhanced({
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed flex-1 text-left">
+            <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+            }}>
               {question.options.A}
             </span>
           </div>
@@ -333,7 +358,14 @@ export function PhaseBEnhanced({
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed flex-1 text-left">
+            <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+            }}>
               {question.options.B}
             </span>
           </div>

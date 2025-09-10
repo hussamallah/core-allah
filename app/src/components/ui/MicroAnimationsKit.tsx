@@ -48,6 +48,8 @@ interface InterstitialProps {
   onBegin?: () => void;
   beginLabel?: string;
   pulseColor?: string;
+  titleStyle?: React.CSSProperties;
+  subtitleStyle?: React.CSSProperties;
 }
 
 export function Interstitial({
@@ -58,6 +60,8 @@ export function Interstitial({
   onBegin,
   beginLabel = "BEGIN",
   pulseColor = "yellow", // Default to yellow
+  titleStyle,
+  subtitleStyle,
 }: InterstitialProps) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -132,6 +136,7 @@ export function Interstitial({
           variants={slideUp}
           custom={0.05}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+          style={titleStyle}
         >
           {title}
         </motion.h2>
@@ -141,6 +146,7 @@ export function Interstitial({
             variants={fadeIn}
             custom={0.1}
             transition={{ duration: 0.5, delay: 0.1 }}
+            style={subtitleStyle}
           >
             {subtitle}
           </motion.p>

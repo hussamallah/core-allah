@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { QuizState, SIFResult, FAMILY_TO_PRIZE, FAMILIES, Family, getPrizeMirror } from '@/types/quiz';
-import { prizeMirrorEngine } from '@/engine/PrizeMirror';
+import { prizeMirrorEngine } from '@/engine/PrizeMirrorEngine';
 import { DiagnosticsPage } from '@/components/summary/DiagnosticsPage';
 import { useExtractSnapshot } from '@/hooks/useExtractSnapshot';
-import { resolveSIFData, getFaceVsILAnalysisText } from '@/utils/sifDataResolver';
+import { resolveSIFData, getFaceVsILAnalysisText } from '@/utils/sifDataResolverNew';
+import { getArchetypeQuestionsForFamily } from '@/data/questions';
 import './SummaryClean.css';
 
 interface SummaryCleanProps {
@@ -35,7 +36,7 @@ const getPrimaryDescription = (face: string) => {
   return descriptions[face] || 'This is your stable core role. It shows who you are inside and how you hold identity under pressure. Everything else revolves around this anchor.';
 };
 
-const getPrizeDescription = (primaryFace: string, prizeFace: string) => {
+const getPrizeDescription = (secondaryFace: string, prizeFace: string) => {
   const descriptions: Record<string, string> = {
     'Control:Sovereign': 'Sovereign → Diplomat: Authority balanced by bridge-making. Diplomat brings your decisive calls into negotiation and alliance-building. Without Diplomat, Sovereign authority stays isolated and brittle. With Diplomat, your authority lands across factions and builds lasting influence.',
     'Control:Rebel': 'Rebel → Spotlight: Disruption balanced by visibility. Spotlight gives your breaking moves public impact and traction. Without Spotlight, rebellion burns fast but vanishes unnoticed. With Spotlight, your disruptions force the world to respond and create lasting change.',
@@ -52,7 +53,7 @@ const getPrizeDescription = (primaryFace: string, prizeFace: string) => {
     'Stress:Catalyst': 'Catalyst → Visionary: Ignition locked by foresight. Visionary ties your sparks to long-term outcomes instead of just noise. Without Visionary, Catalyst burns out fast. With Visionary, ignition becomes breakthrough that creates lasting change.',
     'Stress:Artisan': 'Artisan → Navigator: Craft locked by long-route timing. Navigator ensures your precision lands on time and fits the larger arc. Without Navigator, Artisan gets lost in details. With Navigator, craft becomes strategic delivery that builds momentum.'
   };
-  return descriptions[primaryFace] || 'This is the mirror pattern that completes your Primary. It\'s the opposite family style that locks your Anchor in place and makes it usable outside. The system always checks if you have this installed.';
+  return descriptions[secondaryFace] || 'This is the mirror pattern that completes your Secondary. It\'s the opposite family style that locks your installed role in place and makes it usable outside. The system always checks if you have this installed.';
 };
 
 const getArchetypeFacePattern = (prizeArchetype: string) => {
@@ -107,11 +108,11 @@ const getCanonPrizeMapping = (primaryFace: string) => {
   return canonMappings[primaryFace] || primaryFace;
 };
 
-const getArchetypeMappingTitle = (primaryFace: string, prizeFace: string) => {
-  const canonPrize = getCanonPrizeMapping(primaryFace);
-  const primaryArchetype = primaryFace.split(':')[1];
+const getArchetypeMappingTitle = (secondaryFace: string, prizeFace: string) => {
+  const canonPrize = getCanonPrizeMapping(secondaryFace);
+  const secondaryArchetype = secondaryFace.split(':')[1];
   const prizeArchetype = canonPrize.split(':')[1];
-  return `${primaryArchetype} → ${prizeArchetype}`;
+  return `${secondaryArchetype} → ${prizeArchetype}`;
 };
 
 export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, onRestart, sifEngine }: SummaryCleanProps) {
@@ -289,29 +290,6 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
   
   // Calculate SIF metrics for display
     const sifCounters = state.sifCounters;
-    const primaryFaces = ['Control:Rebel', 'Control:Sovereign', 'Pace:Visionary', 'Pace:Navigator', 'Boundary:Equalizer', 'Boundary:Guardian', 'Truth:Seeker', 'Truth:Architect', 'Recognition:Spotlight', 'Recognition:Diplomat', 'Bonding:Partner', 'Bonding:Provider', 'Stress:Catalyst', 'Stress:Artisan'];
-    const candidateFaces = primaryFaces.filter(face => !face.startsWith(primary.family));
-    
-  // Use SIF Canon v3 Installed Likelihood (IL) scores from the engine
-    const faceScores: Record<string, number> = {};
-    
-  // Get the actual IL scores from the SIF Engine
-  const ilScores: Record<string, number> = sifEngine.getILScores();
-  
-  // Normalize IL scores to 0-1 range for display
-  const ilValues = Object.values(ilScores) as number[];
-  const maxIL = Math.max(...ilValues);
-  const minIL = Math.min(...ilValues);
-  const range = maxIL - minIL;
-  
-  Object.entries(ilScores).forEach(([face, il]) => {
-    faceScores[face] = range > 0 ? (il - minIL) / range : 0.5;
-  });
-
-  // Get top 6 faces by score
-  const topFaces = Object.entries(faceScores)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 6);
 
   // Calculate purity for all lines
   const allPurity: Record<string, number> = {};
@@ -384,9 +362,9 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
     // Primary selection reasoning (SIF determination)
     reasoning.push(`• SIF Primary: ${primary.face} selected as anchor`);
     
-    // Prize mapping reasoning
-    const canonPrize = getCanonPrizeMapping(primary.face);
-    reasoning.push(`• Prize Mirror: ${canonPrize} (canon mapping)`);
+    // Prize mapping reasoning - Prize is now mirror of Secondary, not Primary
+    const canonPrize = getCanonPrizeMapping(secondary.face);
+    reasoning.push(`• Prize Mirror: ${canonPrize} (mirror of Secondary: ${secondary.face})`);
     
     // Secondary selection reasoning (IL calculation)
     if (secondary.face) {
@@ -553,7 +531,7 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
         {/* Main Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-yellow-400 mb-2">
-            {getArchetypeMappingTitle(primary.face, sifData.prize.face.split(':')[1])}
+            {getArchetypeMappingTitle(secondary.face, sifData.prize.face.split(':')[1])}
           </h1>
           <p className="text-gray-400">Your SIF Canon v3 Results</p>
         </div>
@@ -571,34 +549,59 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
             {/* Header */}
             <div className="bg-gray-900 border border-yellow-400 rounded-2xl p-6 mb-6">
               <div className="space-y-6">
-                {/* Primary (Anchor) */}
+                {/* Primary Anchor (from Phase D Secondary) */}
                 <div className="space-y-3">
                   <h2 className="text-xl font-bold text-yellow-400">
-                    Primary ({primary.face})
+                    Primary Anchor: {secondary.face}
                   </h2>
                   <p className="text-sm text-gray-300 leading-relaxed">
-                    {getPrimaryDescription(primary.face)}
+                    {getPrimaryDescription(secondary.face)}
                   </p>
                 </div>
 
-                {/* Prize (Mirror target) */}
+
+                {/* Main Operating Lines */}
                 <div className="space-y-3">
                   <h2 className="text-xl font-bold text-yellow-400">
-                    Prize (Mirror target): {sifData.prize.face}
+                    Main Operating Lines
                   </h2>
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    {getPrizeDescription(primary.face, sifData.prize.face.split(':')[1])}
-                  </p>
+                  <div className="text-sm text-gray-300">
+                    <p className="mb-2">Your core focus areas from Phase A:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {state.lines.filter(line => line.selectedA).map(line => (
+                        <span key={line.id} className="bg-yellow-400/20 text-yellow-300 px-3 py-1 rounded-full text-xs font-medium">
+                          {line.id}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Secondary (Installed) */}
+                {/* Selected Archetypes from Phase E */}
                 <div className="space-y-3">
                   <h2 className="text-xl font-bold text-yellow-400">
-                    Secondary (Installed): {secondary.face}
+                    Selected Archetypes
                   </h2>
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    The archetype context actually installs on you in daily life. It may support your calls or directly fight them. Installation is unstable because it depends on how others see you, not what you anchor from within.
-                  </p>
+                  <div className="text-sm text-gray-300">
+                    <p className="mb-2">Archetypes you selected in Phase E:</p>
+                    <div className="space-y-1">
+                      {state.questionHistory
+                        .filter(q => q.phase === 'E')
+                        .map((question, index) => {
+                          const line = state.lines.find(l => l.id === question.lineId);
+                          const archetypeQuestions = line ? getArchetypeQuestionsForFamily(line.id) : [];
+                          const questionData = archetypeQuestions.find((q: any) => q.id === question.questionId);
+                          const selectedArchetype = questionData ? questionData.map[question.choice as 'A' | 'B'] : 'Unknown';
+                          
+                          return (
+                            <div key={index} className="flex items-center gap-2">
+                              <span className="text-yellow-400 font-medium">{line?.id}:</span>
+                              <span className="text-gray-300">{selectedArchetype}</span>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Needed for Alignment */}
@@ -660,111 +663,208 @@ export function SummaryClean({ state, onSIFCalculate, onFinalizeSIFWithInstall, 
 
 
 
-        {/* Face vs IL Comparison Table */}
+        {/* Unified Face vs IL Analysis Table */}
         <div className="bg-gray-900 border border-purple-500 rounded-2xl p-4 mb-4">
           <h2 className="text-lg font-bold text-purple-400 mb-3">Face vs IL Analysis</h2>
           <div className="text-sm text-gray-300">
-            <p className="text-gray-400 mb-4">Comparing your inner strength (Face) with outer expectations (IL):</p>
+            <p className="text-gray-400 mb-4">Comparing your inner strength (SIF) with outer expectations (IL) using canonical match rules:</p>
             
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b border-gray-700">
+                    <th className="text-left p-2 text-gray-300">Family</th>
                     <th className="text-left p-2 text-gray-300">Face</th>
-                    <th className="text-left p-2 text-gray-300">Face Score</th>
-                    <th className="text-left p-2 text-gray-300">IL Score</th>
-                    <th className="text-left p-2 text-gray-300">Analysis</th>
+                    <th className="text-left p-2 text-gray-300">SIF (value + band)</th>
+                    <th className="text-left p-2 text-gray-300">IL (value + band)</th>
+                    <th className="text-left p-2 text-gray-300">Combined Label</th>
+                    <th className="text-left p-2 text-gray-300">Guidance</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sifData.faceVsIL.map((item, index) => {
-                    const analysisColor = {
-                      'Match': 'text-green-400',
-                      'High IL, low Face': 'text-blue-400',
-                      'Low IL, high Face': 'text-orange-400',
-                      'Low Both': 'text-gray-400'
-                    }[item.label] || 'text-gray-400';
-                    
-                    return (
+                   {sifData.faceVsIL
+                     .map(item => {
+                       // Use recalibrated banding from sifDataResolverNew
+                       const sifBand = item.sifBand || (item.faceScore < 0.30 ? "Low" : item.faceScore < 0.50 ? "Medium" : "High");
+                       const ilBand = item.ilBand || (item.ilScore < 1.60 ? "Low" : item.ilScore < 2.40 ? "Medium" : "High");
+                       const combinedLabel = item.combinedLabel || item.label;
+                       
+                       // Color mapping for combined labels
+                       let combinedColor = '';
+                       let guidance = '';
+                       
+                       switch (combinedLabel) {
+                         case 'Match':
+                           combinedColor = 'text-green-400 bg-green-900/20';
+                           guidance = 'Inside and outside agree. Lean into this face; it will install cleanly.';
+                           break;
+                         case 'Outside-only':
+                           combinedColor = 'text-blue-400 bg-blue-900/20';
+                           guidance = 'Others expect this; you don\'t carry it. Borrow sparingly or train it.';
+                           break;
+                         case 'Inside-only':
+                           combinedColor = 'text-orange-400 bg-orange-900/20';
+                           guidance = 'You carry this; others don\'t expect it. Use selectively or with welcoming context.';
+                           break;
+                         case 'Low both':
+                           combinedColor = 'text-gray-400 bg-gray-900/20';
+                           guidance = 'Weak inside and outside. Don\'t force it.';
+                           break;
+                         default:
+                           // Fallback for legacy labels
+                           if (item.label === 'High IL, low Face') {
+                             combinedColor = 'text-blue-400 bg-blue-900/20';
+                             guidance = 'Others expect this; you don\'t carry it. Borrow sparingly or train it.';
+                           } else if (item.label === 'Low IL, high Face') {
+                             combinedColor = 'text-orange-400 bg-orange-900/20';
+                             guidance = 'You carry this; others don\'t expect it. Use selectively or with welcoming context.';
+                           } else if (item.label === 'Low Both') {
+                             combinedColor = 'text-gray-400 bg-gray-900/20';
+                             guidance = 'Weak inside and outside. Don\'t force it.';
+                           } else {
+                             combinedColor = 'text-green-400 bg-green-900/20';
+                             guidance = 'Inside and outside agree. Lean into this face; it will install cleanly.';
+                           }
+                       }
+                       
+                       const family = item.face.split(':')[0];
+                       const faceName = item.face.split(':')[1];
+                       
+                       return {
+                         ...item,
+                         family,
+                         faceName,
+                         sifBand,
+                         ilBand,
+                         combinedLabel,
+                         combinedColor,
+                         guidance
+                       };
+                     })
+                    .sort((a, b) => {
+                      // Sort by combined label priority: Match > Outside-only > Inside-only > Low both
+                      const order = (label: string) => {
+                        switch (label) {
+                          case 'Match': return 0;
+                          case 'Outside-only': return 1;
+                          case 'Inside-only': return 2;
+                          case 'Low both': return 3;
+                          default: return 4;
+                        }
+                      };
+                      
+                      const orderA = order(a.combinedLabel);
+                      const orderB = order(b.combinedLabel);
+                      
+                      if (orderA !== orderB) return orderA - orderB;
+                      
+                      // Within same category, sort by IL score descending
+                      return b.ilScore - a.ilScore;
+                    })
+                    .map(item => (
                       <tr key={item.face} className="border-b border-gray-800 hover:bg-gray-800">
-                        <td className="p-2 text-gray-200 font-medium">{item.face}</td>
-                        <td className="p-2 text-gray-300 font-mono">{item.faceScore.toFixed(2)}</td>
-                        <td className="p-2 text-gray-300 font-mono">{item.ilScore.toFixed(2)}</td>
+                        <td className="p-2 text-gray-200 font-medium">{item.family}</td>
+                        <td className="p-2 text-gray-200 font-medium">{item.faceName}</td>
                         <td className="p-2">
-                          <div className={`${analysisColor} font-medium text-xs mb-1`}>
-                            {item.label}
-                          </div>
-                          <div className="text-gray-400 text-xs leading-relaxed">
-                            {getFaceVsILAnalysisText(item.label)}
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-300 font-mono text-sm">{item.faceScore.toFixed(2)}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              item.sifBand === 'High' ? 'text-green-400 bg-green-900/20' :
+                              item.sifBand === 'Medium' ? 'text-yellow-400 bg-yellow-900/20' :
+                              'text-red-400 bg-red-900/20'
+                            }`}>
+                              {item.sifBand}
+                            </span>
                           </div>
                         </td>
+                        <td className="p-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-300 font-mono text-sm">{item.ilScore.toFixed(2)}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              item.ilBand === 'High' ? 'text-green-400 bg-green-900/20' :
+                              item.ilBand === 'Medium' ? 'text-yellow-400 bg-yellow-900/20' :
+                              'text-red-400 bg-red-900/20'
+                            }`}>
+                              {item.ilBand}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-2">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${item.combinedColor}`}>
+                            {item.combinedLabel}
+                          </span>
+                        </td>
+                        <td className="p-2 text-gray-400 text-xs leading-relaxed">
+                          {item.guidance}
+                        </td>
                       </tr>
-                    );
-                  })}
+                    ))
+                  }
                 </tbody>
               </table>
             </div>
           </div>
           
-          {/* Face vs IL Analysis Summary */}
-          <div className="mt-6 p-4 bg-gray-800 border border-gray-600 rounded-xl">
-            <h3 className="text-md font-bold text-yellow-400 mb-3">Analysis Summary</h3>
-            
-            <div className="space-y-4 text-sm text-gray-300">
-              <div>
-                <h4 className="font-semibold text-blue-400 mb-2">🎯 Core Definitions</h4>
-                <div className="space-y-2 ml-4">
-                  <div>
-                    <span className="font-medium text-green-400">Face Score (SIF):</span>
-                    <span className="text-gray-300"> "Can you own it?" - Tests if a face could genuinely belong to you</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-purple-400">IL (InstalledLikelihood):</span>
-                    <span className="text-gray-300"> "Do others stick you in it?" - How likely people actually install you into this face</span>
-                  </div>
-                </div>
-              </div>
+           {/* Canonical Match Rules Summary */}
+           <div className="mt-6 p-4 bg-gray-800 border border-gray-600 rounded-xl">
+             <h3 className="text-md font-bold text-yellow-400 mb-3">Canonical Match Rules (v3 - Recalibrated)</h3>
+             
+             <div className="space-y-4 text-sm text-gray-300">
+               <div>
+                 <h4 className="font-semibold text-blue-400 mb-2">🎯 Recalibrated Thresholds</h4>
+                 <div className="space-y-2 ml-4">
+                   <div>
+                     <span className="font-medium text-green-400">SIF (face strength):</span>
+                     <span className="text-gray-300"> Low &lt; 0.30, Medium 0.30–0.49, High ≥ 0.50</span>
+                   </div>
+                   <div>
+                     <span className="font-medium text-purple-400">IL (Installed Likelihood):</span>
+                     <span className="text-gray-300"> Low &lt; 1.60, Medium 1.60–2.40, High &gt; 2.40</span>
+                     <span className="text-yellow-400 text-xs ml-2">(Recalibrated after Stress redistribution)</span>
+                   </div>
+                 </div>
+               </div>
+              
+               <div>
+                 <h4 className="font-semibold text-yellow-400 mb-2">🔍 Combined Labels (Recalibrated)</h4>
+                 <div className="space-y-2 ml-4">
+                   <div>
+                     <span className="font-medium text-green-400">Match:</span>
+                     <span className="text-gray-300"> SIF ≥ 0.50 AND IL ≥ 1.60</span>
+                   </div>
+                   <div>
+                     <span className="font-medium text-blue-400">Outside-only:</span>
+                     <span className="text-gray-300"> SIF &lt; 0.30 AND IL ≥ 1.60</span>
+                   </div>
+                   <div>
+                     <span className="font-medium text-orange-400">Inside-only:</span>
+                     <span className="text-gray-300"> SIF ≥ 0.30 AND IL &lt; 1.60</span>
+                   </div>
+                   <div>
+                     <span className="font-medium text-gray-400">Low both:</span>
+                     <span className="text-gray-300"> SIF &lt; 0.30 AND IL &lt; 1.60</span>
+                   </div>
+                 </div>
+               </div>
               
               <div>
-                <h4 className="font-semibold text-yellow-400 mb-2">🔍 Match vs Mismatch Analysis</h4>
+                <h4 className="font-semibold text-purple-400 mb-2">💡 Key Insights</h4>
                 <div className="space-y-2 ml-4">
                   <div>
-                    <span className="font-medium text-green-400">When They Match:</span>
-                    <span className="text-gray-300"> High Face Score + High IL = "This is not only the face you can hold, it's also the one people already push you into"</span>
+                    <span className="font-medium text-green-400">Match faces:</span>
+                    <span className="text-gray-300"> Both internal capacity and external reality align - strongest secondary candidates</span>
                   </div>
                   <div>
-                    <span className="font-medium text-blue-400">High Face Score + Low IL:</span>
-                    <span className="text-gray-300"> "You could hold this face, but people don't install you there often" → Latent capacity</span>
+                    <span className="font-medium text-blue-400">Outside-only faces:</span>
+                    <span className="text-gray-300"> Others expect this but you don't carry it - potential training opportunities</span>
                   </div>
                   <div>
-                    <span className="font-medium text-orange-400">Low Face Score + High IL:</span>
-                    <span className="text-gray-300"> "People keep installing you there, but it's unstable for you" → Mismatch tension</span>
+                    <span className="font-medium text-orange-400">Inside-only faces:</span>
+                    <span className="text-gray-300"> You carry this but others don't expect it - use with welcoming context</span>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-400">Low Both:</span>
-                    <span className="text-gray-300"> "Not strong inside; not expected outside" → Low priority</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-purple-400 mb-2">💡 Key Insights from Your Results</h4>
-                <div className="space-y-2 ml-4">
-                  <div>
-                    <span className="font-medium text-green-400">Top IL Candidates:</span>
-                    <span className="text-gray-300"> Faces with highest IL scores are most likely to appear in your Phase D shortlist</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-blue-400">Face Score determines:</span>
-                    <span className="text-gray-300"> Which of these high-IL faces you can actually "own" and hold stably</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-yellow-400">Match = Strong Secondary:</span>
-                    <span className="text-gray-300"> Both internal capacity and external reality align</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-orange-400">Mismatch = Diagnostic insight:</span>
-                    <span className="text-gray-300"> Reveals tension between what you can hold vs what others expect</span>
+                    <span className="font-medium text-gray-400">Low both faces:</span>
+                    <span className="text-gray-300"> Weak inside and outside - don't force it</span>
                   </div>
                 </div>
               </div>

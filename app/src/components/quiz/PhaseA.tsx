@@ -23,7 +23,15 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
   return (
     <div className="card p-6 animate-fade-in-up">
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-brand-gray-100 mb-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <h1 className="text-3xl font-bold mb-3 animate-fade-in-up" style={{ 
+          animationDelay: '0.1s',
+          background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+          filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))'
+        }}>
           Discover Your Core Profile
         </h1>
         <p className="text-brand-gray-200 text-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -91,8 +99,15 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
                       </svg>
                     )}
                   </div>
-                  <div>
-                    <strong className="text-brand-gold-400 text-lg font-bold">{line.id}</strong>
+                  <div className="flex-1 min-w-0">
+                    <strong className="text-sm font-bold truncate" style={{
+                      background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      textShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+                      filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))'
+                    }}>{line.id}</strong>
                   </div>
                 </div>
                 {/* Line Icon - moved to top right */}
@@ -102,7 +117,14 @@ export function PhaseA({ state, onLineToggle, onStartPhaseB, onAddQuestionToHist
               </div>
               
               {familyCard && (
-                <div className="text-brand-gray-200 text-sm font-medium italic text-center leading-relaxed px-2 flex-1 flex items-center">
+                <div className="text-xs font-medium italic text-center leading-tight px-1 flex-1 flex items-center" style={{
+                  background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+                  filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+                }}>
                   {familyCard.blurb}
                 </div>
               )}

@@ -5,7 +5,7 @@ import { PhaseBIntegrated } from './quiz/PhaseBIntegrated';
 import { PhaseC } from './quiz/PhaseC';
 import { PhaseE } from './quiz/PhaseE';
 import PhaseD from './quiz/PhaseD';
-import { SummaryClean } from './quiz/SummaryClean';
+import { SummaryClean } from '@/components/quiz/SummaryClean';
 import { quizRecorder } from '@/utils/QuizRecorder';
 import { ProgressBar } from './ProgressBar';
 import { phaseDEngine } from '@/engine/PhaseD';
@@ -174,15 +174,17 @@ export function QuizEngine() {
         break;
         
       case 'D':
-        // Phase D: Install question - progress based on whether user has made a choice
+        // Phase D: Primary face selection - progress based on whether user has made a choice
         completed = state.installedChoice ? 1 : 0;
         total = 1;
         break;
         
       case 'E':
-        // Phase E: Anchor selection - progress based on whether user has made a choice
-        completed = state.anchor ? 1 : 0;
-        total = 1;
+        // Phase E: One question per A-line - progress based on completed questions
+        const aLines = state.lines.filter(l => l.selectedA);
+        const completedE = state.questionHistory.filter(q => q.phase === 'E').length;
+        completed = completedE;
+        total = aLines.length;
         break;
         
       case 'Archetype':
@@ -397,7 +399,7 @@ export function QuizEngine() {
   }, []);
 
   const handleProceedToE = () => {
-    console.log('📈 Proceeding to Phase E (Primary/Anchor selection)');
+    console.log('📈 Proceeding to Phase E (Battle face)');
     
     // Build SIF shortlist before Phase E so it can use self-installed candidates
     console.log('🔧 Building SIF shortlist for Phase E...');
@@ -581,8 +583,8 @@ export function QuizEngine() {
               case 'A': return { step: 1, title: 'Choose your focus', description: `${completed}/3 families selected` };
               case 'B': return { step: 2, title: 'Quick choices', description: `${completed}/${total} dilemmas completed` };
               case 'C': return { step: 3, title: 'Module decisions', description: `${completed}/${total} scenarios completed` };
-              case 'D': return { step: 4, title: 'Install question', description: `${completed}/${total} choice made` };
-              case 'E': return { step: 5, title: 'Anchor selection', description: `${completed}/${total} choice made` };
+              case 'D': return { step: 4, title: 'Primary face selection', description: `${completed}/${total} choice made` };
+              case 'E': return { step: 5, title: 'Line questions', description: `${completed}/${total} questions completed` };
               case 'Archetype': return { step: 5, title: 'Your profile', description: 'Determining your specific archetype...' };
               case 'FinalProcessing': return { step: 6, title: 'Final processing', description: 'Processing results...' };
               case 'Summary': return { step: 7, title: 'Complete', description: 'Your 7-minute profile is ready!' };
@@ -591,7 +593,8 @@ export function QuizEngine() {
           };
           
           const stepInfo = getStepInfo();
-          return total > 0 && (
+          // Only show progress bar for phases other than Phase A
+          return total > 0 && state.phase !== 'A' && (
             <div className="mb-6 animate-fade-in-up">
               <div className="flex items-center justify-between mb-3">
                 <div>
@@ -608,7 +611,6 @@ export function QuizEngine() {
             </div>
           );
         })()}
-
 
         {/* Phase Content - Only show when not loading */}
         {!isLoading && (

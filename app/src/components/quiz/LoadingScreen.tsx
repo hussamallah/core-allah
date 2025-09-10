@@ -38,22 +38,22 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           minHoldMs: 2000,
           pulseColor: 'pink' // Pink star on the bird
         };
-      case 'c-to-d':
-        return {
-          icon: <img src="/Hawk Emblem with Glowing Star.png" alt="Installation" className="w-32 h-32 object-contain" />,
-          title: 'INSTALLATION. YOU DON\'T CHOOSE A FAMILY. YOU CHOOSE A FACE.',
-          subtitle: 'INSTALLED ≠ CHOSEN. PAY ATTENTION.',
-          minHoldMs: 2000,
-          pulseColor: 'green' // Green star on Hawk
-        };
-      case 'd-to-e':
-        return {
-          icon: <img src="/Symmetrical Canada Goose Emblem.png" alt="Anchor" className="w-32 h-32 object-contain" />,
-          title: 'ANCHOR. ONE LINE HOLDS, ALL OTHERS ORBIT.',
-          subtitle: 'ANCHOR = WHO YOU ARE WHEN EVERYTHING ELSE COLLAPSES.',
-          minHoldMs: 2000,
-          pulseColor: 'cyan' // Cyan star on Canada Goose
-        };
+       case 'c-to-d':
+         return {
+           icon: <img src="/Hawk Emblem with Glowing Star.png" alt="Installation" className="w-32 h-32 object-contain" />,
+           title: 'ANCHOR: YOUR ARCHETYPE / FACE.',
+           subtitle: 'THIS IS HOW YOU MOVE DAY TO DAY.',
+           minHoldMs: 2000,
+           pulseColor: 'green' // Green star on Hawk
+         };
+       case 'd-to-e':
+         return {
+           icon: <img src="/Symmetrical Canada Goose Emblem.png" alt="Line Questions" className="w-32 h-32 object-contain" />,
+           title: 'YOUR PURE CODE HAS BEEN DETECTED.',
+           subtitle: 'Decide how you act and move under that code.',
+           minHoldMs: 2000,
+           pulseColor: 'cyan' // Cyan star on Canada Goose
+         };
       case 'final-result':
         return {
           icon: <img src="/Stylized Pelican Emblem on Black.png" alt="Chamber opens" className="w-32 h-32 object-contain" />,
@@ -83,6 +83,22 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
       onBegin={onComplete}
       beginLabel="BEGIN"
       pulseColor={content.pulseColor}
+      titleStyle={{
+        background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        textShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+        filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))'
+      }}
+      subtitleStyle={{
+        background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+        filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+      }}
     />
   );
 };

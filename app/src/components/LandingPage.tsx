@@ -46,17 +46,30 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
       {/* Main content with enhanced animations */}
       <div className={`flex flex-col items-center justify-center text-center max-w-4xl px-8 mt-20 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <h1 className="text-5xl md:text-6xl font-bold mb-2 text-brand-gray-100 whitespace-nowrap uppercase tracking-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          Awaken Your Sovereign Face
+          Awaken Your Core Identity
         </h1>
         <p className="text-2xl md:text-3xl font-light mb-6 leading-relaxed text-brand-gray-200 uppercase tracking-wide animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-          One face. Seven lines. Aligned, they reveal your core.<br />
-          When they align with your core, you don't just navigate reality—you direct it.
+          Seven lines align to reveal your true design. When they match your core, you don't<br />
+          just navigate reality — you direct it.
+        </p>
+        <p 
+          className="text-2xl md:text-3xl font-light mb-6 leading-relaxed text-brand-gray-200 uppercase tracking-wide animate-fade-in-up" 
+          style={{ 
+            animationDelay: '0.5s',
+            marginTop: '1px', // Keep original position
+            marginBottom: '18px' // Reduce from 24px to 18px to move text down 6px without affecting button
+          }}
+        >
+          AN IDENTITY ENGINE · SHOWS THE PROOF, TO LAND OUTCOMES
         </p>
         
         <button
           onClick={onStartQuiz}
           className="btn-primary px-16 py-6 text-2xl font-semibold tracking-wider uppercase animate-bounce-in touch-target touch-safe"
-          style={{ animationDelay: '0.6s' }}
+          style={{ 
+            animationDelay: '0.6s',
+            marginTop: '9px' // Move button down 9px
+          }}
         >
           Start Now
         </button>

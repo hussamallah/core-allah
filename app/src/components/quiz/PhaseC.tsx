@@ -148,25 +148,43 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
         <div className="space-y-4">
           <button
             onClick={() => handleSeverityChoice('high', 1.0)}
-            className="w-full p-3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
           >
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 A
               </div>
-              <span className="text-gray-100 text-sm font-medium leading-relaxed">{severityQuestion.options.A}</span>
+              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+                filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+              }}>
+                {severityQuestion.options.A}
+              </span>
             </div>
           </button>
           
           <button
             onClick={() => handleSeverityChoice('mid', 0.5)}
-            className="w-full p-3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-orange-400 hover:shadow-lg hover:shadow-orange-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+            className="w-full p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl border-2 border-gray-600 text-center hover:border-yellow-400 hover:shadow-lg hover:shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
           >
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-orange-400 text-black font-bold flex items-center justify-center text-sm group-hover:bg-orange-300 transition-colors">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
                 B
               </div>
-              <span className="text-gray-100 text-sm font-medium leading-relaxed">{severityQuestion.options.B}</span>
+              <span className="text-base font-medium leading-relaxed flex-1 text-left uppercase" style={{
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+                filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+              }}>
+                {severityQuestion.options.B}
+              </span>
             </div>
           </button>
           
@@ -277,10 +295,6 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
     <div key={`phase-c-${pendingLine.id}-${k}-${type}-${order}`} className="bg-gray-900 rounded-xl p-6 min-h-[500px]">
       {/* Question Card */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-6 border border-gray-600 shadow-md mb-8">
-        <div className="mb-4 text-center">
-          <h2 className="text-white text-xl font-semibold">{pendingLine.id}</h2>
-        </div>
-        
         <p className="text-gray-100 text-lg leading-relaxed mb-4 text-center">{question.prompt}</p>
       </div>
 
@@ -294,7 +308,14 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               A
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.A}</span>
+            <span className="text-base font-medium leading-relaxed uppercase" style={{
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+            }}>{question.options.A}</span>
           </div>
         </button>
         
@@ -306,7 +327,14 @@ export function PhaseC({ state, onChoice, onSeveritySelect, onProceedToD, stepDo
             <div className="w-8 h-8 rounded-full bg-yellow-400 text-black font-bold flex items-center justify-center text-base group-hover:bg-yellow-300 transition-colors">
               B
             </div>
-            <span className="text-gray-100 text-base font-medium leading-relaxed">{question.options.B}</span>
+            <span className="text-base font-medium leading-relaxed uppercase" style={{
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+            }}>{question.options.B}</span>
           </div>
         </button>
       </div>

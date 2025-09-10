@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExtractSnapshot } from '@/types/Extract';
-import { resolveSIFData, getFaceVsILAnalysisText } from '@/utils/sifDataResolver';
+import { resolveSIFData, getFaceVsILAnalysisText } from '../../utils/sifDataResolverNew';
 import { QuizState, SIFResult } from '@/types/quiz';
 
 interface DiagnosticsPageProps {

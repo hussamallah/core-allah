@@ -96,6 +96,11 @@ export default function PhaseD({
       shortlist: shortlist || []
     });
     
+    // Auto-continue to Phase E after selection
+    setTimeout(() => {
+      console.log('🎯 PHASE D - Auto-continuing to Phase E');
+      onProceedToE();
+    }, 1000); // 1 second delay for better UX
   };
 
   const handleProceed = () => {
@@ -137,8 +142,15 @@ export default function PhaseD({
   return (
     <div className="bg-gray-900 rounded-xl p-4 min-h-[300px]">
       <div className="text-center mb-6">
-        <div className="text-gray-200 text-base mb-4">
-          Which role do you actually get installed into most often by people and context?
+        <div className="text-yellow-400 text-base mb-4 font-medium uppercase" style={{
+          background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+          filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))'
+        }}>
+          What role do you <strong>be</strong> most often in real life — the one people place you into?
         </div>
       </div>
       
@@ -153,26 +165,33 @@ export default function PhaseD({
             }`}
             onClick={() => handleInstallChoice(statement.faceId)}
           >
-            <div className="text-white text-lg font-medium mb-2">
+            <div className="text-white text-lg font-medium mb-2 uppercase">
               {statement.statement.replace(/\*\*(.*?)\*\*/g, '$1')}
+            </div>
+            <div className="text-xs uppercase" style={{
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 8px rgba(255, 215, 0, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.3))'
+            }}>
+              {statement.cues.join(' • ')}
             </div>
           </button>
         ))}
       </div>
       
-      <div className="text-center">
-        <button
-          disabled={!installed}
-          onClick={handleProceed}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            installed
-              ? 'bg-gradient-to-r from-yellow-300 to-yellow-200 text-black hover:from-yellow-200 hover:to-yellow-100 shadow-[0_0_15px_rgba(253,224,71,0.5)]'
-              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          Next
-        </button>
-      </div>
+      {installed && (
+        <div className="text-center">
+          <div className="text-yellow-400 text-lg font-medium mb-2 uppercase">
+            Selected: {installed}
+          </div>
+          <div className="text-gray-400 text-sm">
+            Continuing to Phase E...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

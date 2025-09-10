@@ -715,7 +715,7 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Truth:Architect"
+              "Pace:Navigator"
             ],
             "faceF": []
           },
@@ -896,7 +896,7 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Truth:Architect"
+              "Stress:Artisan"
             ],
             "faceF": []
           },
@@ -1074,7 +1074,8 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Truth:Seeker"
+              "Pace:Navigator",
+              "Stress:Sentinel"
             ],
             "faceF": []
           },
@@ -1251,7 +1252,7 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Boundary:Guardian"
+              "Stress:Sentinel"
             ],
             "faceF": []
           },
@@ -2315,7 +2316,8 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Recognition:Diplomat"
+              "Pace:Navigator",
+              "Stress:Artisan"
             ],
             "faceF": []
           },
@@ -2492,7 +2494,8 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Truth:Architect"
+              "Pace:Navigator",
+              "Stress:Artisan"
             ],
             "faceF": []
           },
@@ -3024,7 +3027,8 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Boundary:Guardian"
+              "Boundary:Guardian",
+              "Stress:Sentinel"
             ],
             "faceF": []
           },
@@ -3202,7 +3206,8 @@
             "famF": [],
             "faceC": [],
             "faceO": [
-              "Boundary:Equalizer"
+              "Pace:Navigator",
+              "Stress:Sentinel"
             ],
             "faceF": []
           },

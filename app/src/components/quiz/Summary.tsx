@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { QuizState, SIFResult, FAMILY_TO_PRIZE, FAMILIES, Family } from '@/types/quiz';
-import { prizeMirrorEngine } from '@/engine/PrizeMirror';
+import { prizeMirrorEngine } from '../../engine/PrizeMirrorEngine';
 
 interface SummaryProps {
   state: QuizState;

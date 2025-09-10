@@ -43,88 +43,88 @@ export class SIFEngine {
     cues: string[];
   }> = {
     "Control:Sovereign": {
-      statement: "People expect me to **take charge and set the agenda**.",
+      statement: "I be the one who **takes charge and sets the agenda**.",
       label: "Sovereign",
       family: "Control",
-      cues: ["Sets direction", "Decides quickly"]
+      cues: ["Leads direction", "Decides quickly"]
     },
     "Control:Rebel": {
-      statement: "People expect me to **challenge the plan or push back**.",
+      statement: "I be the one who **pushes back and challenges the plan**.",
       label: "Rebel", 
       family: "Control",
-      cues: ["Questions authority", "Breaks stuck patterns"]
+      cues: ["Breaks patterns", "Resists control"]
     },
     "Pace:Navigator": {
-      statement: "People lean on me to **map the path and keep us on track**.",
+      statement: "I be the one who **maps the path and keeps momentum steady**.",
       label: "Navigator",
       family: "Pace", 
-      cues: ["Plans milestones", "Manages momentum"]
+      cues: ["Plots route", "Manages progress"]
     },
     "Pace:Visionary": {
-      statement: "People look to me to **imagine what's next and inspire direction**.",
+      statement: "I be the one who **imagines what's next and inspires direction**.",
       label: "Visionary",
       family: "Pace",
-      cues: ["Big picture", "Sets tempo with ideas"]
+      cues: ["Big picture", "Sparks tempo with ideas"]
     },
     "Boundary:Equalizer": {
-      statement: "People call me in to **make things fair and balance trade-offs**.",
+      statement: "I be the one who **balances trade-offs and makes things fair**.",
       label: "Equalizer",
       family: "Boundary",
-      cues: ["Referees decisions", "Ensures equity"]
+      cues: ["Referees", "Enforces equity"]
     },
     "Boundary:Guardian": {
-      statement: "People rely on me to **protect the group and enforce guardrails**.",
+      statement: "I be the one who **protects the group and holds the line**.",
       label: "Guardian",
       family: "Boundary",
-      cues: ["Safety first", "Holds the line"]
+      cues: ["Safety first", "Blocks threats"]
     },
     "Truth:Architect": {
-      statement: "People tap me to **design the structure or system**.",
+      statement: "I be the one who **designs the structure or system**.",
       label: "Architect",
       family: "Truth",
-      cues: ["Models & frameworks", "Clarity of logic"]
+      cues: ["Builds frameworks", "Sets clarity"]
     },
     "Truth:Seeker": {
-      statement: "People ask me to **dig for the real facts and question assumptions**.",
+      statement: "I be the one who **digs for truth and questions assumptions**.",
       label: "Seeker",
       family: "Truth",
-      cues: ["Investigates", "Probing questions"]
+      cues: ["Probes deeper", "Insists on facts"]
     },
     "Recognition:Spotlight": {
-      statement: "People put me **out front to represent or present**.",
+      statement: "I be the one who **steps forward and represents the group**.",
       label: "Spotlight",
       family: "Recognition",
-      cues: ["Spokesperson", "Visible ownership"]
+      cues: ["Visible", "Owns the stage"]
     },
     "Recognition:Diplomat": {
-      statement: "People ask me to **smooth relationships and keep harmony**.",
+      statement: "I be the one who **smooths relationships and keeps peace**.",
       label: "Diplomat",
       family: "Recognition",
-      cues: ["Bridges groups", "Reads the room"]
+      cues: ["Bridges people", "Eases conflict"]
     },
     "Bonding:Partner": {
-      statement: "People come to me for **emotional support and connection**.",
+      statement: "I be the one who **supports people and keeps bonds alive**.",
       label: "Partner",
       family: "Bonding",
-      cues: ["Morale & empathy", "Keeps people engaged"]
+      cues: ["Loyalty", "Morale", "Empathy"]
     },
     "Bonding:Provider": {
-      statement: "People expect me to **handle practical care and logistics**.",
+      statement: "I be the one who **handles care and practical needs**.",
       label: "Provider",
       family: "Bonding",
-      cues: ["Gets resources in place", "Looks after needs"]
+      cues: ["Brings resources", "Looks after others"]
     },
     "Stress:Artisan": {
-      statement: "People ask me to **fix things hands-on right now**.",
+      statement: "I be the one who **fixes things hands-on right now**.",
       label: "Artisan",
       family: "Stress",
-      cues: ["Jumps in", "Tactical problem-solving"]
+      cues: ["Tactical", "Problem-solver"]
     },
     "Stress:Catalyst": {
-      statement: "People push me to **create urgency and drive hard outcomes**.",
+      statement: "I be the one who **creates urgency and drives hard outcomes**.",
       label: "Catalyst",
       family: "Stress",
-      cues: ["Turns up the heat", "Forces movement"]
+      cues: ["Pushes pace", "Forces motion"]
     }
   };
 
@@ -284,21 +284,27 @@ export class SIFEngine {
     if (effects.faceC?.length > 0) {
       effects.faceC.forEach((face: string) => {
         this.inc(this.counters.faceC, face);
+        this.inc(this.opportunities, face); // Track opportunity for face scoring
         console.log(`  → faceC[${face}] = ${this.counters.faceC[face]}`);
+        console.log(`  → opportunities[${face}] = ${this.opportunities[face]}`);
       });
     }
     
     if (effects.faceO?.length > 0) {
       effects.faceO.forEach((face: string) => {
         this.inc(this.counters.faceO, face);
+        this.inc(this.opportunities, face); // Track opportunity for face scoring
         console.log(`  → faceO[${face}] = ${this.counters.faceO[face]}`);
+        console.log(`  → opportunities[${face}] = ${this.opportunities[face]}`);
       });
     }
     
     if (effects.faceF?.length > 0) {
       effects.faceF.forEach((face: string) => {
         this.inc(this.counters.faceF, face);
+        this.inc(this.opportunities, face); // Track opportunity for face scoring
         console.log(`  → faceF[${face}] = ${this.counters.faceF[face]}`);
+        console.log(`  → opportunities[${face}] = ${this.opportunities[face]}`);
       });
     }
     
@@ -514,22 +520,37 @@ export class SIFEngine {
       endedF: s.endedF
     })));
 
+    // Calculate O/F exposure for each face and normalize IL scores
+    console.log(`🔄 Applying IL normalization by O/F exposure...`);
+    const normalizedScored = scored.map(s => {
+      const ofExposure = this.getOFExposureForFace(s.face);
+      const IL_norm = s.IL / Math.sqrt(1 + ofExposure);
+      const IL_final = Math.min(5, Math.max(0, +IL_norm.toFixed(2)));
+      
+      console.log(`  → ${s.face}: raw IL=${s.IL}, O/F exposure=${ofExposure}, normalized IL=${IL_final}`);
+      
+      return {
+        ...s,
+        IL: IL_final
+      };
+    });
+
     // Store the calculated IL scores for later retrieval
-    scored.forEach(s => {
+    normalizedScored.forEach(s => {
       this.calculatedILScores[s.face] = s.IL;
       console.log(`💾 Stored IL score: ${s.face} = ${s.IL}`);
     });
     
     console.log('💾 All IL scores stored:', this.calculatedILScores);
 
-    scored.sort((a,b)=>{
+    normalizedScored.sort((a,b)=>{
       if (b.IL !== a.IL) return b.IL - a.IL;
       if (b.fTouch !== a.fTouch) return b.fTouch - a.fTouch;
       if (b.endedF !== a.endedF) return b.endedF - a.endedF;
       return a.face.localeCompare(b.face);
     });
 
-    console.log(`🔄 Sorted by IL (desc), then fTouch, then endedF, then alphabetical:`, scored.map(s => ({
+    console.log(`🔄 Sorted by IL (desc), then fTouch, then endedF, then alphabetical:`, normalizedScored.map(s => ({
       face: s.face,
       IL: s.IL,
       fTouch: s.fTouch,
@@ -538,7 +559,7 @@ export class SIFEngine {
 
     const shortlist: string[] = [];
     const families: Record<string, number> = {};
-    for (const s of scored) {
+    for (const s of normalizedScored) {
       if (shortlist.indexOf(s.face) === -1) {
         shortlist.push(s.face);
         families[s.family] = (families[s.family]||0) + 1;
@@ -742,6 +763,64 @@ export class SIFEngine {
   }
 
   /**
+   * Get Face Scores for display in Face vs IL Analysis
+   * Face scores represent internal strength/credibility of each face
+   */
+  public getFaceScores(): Record<string, number> {
+    console.log('📊 getFaceScores called, calculating face scores from counters');
+    
+    const faceScores: Record<string, number> = {};
+    
+    // Get all possible faces
+    const allFaces = Object.values(this.FAMILY_FACES).flat();
+    
+    allFaces.forEach(face => {
+      // Calculate face score using the same formula as in calculateSIFShortlist
+      const family = FACE_TO_FAMILY[face];
+      const famC = this.counters.famC[family] || 0;
+      const famO = this.counters.famO[family] || 0;
+      const famF = this.counters.famF[family] || 0;
+      
+      // Calculate NI (Natural Instinct) - positive rate
+      const opportunities = this.opportunities[face] || 0;
+      const positiveVotes = this.counters.faceC[face] || 0;
+      const negativeVotes = this.counters.faceO[face] || 0;
+      const rawNI = opportunities > 0 ? positiveVotes / opportunities : 0;
+      
+      // Calculate SI (Situational Instinct) - family alignment
+      const familyTotal = famC + famO + famF;
+      const SI = familyTotal > 0 ? famC / familyTotal : 0;
+      
+      // Calculate II (Installed Instinct) - external pressure
+      const II = this.counters.faceO[face] || 0;
+      
+      // Normalize NI across all faces
+      const allRawNIs = allFaces.map(f => this.opportunities[f] > 0 ? (this.counters.faceC[f] || 0) / this.opportunities[f] : 0);
+      const maxNI = Math.max(0, ...allRawNIs);
+      const NI = maxNI > 0 ? rawNI / maxNI : 0;
+      
+      // Calculate final face score using SIF formula
+      const faceScore = 0.5 * NI + 0.5 * SI - 0.1 * II;
+      
+      faceScores[face] = Math.max(0, Math.min(1, faceScore)); // Clamp to 0-1 range
+      
+      console.log(`📊 Face Score for ${face}:`, {
+        opportunities,
+        positiveVotes,
+        negativeVotes,
+        rawNI: rawNI.toFixed(3),
+        NI: NI.toFixed(3),
+        SI: SI.toFixed(3),
+        II,
+        faceScore: faceScore.toFixed(3)
+      });
+    });
+    
+    console.log('📊 Final face scores:', faceScores);
+    return faceScores;
+  }
+
+  /**
    * NEW: SIF Canon v3 finalization with InstalledLikelihood
    */
   public finalizeSIFWithInstall(
@@ -752,7 +831,6 @@ export class SIFEngine {
     console.log("SIF FINAL RESULT (CANON V3): Starting finalization", { anchorFace });
     
     const primaryFamily = FACE_TO_FAMILY[anchorFace];
-    const prizeFace = getPrizeMirror(anchorFace);
     
     // Get installed choice from state
     const installedChoice = state.installedChoice || "";
@@ -761,7 +839,6 @@ export class SIFEngine {
     console.log("SIF FINAL RESULT (CANON V3):", {
       anchorFace,
       primaryFamily,
-      prizeFace,
       installedChoice,
       shortlist
     });
@@ -776,6 +853,15 @@ export class SIFEngine {
     
     const secondaryFace = this.resolveSecondary(installedChoice, anchorFace, shortlist, allFacesByIL || []);
     const secondaryFamily = FACE_TO_FAMILY[secondaryFace];
+    
+    // Prize is now the mirror of Secondary (not Anchor)
+    const prizeFace = getPrizeMirror(secondaryFace);
+    
+    console.log("🎁 PRIZE CALCULATION (SECONDARY-BASED):", {
+      secondaryFace,
+      prizeFace,
+      note: "Prize is now mirror of Secondary, not Anchor"
+    });
     
     console.log("✅ SECONDARY RESOLVED:", {
       secondaryFace,
@@ -1297,4 +1383,14 @@ export class SIFEngine {
     console.log('🔍 Final internal candidates:', candidates);
     return candidates;
   }
+
+  /**
+   * Calculate O/F exposure for a face (how many O/F choices credited this face)
+   */
+  private getOFExposureForFace(face: string): number {
+    const faceO = this.counters.faceO[face] || 0;
+    const faceF = this.counters.faceF[face] || 0;
+    return faceO + faceF;
+  }
 }
+
