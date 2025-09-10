@@ -3,13 +3,14 @@ import { ArchetypePageData } from '@/data/archetypePages'
 import { ArchetypeClientPage } from './ArchetypeClientPage'
 
 interface ArchetypePageProps {
-  params: {
+  params: Promise<{
     archetype: string
-  }
+  }>
 }
 
-export default function ArchetypePage({ params }: ArchetypePageProps) {
-  const archetypeData = getArchetypeBySlug(params.archetype)
+export default async function ArchetypePage({ params }: ArchetypePageProps) {
+  const resolvedParams = await params
+  const archetypeData = getArchetypeBySlug(resolvedParams.archetype)
 
   if (!archetypeData) {
     return (
