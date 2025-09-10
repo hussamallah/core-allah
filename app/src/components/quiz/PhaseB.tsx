@@ -143,7 +143,7 @@ export function PhaseB({ state, onChoice, onProceedToC, onAddUsedQuestion, onAdd
       {showDebug && (
         <SemanticTagsDebug 
           question={question} 
-          choice={selectedChoice} 
+          choice={selectedChoice || undefined} 
         />
       )}
 
