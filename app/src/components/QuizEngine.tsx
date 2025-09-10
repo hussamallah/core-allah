@@ -601,7 +601,7 @@ export function QuizEngine() {
                   <h2 className="text-lg font-semibold text-brand-gray-100">Step {stepInfo.step}: {stepInfo.title}</h2>
                   <p className="text-sm text-brand-gray-400">{stepInfo.description}</p>
                 </div>
-                {state.phase === 'A' && (
+                {(state.phase as string) === 'A' && (
                   <div className="text-xs text-brand-gray-500 bg-brand-gray-800 px-3 py-1 rounded-full">
                     ~7 minutes
                   </div>
